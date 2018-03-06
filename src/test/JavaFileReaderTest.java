@@ -7,6 +7,7 @@ import static org.junit.Assert.assertEquals;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.DirectoryNotEmptyException;
 import java.nio.file.NotDirectoryException;
 import java.util.ArrayList;
 
@@ -27,7 +28,7 @@ public class JavaFileReaderTest {
 	/**
 	 * The expected string representation of ReadMeTestClass
 	 */
-	private static String TestClassString = "package test;\n\npublic class TestClass {\n\n}\n\n";
+	private static String TestClassString = "package test;\n\npublic class TestClass {\n\n}\n";
 
 	/**
 	 * Run before each test case
@@ -36,6 +37,25 @@ public class JavaFileReaderTest {
 	 */
 	@Before
 	public void setUp() {
+	}
+
+	/**
+	 * Check that all the contents of all Java files (and only Java files) can be
+	 * retrieved as Strings from the testPackage directory
+	 * 
+	 * @throws DirectoryNotEmptyException
+	 * @throws IOException
+	 */
+	@Test
+	public void testGetAllJavaFilesToString() throws DirectoryNotEmptyException, IOException {
+		String testDirectory = new File("").getAbsolutePath().concat("/src/test/testPackage/");
+		ArrayList<String> results = JavaFileReader.getAllJavaFilesToString(testDirectory);
+		String appleSource = "package test.testPackage;\n\npublic class Apple {\n\n}\n";
+		String bananaSource = "package test.testPackage;\n\npublic class Banana {\n\n}\n";
+		String zebraSource = "package test.testPackage;\n\npublic class Zebra {\n\n}\n";
+		assertEquals(appleSource, results.get(0));
+		assertEquals(bananaSource, results.get(1));
+		assertEquals(zebraSource, results.get(2));
 	}
 
 	/**
@@ -93,7 +113,7 @@ public class JavaFileReaderTest {
 	 * @throws IOException
 	 */
 	@Test(expected = FileNotFoundException.class)
-	public void testGetNonExistenceFile() throws IOException {
+	public void testGetNonExistenFile() throws IOException {
 		String invalidFilePath = "";
 		String result = "";
 		result = JavaFileReader.getFileToString(invalidFilePath);

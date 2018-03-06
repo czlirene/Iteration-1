@@ -2,8 +2,8 @@ package test;
 
 import static org.junit.Assert.fail;
 
-//import org.eclipse.jdt.core.dom.*;
-
+import org.eclipse.jdt.core.dom.AST;
+import org.eclipse.jdt.core.dom.ASTParser;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -22,7 +22,8 @@ public class ASTParserCompilationUnitTest {
 	 */
 	@Before
 	public void setUp() {
-		parser = ASTParser.newParser(AST.K_COMPILIATION_UNIT);
+		parser = ASTParser.newParser(AST.JLS8);
+		parser.setKind(ASTParser.K_COMPILATION_UNIT);
 	}
 
 	@Test

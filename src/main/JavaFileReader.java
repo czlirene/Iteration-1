@@ -4,12 +4,14 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.file.DirectoryNotEmptyException;
 import java.nio.file.NotDirectoryException;
 import java.util.ArrayList;
 import java.util.Collections;
 
 /**
  * Detects Java files in a directory. Reads source code from Java files.
+ * Retrieves source code from Java files.
  *
  * @author Evan Quan
  * @since March 5, 2018
@@ -23,23 +25,25 @@ public class JavaFileReader {
 	 * @param directory
 	 *            of interest
 	 * @return contents of all Java files as Strings
-	 * @throws IOException
-	 *             if a Java file in the directory is not able to be read
 	 * @throws DirectoryNotFoundException
 	 *             if directory cannot be found
+	 * @throws IOException
+	 *             if a Java file in the directory is not able to be read
 	 */
-	public static ArrayList<String> getAllJavaFilesToString(String directory) throws IOException {
+	public static ArrayList<String> getAllJavaFilesToString(String directory)
+			throws DirectoryNotEmptyException, IOException {
 		// Get all Java files
 		ArrayList<String> javaFileNames = getJavaFileNames(directory);
+		ArrayList<String> javaFilesToString = new ArrayList<String>();
 
 		// Get the contents of every Java file
 		String filePath;
 		for (String javaFile : javaFileNames) {
 			filePath = directory + "/" + javaFile;
-			javaFileNames.add(getFileToString(filePath));
+			javaFilesToString.add(getFileToString(filePath));
 		}
 
-		return javaFileNames;
+		return javaFilesToString;
 	}
 
 	/**

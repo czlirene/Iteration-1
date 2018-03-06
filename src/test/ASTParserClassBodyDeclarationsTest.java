@@ -2,6 +2,8 @@ package test;
 
 import static org.junit.Assert.fail;
 
+import org.eclipse.jdt.core.dom.AST;
+import org.eclipse.jdt.core.dom.ASTParser;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -22,7 +24,8 @@ public class ASTParserClassBodyDeclarationsTest {
 	 */
 	@Before
 	public void setUp() {
-		parser = ASTParser.newParser(AST.K_CLASS_BODY_DECLARATIONS);
+		parser = ASTParser.newParser(AST.JLS8);
+		parser.setKind(ASTParser.K_CLASS_BODY_DECLARATIONS);
 	}
 
 	@Test
