@@ -7,8 +7,8 @@ import java.util.Scanner;
  * a fully qualified name of a Java type. Counts the number of declarations of a
  * Java type and references of each occurrence of that type within that
  * directory.
- * 
- * 
+ *
+ *
  * @author Evan Quan
  * @since March 5, 2018
  *
@@ -17,7 +17,7 @@ public class TypeFinder {
 
 	/**
 	 * Initiates program
-	 * 
+	 *
 	 * @param args
 	 */
 	public static void main(String[] args) {
@@ -38,7 +38,16 @@ public class TypeFinder {
 
 		int declarationCount = 0;
 		int referenceCount = 0;
-		// TODO everything else! Hooray!
+		// TODO HERE
+		// Get all Java file contents
+		// Instantiate ASTParser
+		// Configure parser
+		// FOR LOOP START
+		// Have parser read all Java file contents and create needed ASTs
+		// Extract declaration and reference information from ASTs
+		// Increment declarationCount and referenceCount
+		// FOR LOOP END
+		// EZ Clap
 
 		// Final output
 		System.out.println("\n" + type + ". Declarations found: " + declarationCount + "; references found: "

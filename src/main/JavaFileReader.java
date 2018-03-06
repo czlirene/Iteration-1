@@ -10,26 +10,46 @@ import java.util.Collections;
 
 /**
  * Detects Java files in a directory. Reads source code from Java files.
- * 
+ *
  * @author Evan Quan
  * @since March 5, 2018
  */
 public class JavaFileReader {
 
 	/**
-	 * Cannot be instantiated
+	 * Reads the contents of all Java files in a given directory and returns their
+	 * contents as Strings TODO UNTESTED
+	 *
+	 * @param directory
+	 *            of interest
+	 * @return contents of all Java files as Strings
+	 * @throws IOException
+	 *             if a Java file in the directory is not able to be read
+	 * @throws DirectoryNotFoundException
+	 *             if directory cannot be found
 	 */
-	private JavaFileReader() {
+	public static ArrayList<String> getAllJavaFilesToString(String directory) throws IOException {
+		// Get all Java files
+		ArrayList<String> javaFileNames = getJavaFileNames(directory);
+
+		// Get the contents of every Java file
+		String filePath;
+		for (String javaFile : javaFileNames) {
+			filePath = directory + "/" + javaFile;
+			javaFileNames.add(getFileToString(filePath));
+		}
+
+		return javaFileNames;
 	}
 
 	/**
-	 * Reads the contents of a .java file and returns the contents as a string
-	 * 
+	 * Reads the contents of a file and returns the contents as a String
+	 *
 	 * @param path
-	 *            of .java to read
-	 * @return contents of .java file
+	 *            of file to read
+	 * @return contents of file
 	 * @throws IOException
-	 *             if file not found
+	 *             if file is not able to be read
 	 */
 	public static String getFileToString(String file) throws IOException {
 		FileReader fileReader = new FileReader(file);
@@ -37,6 +57,9 @@ public class JavaFileReader {
 		StringBuffer stringBuffer = new StringBuffer();
 		String lineSeparator = System.getProperty("line.separator");
 
+		// Keep reading line by line (and ending with a line separator)
+		// Until no more lines can be read
+		// Each line is appended to the output stringBuffer
 		try {
 			String line = bufferedReader.readLine();
 			while (line != null) {
@@ -44,7 +67,6 @@ public class JavaFileReader {
 				stringBuffer.append(lineSeparator);
 				line = bufferedReader.readLine();
 			}
-
 			return stringBuffer.toString();
 		} finally {
 			bufferedReader.close();
@@ -84,12 +106,18 @@ public class JavaFileReader {
 
 	/**
 	 * Checks if a file is a Java file
-	 * 
+	 *
 	 * @param fileName
 	 *            name of file
 	 * @return true if file is a Java file, else false
 	 */
 	public static boolean isJavaFile(String fileName) {
 		return fileName.endsWith(".java");
+	}
+
+	/**
+	 * Cannot be instantiated
+	 */
+	private JavaFileReader() {
 	}
 }

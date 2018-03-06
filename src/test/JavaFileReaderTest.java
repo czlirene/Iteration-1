@@ -2,6 +2,8 @@ package test;
 
 import static org.junit.Assert.assertEquals;
 
+//import org.eclipse.jdt.core.dom.*;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -15,7 +17,7 @@ import main.JavaFileReader;
 
 /**
  * JUnit 4 Test for JavaFileReader class
- * 
+ *
  * @author Evan Quan
  * @since March 5, 2018
  *
@@ -25,11 +27,11 @@ public class JavaFileReaderTest {
 	/**
 	 * The expected string representation of ReadMeTestClass
 	 */
-	private static String TestClassString = "package test;\n\npublic class TestClass {\n\n}\n";
+	private static String TestClassString = "package test;\n\npublic class TestClass {\n\n}\n\n";
 
 	/**
 	 * Run before each test case
-	 * 
+	 *
 	 * @throws Exception
 	 */
 	@Before
@@ -39,7 +41,7 @@ public class JavaFileReaderTest {
 	/**
 	 * Check that that a Java file in the current directory (same directory as the
 	 * JUnit tests) can be read and its contents can be converted to a string
-	 * 
+	 *
 	 * @throws IOException
 	 */
 	@Test
@@ -53,23 +55,8 @@ public class JavaFileReaderTest {
 	}
 
 	/**
-	 * Check that trying to read from a non-existing file throws a
-	 * FileNotFoundException
-	 * 
-	 * @throws IOException
-	 */
-	@Test(expected = FileNotFoundException.class)
-	public void testGetNonExistenceFile() throws IOException {
-		String invalidFilePath = "";
-		String result = "";
-		result = JavaFileReader.getFileToString(invalidFilePath);
-
-		assertEquals(TestClassString, result);
-	}
-
-	/**
 	 * Check if all the names of Java files of testPackage directory can be acquired
-	 * 
+	 *
 	 * @throws NotDirectoryException
 	 */
 	@Test
@@ -79,14 +66,14 @@ public class JavaFileReaderTest {
 
 		assertEquals("Apple.java", javaFileNames.get(0));
 		assertEquals("Banana.java", javaFileNames.get(1));
-		assertEquals("Bonobo.java", javaFileNames.get(2));
+		assertEquals("Zebra.java", javaFileNames.get(2));
 
 	}
 
 	/**
 	 * Check if a NotDirectoryException is thrown if an invalid directory argument
 	 * is used
-	 * 
+	 *
 	 * @throws NotDirectoryException
 	 */
 	@Test(expected = NotDirectoryException.class)
@@ -97,6 +84,21 @@ public class JavaFileReaderTest {
 		assertEquals("Apple.java", javaFileNames.get(0));
 		assertEquals("Banana.java", javaFileNames.get(1));
 		assertEquals("Bonobo.java", javaFileNames.get(2));
+	}
+
+	/**
+	 * Check that trying to read from a non-existing file throws a
+	 * FileNotFoundException
+	 *
+	 * @throws IOException
+	 */
+	@Test(expected = FileNotFoundException.class)
+	public void testGetNonExistenceFile() throws IOException {
+		String invalidFilePath = "";
+		String result = "";
+		result = JavaFileReader.getFileToString(invalidFilePath);
+
+		assertEquals(TestClassString, result);
 	}
 
 }

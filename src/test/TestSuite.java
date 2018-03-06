@@ -8,10 +8,12 @@ import org.junit.runners.Suite;
 /**
  * NOTE: Put all test classes here in the form: ClassName.class
  */
-@Suite.SuiteClasses({ JavaFileReaderTest.class, PassTest.class })
+@Suite.SuiteClasses({ ASTParserCompilationUnitTest.class, ASTParserClassBodyDeclarationsTest.class,
+		JavaFileReaderTest.class, PassTest.class })
+
 /**
  * Runs all test classes
- * 
+ *
  * @author Evan Quan
  *
  */
