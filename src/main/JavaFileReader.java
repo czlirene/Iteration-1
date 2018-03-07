@@ -20,7 +20,7 @@ public class JavaFileReader {
 
 	/**
 	 * Reads the contents of all Java files in a given directory and returns their
-	 * contents as Strings TODO UNTESTED
+	 * contents as Strings
 	 *
 	 * @param directory
 	 *            of interest
@@ -120,8 +120,17 @@ public class JavaFileReader {
 	}
 
 	/**
+	 * 
+	 * @return the path from the root directory to the current directory
+	 */
+	public static String getAbsolutePathToHere() {
+		return new File("").getAbsolutePath();
+	}
+
+	/**
 	 * Cannot be instantiated
 	 */
 	private JavaFileReader() {
 	}
+
 }

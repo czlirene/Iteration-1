@@ -1,5 +1,8 @@
 package main;
 
+import java.io.IOException;
+import java.nio.file.NotDirectoryException;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 /**
@@ -30,16 +33,31 @@ public class TypeFinder {
 		Scanner in = new Scanner(System.in);
 
 		// Get input from user
-		System.out.print("Absolute path of directory of interest\n(Start with \"./\" for relative path)\n> ");
+		System.out.print("Path of directory of interest\n(Start with \"./\" for relative path)\n> ");
 		String directory = in.nextLine();
 
+		try {
+			// Get all Java contents
+			ArrayList<String> javaFiles = JavaFileReader.getAllJavaFilesToString(directory);
+			// DEBUG Remove this
+			for (String file : javaFiles) {
+				System.out.println(file);
+			}
+		} catch (NotDirectoryException e) {
+			System.out.println("\"" + directory + "\" is not a valid directory.");
+			in.close();
+			return; // End program
+		} catch (IOException e) {
+			// This should never run
+			e.printStackTrace();
+		}
+
 		System.out.print("\nJava Type\n> ");
-		String type = in.next();
+		String type = in.next(); // Only considers 1 word, as types are only 1 word
 
 		int declarationCount = 0;
 		int referenceCount = 0;
 		// TODO HERE
-		// Get all Java file contents
 		// Instantiate ASTParser
 		// Configure parser
 		// FOR LOOP START

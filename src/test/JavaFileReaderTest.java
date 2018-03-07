@@ -2,12 +2,8 @@ package test;
 
 import static org.junit.Assert.assertEquals;
 
-//import org.eclipse.jdt.core.dom.*;
-
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.nio.file.DirectoryNotEmptyException;
 import java.nio.file.NotDirectoryException;
 import java.util.ArrayList;
 
@@ -43,12 +39,12 @@ public class JavaFileReaderTest {
 	 * Check that all the contents of all Java files (and only Java files) can be
 	 * retrieved as Strings from the testPackage directory
 	 * 
-	 * @throws DirectoryNotEmptyException
+	 * @throws NotDirectoryException
 	 * @throws IOException
 	 */
 	@Test
-	public void testGetAllJavaFilesToString() throws DirectoryNotEmptyException, IOException {
-		String testDirectory = new File("").getAbsolutePath().concat("/src/test/testPackage/");
+	public void testGetAllJavaFilesToStringForTestPackage() throws NotDirectoryException, IOException {
+		String testDirectory = JavaFileReader.getAbsolutePathToHere().concat("/src/test/testPackage/");
 		ArrayList<String> results = JavaFileReader.getAllJavaFilesToString(testDirectory);
 		String appleSource = "package test.testPackage;\n\npublic class Apple {\n\n}\n";
 		String bananaSource = "package test.testPackage;\n\npublic class Banana {\n\n}\n";
@@ -56,6 +52,20 @@ public class JavaFileReaderTest {
 		assertEquals(appleSource, results.get(0));
 		assertEquals(bananaSource, results.get(1));
 		assertEquals(zebraSource, results.get(2));
+	}
+
+	/**
+	 * Check that a NotDirectoryException is thrown if an invalid directory is
+	 * searched
+	 * 
+	 * @throws NotDirectoryException
+	 * @throws IOException
+	 */
+	@SuppressWarnings("unused")
+	@Test(expected = NotDirectoryException.class)
+	public void testGetAllJavaFilesToStringForInvalidDirectory() throws NotDirectoryException, IOException {
+		String invalidDirectory = "";
+		ArrayList<String> results = JavaFileReader.getAllJavaFilesToString(invalidDirectory);
 	}
 
 	/**
@@ -67,7 +77,7 @@ public class JavaFileReaderTest {
 	@Test
 	public void testGetFileToStringForCurrentDirectory() throws IOException {
 
-		String currentFilePath = new File("").getAbsolutePath().concat("/src/test/TestClass.java");
+		String currentFilePath = JavaFileReader.getAbsolutePathToHere().concat("/src/test/TestClass.java");
 		System.out.println(currentFilePath);
 		String result = JavaFileReader.getFileToString(currentFilePath);
 
@@ -80,8 +90,8 @@ public class JavaFileReaderTest {
 	 * @throws NotDirectoryException
 	 */
 	@Test
-	public void testGetJavaFileNames() throws NotDirectoryException {
-		String testDirectory = new File("").getAbsolutePath().concat("/src/test/testPackage/");
+	public void testGetJavaFileNamesForTestPackage() throws NotDirectoryException {
+		String testDirectory = JavaFileReader.getAbsolutePathToHere().concat("/src/test/testPackage/");
 		ArrayList<String> javaFileNames = JavaFileReader.getJavaFileNames(testDirectory);
 
 		assertEquals("Apple.java", javaFileNames.get(0));
@@ -96,29 +106,23 @@ public class JavaFileReaderTest {
 	 *
 	 * @throws NotDirectoryException
 	 */
+	@SuppressWarnings("unused")
 	@Test(expected = NotDirectoryException.class)
-	public void testGetJavaFileNamesInvalidDirectory() throws NotDirectoryException {
+	public void testGetJavaFileNamesForInvalidDirectory() throws NotDirectoryException {
 		String invalidDirectory = "";
 		ArrayList<String> javaFileNames = JavaFileReader.getJavaFileNames(invalidDirectory);
-
-		assertEquals("Apple.java", javaFileNames.get(0));
-		assertEquals("Banana.java", javaFileNames.get(1));
-		assertEquals("Bonobo.java", javaFileNames.get(2));
 	}
 
 	/**
-	 * Check that trying to read from a non-existing file throws a
-	 * FileNotFoundException
+	 * Check that trying to read from an invalid file throws a FileNotFoundException
 	 *
 	 * @throws IOException
 	 */
+	@SuppressWarnings("unused")
 	@Test(expected = FileNotFoundException.class)
-	public void testGetNonExistenFile() throws IOException {
+	public void testGetFileToStringForInvalidFilePath() throws IOException {
 		String invalidFilePath = "";
-		String result = "";
-		result = JavaFileReader.getFileToString(invalidFilePath);
-
-		assertEquals(TestClassString, result);
+		String result = JavaFileReader.getFileToString(invalidFilePath);
 	}
 
 }
