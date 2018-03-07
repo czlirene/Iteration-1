@@ -13,7 +13,7 @@ import org.junit.Test;
 import main.JavaFileReader;
 
 /**
- * JUnit 4 Test for JavaFileReader class
+ * JUnit 4 Test for {@link JavaFileReader} class
  *
  * @author Evan Quan
  * @since March 5, 2018
@@ -75,11 +75,11 @@ public class JavaFileReaderTest {
 	 * @throws IOException
 	 */
 	@Test
-	public void testGetFileToStringForCurrentDirectory() throws IOException {
+	public void testGetFileToStringForRelativeDirectoryPath() throws IOException {
 
-		String currentFilePath = JavaFileReader.getAbsolutePathToHere().concat("/src/test/TestClass.java");
-		System.out.println(currentFilePath);
-		String result = JavaFileReader.getFileToString(currentFilePath);
+		String relativePath = "./src/test/TestClass.java";
+		System.out.println(relativePath);
+		String result = JavaFileReader.getFileToString(relativePath);
 
 		assertEquals(TestClassString, result);
 	}

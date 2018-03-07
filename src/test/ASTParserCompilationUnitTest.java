@@ -8,7 +8,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- * JUnit 4 Tests for ASTParser configured to kind K_COMPILATION_UNIT and
+ * JUnit 4 Tests for {@link ASTParser} configured to kind K_COMPILATION_UNIT and
  * CompilationUnit
  *
  * @author Evan Quan

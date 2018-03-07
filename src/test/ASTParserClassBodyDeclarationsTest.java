@@ -8,8 +8,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 /**
- * JUnit 4 Tests for ASTParser configured to kind K_CLASS_BODY_DECLARATIONS and
- * TypeDeclaration
+ * JUnit 4 Tests for {@link ASTParser} configured to kind
+ * K_CLASS_BODY_DECLARATIONS and TypeDeclaration
  *
  * @author Evan Quan
  *
