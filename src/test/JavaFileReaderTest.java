@@ -16,7 +16,7 @@ import main.JavaFileReader;
  * JUnit 4 Test for {@link JavaFileReader} class
  *
  * @author Evan Quan
- * @since March 5, 2018
+ * @since March 8, 2018
  *
  */
 public class JavaFileReaderTest {
@@ -44,8 +44,7 @@ public class JavaFileReaderTest {
 	 */
 	@Test
 	public void testGetAllJavaFilesToStringForTestPackage() throws NotDirectoryException, IOException {
-		String testDirectory = JavaFileReader.getAbsolutePathToHere().concat("/src/test/testPackage/");
-		ArrayList<String> results = JavaFileReader.getAllJavaFilesToString(testDirectory);
+		ArrayList<String> results = JavaFileReader.getAllJavaFilesToString(TestSuite.TEST_PACKAGE_DIR);
 		String appleSource = "package test.testPackage;\n\npublic class Apple {\n\n}\n";
 		String bananaSource = "package test.testPackage;\n\npublic class Banana {\n\n}\n";
 		String zebraSource = "package test.testPackage;\n\npublic class Zebra {\n\n}\n";
@@ -76,9 +75,7 @@ public class JavaFileReaderTest {
 	 */
 	@Test
 	public void testGetFileToStringForRelativeDirectoryPath() throws IOException {
-
-		String relativePath = "./src/test/TestClass.java";
-		System.out.println(relativePath);
+		String relativePath = TestSuite.BASEDIR.concat("TestClass.java");
 		String result = JavaFileReader.getFileToString(relativePath);
 
 		assertEquals(TestClassString, result);
@@ -91,8 +88,7 @@ public class JavaFileReaderTest {
 	 */
 	@Test
 	public void testGetJavaFileNamesForTestPackage() throws NotDirectoryException {
-		String testDirectory = JavaFileReader.getAbsolutePathToHere().concat("/src/test/testPackage/");
-		ArrayList<String> javaFileNames = JavaFileReader.getJavaFileNames(testDirectory);
+		ArrayList<String> javaFileNames = JavaFileReader.getJavaFileNames(TestSuite.TEST_PACKAGE_DIR);
 
 		assertEquals("Apple.java", javaFileNames.get(0));
 		assertEquals("Banana.java", javaFileNames.get(1));

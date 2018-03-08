@@ -14,7 +14,7 @@ import java.util.Collections;
  * Retrieves source code from Java files.
  *
  * @author Evan Quan
- * @since March 5, 2018
+ * @since March 8, 2018
  */
 public class JavaFileReader {
 
@@ -117,14 +117,6 @@ public class JavaFileReader {
 	 */
 	public static boolean isJavaFile(String fileName) {
 		return fileName.endsWith(".java");
-	}
-
-	/**
-	 * 
-	 * @return the path from the root directory to the current directory
-	 */
-	public static String getAbsolutePathToHere() {
-		return new File("").getAbsolutePath();
 	}
 
 	/**

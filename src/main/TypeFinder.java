@@ -3,7 +3,6 @@ package main;
 import java.io.IOException;
 import java.nio.file.NotDirectoryException;
 import java.util.ArrayList;
-import java.util.Scanner;
 
 /**
  * Takes a pathname to indicate a directory of interest and a string to indicate
@@ -13,10 +12,14 @@ import java.util.Scanner;
  *
  *
  * @author Evan Quan
- * @since March 5, 2018
+ * @since March 8, 2018
  *
  */
 public class TypeFinder {
+
+	public static int DIRECTORY_PATH = 0;
+	public static int JAVA_TYPE = 1;
+	public static String INVALID_DIRECTORY_ERROR_MESSAGE = "Invalid directory.";
 
 	/**
 	 * Initiates program
@@ -25,16 +28,9 @@ public class TypeFinder {
 	 */
 	public static void main(String[] args) {
 
-		// Prompt user
-		System.out.println("Type Finder");
-		System.out.println(
-				"Counts the number of declarations of a Java type and number of references of each occurrence of that type within a directory.\n");
-
-		Scanner in = new Scanner(System.in);
-
-		// Get input from user
-		System.out.print("Path of directory of interest\n(Start with \"./\" for relative path)\n> ");
-		String directory = in.nextLine();
+		// Get input from command line arguments
+		String directory = args[DIRECTORY_PATH];
+		String type = args[JAVA_TYPE];
 
 		try {
 			// Get all Java contents
@@ -44,16 +40,12 @@ public class TypeFinder {
 				System.out.println(file);
 			}
 		} catch (NotDirectoryException e) {
-			System.out.println("\"" + directory + "\" is not a valid directory.");
-			in.close();
+			System.out.println(INVALID_DIRECTORY_ERROR_MESSAGE);
 			return; // End program
 		} catch (IOException e) {
 			// This should never run
 			e.printStackTrace();
 		}
-
-		System.out.print("\nJava Type\n> ");
-		String type = in.next(); // Only considers 1 word, as types are only 1 word
 
 		int declarationCount = 0;
 		int referenceCount = 0;
@@ -68,10 +60,8 @@ public class TypeFinder {
 		// EZ Clap
 
 		// Final output
-		System.out.println("\n" + type + ". Declarations found: " + declarationCount + "; references found: "
-				+ referenceCount + ".");
-
-		in.close();
+		System.out.println(
+				type + ". Declarations found: " + declarationCount + "; references found: " + referenceCount + ".");
 	}
 
 }
