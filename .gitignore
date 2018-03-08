@@ -1,5 +1,8 @@
 /bin/
 
+## Python stuff from Atom
+.ropeproject
+
 # Mac
 .DS_Store
 
