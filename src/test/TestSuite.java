@@ -21,5 +21,6 @@ import org.junit.runners.Suite;
 public class TestSuite {
 	// Base directory is the test package directory
 	public static String BASEDIR = new File("").getAbsolutePath().concat("/src/test/");
+	// test.testPackage package directory is contained in test package directory
 	public static String TEST_PACKAGE_DIR = BASEDIR.concat("testPackage/");
 }

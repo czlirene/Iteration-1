@@ -19,7 +19,8 @@ public class TypeFinder {
 
 	public static int DIRECTORY_PATH = 0;
 	public static int JAVA_TYPE = 1;
-	public static String INVALID_DIRECTORY_ERROR_MESSAGE = "Invalid directory.";
+	public static String INVALID_DIRECTORY_ERROR_MESSAGE = "Error: Invalid directory.";
+	public static String YOU_DUN_GOOFED_UP_MESSAGE = "Error: This should never run.";
 
 	/**
 	 * Initiates program
@@ -32,32 +33,36 @@ public class TypeFinder {
 		String directory = args[DIRECTORY_PATH];
 		String type = args[JAVA_TYPE];
 
+		// Get all Java file contents from directory
 		try {
-			// Get all Java contents
 			ArrayList<String> javaFiles = JavaFileReader.getAllJavaFilesToString(directory);
-			// DEBUG Remove this
-			for (String file : javaFiles) {
-				System.out.println(file);
-			}
 		} catch (NotDirectoryException e) {
-			System.out.println(INVALID_DIRECTORY_ERROR_MESSAGE);
+			System.err.println(INVALID_DIRECTORY_ERROR_MESSAGE);
 			return; // End program
 		} catch (IOException e) {
 			// This should never run
-			e.printStackTrace();
+			System.err.println(YOU_DUN_GOOFED_UP_MESSAGE);
 		}
 
-		int declarationCount = 0;
-		int referenceCount = 0;
+		// NOTE: We may need to modify the type string here if the package is
+		// included???
+
+		// Instantiate visitor
+		TypeVisitor visitor = new TypeVisitor(type);
+
 		// TODO HERE
 		// Instantiate ASTParser
 		// Configure parser
 		// FOR LOOP START
 		// Have parser read all Java file contents and create needed ASTs
 		// Extract declaration and reference information from ASTs
+		// Potentially using visitor
 		// Increment declarationCount and referenceCount
 		// FOR LOOP END
 		// EZ Clap
+
+		int declarationCount = visitor.getDeclarationCount();
+		int referenceCount = visitor.getReferenceCount();
 
 		// Final output
 		System.out.println(

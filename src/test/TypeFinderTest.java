@@ -24,6 +24,7 @@ public class TypeFinderTest {
 	 * Contents of standard output
 	 */
 	private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
+	private final ByteArrayOutputStream errContent = new ByteArrayOutputStream();
 
 	/**
 	 * outContent tracks standard output
@@ -31,11 +32,13 @@ public class TypeFinderTest {
 	@Before
 	public void setUpStream() {
 		System.setOut(new PrintStream(outContent));
+		System.setErr(new PrintStream(errContent));
 	}
 
 	@After
 	public void restoreStream() {
 		System.setOut(System.out);
+		System.setErr(System.err);
 	}
 
 	/**
@@ -49,7 +52,7 @@ public class TypeFinderTest {
 		String[] args = { invalidDirectory, type };
 		TypeFinder.main(args);
 		String expected = TypeFinder.INVALID_DIRECTORY_ERROR_MESSAGE + "\n";
-		String results = outContent.toString();
+		String results = errContent.toString();
 		assertEquals(expected, results);
 	}
 
@@ -60,6 +63,7 @@ public class TypeFinderTest {
 	@Test
 	public void testTestPackageDirectory() {
 		// TODO
+		// String results = outContents.toString():
 	}
 
 }
