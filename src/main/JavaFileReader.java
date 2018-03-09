@@ -28,7 +28,9 @@ public class JavaFileReader {
 	 * @throws DirectoryNotFoundException
 	 *             if directory cannot be found
 	 * @throws IOException
-	 *             if a Java file in the directory is not able to be read
+	 *             if a Java file in the directory is not able to be read.
+	 *             Hypothetically, this exception should never run as Java
+	 *             files that do not exist or cannot be accessed are ignored.
 	 */
 	public static ArrayList<String> getAllJavaFilesToString(String directory)
 			throws DirectoryNotEmptyException, IOException {
@@ -103,7 +105,10 @@ public class JavaFileReader {
 			}
 		}
 
-		// Sort names alphabetically, as they may not already be
+		// Sort names alphabetically, as they may not already be.
+		// NOTE for iteration 1: This is only necessary for testing
+		// by making the order of file names predictable. Otherwise,
+		// it has no meaningful effect on the results.
 		Collections.sort(javaFileNames);
 		return javaFileNames;
 	}
