@@ -14,10 +14,10 @@ Patrick Gharib
 
 Tasks
 -----
-- Detect all Java files in a directory
+- Detect all Java files in a directory (DONE)
 	- Having the user input the paths for each individual file is not enough because we need to be able to read from ALL java files in a directory
 	- Remember to check for `.java` file ending
-- Convert file contents to string
+- Convert file contents to string (DONE)
 	- Done 1 file at a time
 	- Should probably save to an ArrayList<String>
 - Configure AST parser to parse file contents

@@ -57,13 +57,39 @@ public class TypeFinderTest {
 	}
 
 	/**
+	 * Check that inputting no command line arguments returns a prompt to the user
+	 * explaining how to use the program
+	 */
+	@Test
+	public void testNoArguments() {
+		String[] args = {};
+		TypeFinder.main(args);
+		String expected = TypeFinder.PROPER_USE_MESSAGE + "\n";
+		String results = outContent.toString();
+		assertEquals(expected, results);
+	}
+
+	/**
+	 * Check that inputting 3 arguments (more arguments than what is needed) returns
+	 * a prompt to the user explaining how to use the program
+	 */
+	@Test
+	public void testThreeArguments() {
+		String[] args = { "", "", "" };
+		TypeFinder.main(args);
+		String expected = TypeFinder.PROPER_USE_MESSAGE + "\n";
+		String results = outContent.toString();
+		assertEquals(expected, results);
+	}
+
+	/**
 	 * Check that the correct number of declarations and references can be found
 	 * from the test.testPackage directory
 	 */
-	@Test
-	public void testTestPackageDirectory() {
-		// TODO
-		// String results = outContents.toString():
-	}
+	// @Test
+	// public void testTestPackageDirectory() {
+	// // TODO
+	// // String results = outContents.toString():
+	// }
 
 }

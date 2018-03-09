@@ -27,7 +27,7 @@ public class TypeFinder {
 	public static final int JAVA_TYPE = 1;
 	/**
 	 * The number of command line arguments the user needs to input in order
-	 * for the program to propertly work.
+	 * for the program to properly work.
 	 */
 	public static final int VALID_ARGUMENT_COUNT = 2;
 	/**
