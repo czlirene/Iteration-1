@@ -36,10 +36,11 @@ public class TypeFinder {
 
 		int dec_count = 0;
 		int ref_count = 0;
+		ArrayList<String> javaFiles = null;
 
 		// Get all Java file contents from directory
 		try {
-			ArrayList<String> javaFiles = JavaFileReader.getAllJavaFilesToString(directory);
+			javaFiles = JavaFileReader.getAllJavaFilesToString(directory);
 		} catch (NotDirectoryException e) {
 			System.err.println("Error: Invalid directory");
 			System.exit(0);
@@ -50,10 +51,9 @@ public class TypeFinder {
 
 		/* Create AST */
 		ASTParser parser;
-
 		for (String file : javaFiles){
 			parser = ASTParser.newParser(AST.JLS9);
-			parser.setSource(file);
+			parser.setSource(file.toCharArray());
 			parser.setKind(ASTParser.K_COMPILATION_UNIT);
 			parser.setResolveBindings(true);
 			parser.setBindingsRecovery(true);
