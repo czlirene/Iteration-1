@@ -3,7 +3,7 @@ package test;
 /**
  * Just some test stuff to be done with a main method
  * 
- * @author evan.quan
+ * @author Evan Quan
  *
  */
 public class MainTest {

@@ -44,10 +44,10 @@ public class JavaFileReaderTest {
 	 */
 	@Test
 	public void testGetAllJavaFilesToStringForTestPackage() throws NotDirectoryException, IOException {
-		ArrayList<String> results = JavaFileReader.getAllJavaFilesToString(TestSuite.TEST_PACKAGE_DIR);
-		String appleSource = "package test.testPackage;\n\npublic class Apple {\n\n}\n";
-		String bananaSource = "package test.testPackage;\n\npublic class Banana {\n\n}\n";
-		String zebraSource = "package test.testPackage;\n\npublic class Zebra {\n\n}\n";
+		ArrayList<String> results = JavaFileReader.getAllJavaFilesToString(TestSuite.JAVA_FILE_READER_TEST_DIR);
+		String appleSource = "package test.javaFileReaderTestPackage;\n\npublic class Apple {\n\n}\n";
+		String bananaSource = "package test.javaFileReaderTestPackage;\n\npublic class Banana {\n\n}\n";
+		String zebraSource = "package test.javaFileReaderTestPackage;\n\npublic class Zebra {\n\n}\n";
 		assertEquals(appleSource, results.get(0));
 		assertEquals(bananaSource, results.get(1));
 		assertEquals(zebraSource, results.get(2));
@@ -76,7 +76,7 @@ public class JavaFileReaderTest {
 	@Test
 	public void testGetFileToStringForRelativeDirectoryPath() throws IOException {
 		String relativePath = TestSuite.BASEDIR.concat("TestClass.java");
-		String result = JavaFileReader.getFileToString(relativePath);
+		String result = JavaFileReader.getFileContentsToString(relativePath);
 
 		assertEquals(TestClassString, result);
 	}
@@ -88,7 +88,7 @@ public class JavaFileReaderTest {
 	 */
 	@Test
 	public void testGetJavaFileNamesForTestPackage() throws NotDirectoryException {
-		ArrayList<String> javaFileNames = JavaFileReader.getJavaFileNames(TestSuite.TEST_PACKAGE_DIR);
+		ArrayList<String> javaFileNames = JavaFileReader.getJavaFileNames(TestSuite.JAVA_FILE_READER_TEST_DIR);
 
 		assertEquals("Apple.java", javaFileNames.get(0));
 		assertEquals("Banana.java", javaFileNames.get(1));
@@ -118,7 +118,7 @@ public class JavaFileReaderTest {
 	@Test(expected = FileNotFoundException.class)
 	public void testGetFileToStringForInvalidFilePath() throws IOException {
 		String invalidFilePath = "";
-		String result = JavaFileReader.getFileToString(invalidFilePath);
+		String result = JavaFileReader.getFileContentsToString(invalidFilePath);
 	}
 
 }

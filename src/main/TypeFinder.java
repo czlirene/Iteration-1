@@ -1,6 +1,7 @@
 package main;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.nio.file.NotDirectoryException;
 import java.util.ArrayList;
 
@@ -26,34 +27,36 @@ public class TypeFinder {
 	 */
 	public static final int JAVA_TYPE = 1;
 	/**
-	 * The number of command line arguments the user needs to input in order
-	 * for the program to properly work.
+	 * The number of command line arguments the user needs to input in order for the
+	 * program to properly work.
 	 */
 	public static final int VALID_ARGUMENT_COUNT = 2;
 	/**
-	 * Error message when the user inputs a directory that TypeFinder cannot recognize.
-	 * This may be because the directory does not exist, or is not accessible.
+	 * Error message when the user inputs a directory that TypeFinder cannot
+	 * recognize. This may be because the directory does not exist, or is not
+	 * accessible.
 	 */
 	public static final String INVALID_DIRECTORY_ERROR_MESSAGE = "Error: Invalid directory.";
 	/**
 	 * An IOException should never run (as opposed to a NotDirectoryException)
-	 * because files that cannot be accessed or do not exist are not considered
-	 * when looking for Java files in a directory anyways.
+	 * because files that cannot be accessed or do not exist are not considered when
+	 * looking for Java files in a directory anyways.
 	 */
 	public static final String YOU_DUN_GOOFED_UP_MESSAGE = "Error: This should never run.";
 	/**
-	 * Error message when the user inputs an incorrect number of command line arguments
-	 * when running the program. Prompts the user on what the program does and
-	 * how to use it properly.
+	 * Error message when the user inputs an incorrect number of command line
+	 * arguments when running the program. Prompts the user on what the program does
+	 * and how to use it properly.
 	 */
 	public static final String PROPER_USE_MESSAGE = "TypeFinder: finds the number of declarations and references of a Java type, for all Java files in a given directory.\nProper use:\njava TypeFinder <directory path> <Java type>";
 
 	/**
 	 * Initiates program
 	 *
-	 * @param args command line arguments
-	 *		args[0] path of directory of interest
-	 *		args[1] name of Java type to search for declarations and references
+	 * @param args
+	 *            command line arguments args[0] path of directory of interest
+	 *            args[1] name of Java type to search for declarations and
+	 *            references
 	 */
 	public static void main(String[] args) {
 
@@ -62,7 +65,7 @@ public class TypeFinder {
 			System.out.println(PROPER_USE_MESSAGE);
 			return; // End program
 		}
-		
+
 		// Get input from command line arguments
 		String directory = args[DIRECTORY_PATH];
 		String type = args[JAVA_TYPE];
@@ -95,8 +98,8 @@ public class TypeFinder {
 		// EZ Clap
 
 		// Save results from all traversed Java files
-		int declarationCount = visitor.getDeclarationCount();
-		int referenceCount = visitor.getReferenceCount();
+		BigInteger declarationCount = visitor.getDeclarationCount();
+		BigInteger referenceCount = visitor.getReferenceCount();
 
 		// Final output
 		System.out.println(

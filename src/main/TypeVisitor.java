@@ -1,5 +1,7 @@
 package main;
 
+import java.math.BigInteger;
+
 import org.eclipse.jdt.core.dom.ASTVisitor;
 import org.eclipse.jdt.core.dom.AbstractTypeDeclaration;
 import org.eclipse.jdt.core.dom.SimpleName;
@@ -27,24 +29,23 @@ import org.eclipse.jdt.core.dom.SimpleName;
  * same name, and input type (the argument) with its package included.
  * 
  * @author Evan Quan
- * @since March 8, 2018
+ * @since March 9, 2018
  *
  */
 public class TypeVisitor extends ASTVisitor {
 
-	private int declarationCount;
-	private int referenceCount;
+	private BigIncrementer declarationCount;
+	private BigIncrementer referenceCount;
 	private String type;
 
 	/**
 	 * Complete constructor
 	 * 
 	 * @param type
-	 *            of
 	 */
 	public TypeVisitor(String type) {
-		declarationCount = 0;
-		referenceCount = 0;
+		declarationCount = new BigIncrementer();
+		referenceCount = new BigIncrementer();
 		this.type = type;
 	}
 
@@ -64,10 +65,10 @@ public class TypeVisitor extends ASTVisitor {
 			if (name.isDeclaration()) {
 				// The node's name represents a name that is being defined, as opposed to one
 				// being referenced
-				declarationCount++;
+				declarationCount.increment();
 			} else {
 				// the name is one being referenced
-				referenceCount++;
+				referenceCount.increment();
 			}
 		}
 	}
@@ -76,16 +77,16 @@ public class TypeVisitor extends ASTVisitor {
 	 * 
 	 * @return the number of declarations of input type
 	 */
-	public int getDeclarationCount() {
-		return declarationCount;
+	public BigInteger getDeclarationCount() {
+		return declarationCount.getBigInteger();
 	}
 
 	/**
 	 * 
 	 * @return the number of reference of input type
 	 */
-	public int getReferenceCount() {
-		return referenceCount;
+	public BigInteger getReferenceCount() {
+		return referenceCount.getBigInteger();
 	}
 
 }

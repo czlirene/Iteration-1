@@ -17,13 +17,26 @@ Tasks
 - Detect all Java files in a directory (DONE)
 	- Having the user input the paths for each individual file is not enough because we need to be able to read from ALL java files in a directory
 	- Remember to check for `.java` file ending
-- Convert file contents to string (DONE)
-	- Done 1 file at a time
-	- Should probably save to an ArrayList<String>
+- Convert file contents to string
+	- Done 1 file at a time (DONE)
+	- Should probably save to an ArrayList<String> (DONE)
 - Configure AST parser to parse file contents
 	- Multiple configurations needed?
 - Get Type declaration and reference information
 	- Acquired from the outputted AST (of whatever type)
+- Error checking for user input
+	- Invalid number of arguments (DONE)
+	- Invalid directory (DONE)
+- Output
+	- Declaration/Reference count overflow (DONE)
+		- Practically impossible using BigIncrementer (DONE)
+	- Invalid input creates proper error messages
+- Directory
+	- Contains no Java files
+	- Contains 1 Java file 
+	- Contains multiple Java files (DONE)
+	- Contains non-Java files (DONE)
+	- Contains non-readable files. ie. do not have read permission
 
 Classes
 -------
@@ -40,9 +53,13 @@ ASTParser
 - Parses file contents
 
 ASTNode
-- Get declaration and reference information from file contents
+- Has declaration and reference information from file contents
 
-Do we need some sort of visitor?
+TypeVisitor
+- Get declaration and reference information from AST
+
+BigIncrementer
+- Tracks declaration and reference counts
 
 Resources
 ---------
