@@ -1,8 +1,13 @@
 package main;
 
+import java.util.*;
+
+import org.eclipse.jdt.core.dom.*;
 import org.eclipse.jdt.core.dom.ASTVisitor;
-import org.eclipse.jdt.core.dom.AbstractTypeDeclaration;
 import org.eclipse.jdt.core.dom.SimpleName;
+import org.eclipse.jdt.core.dom.AbstractTypeDeclaration;
+import org.eclipse.jdt.core.dom.IVariableBinding;
+import org.eclipse.jdt.core.dom.VariableDeclarationStatement;
 
 /**
  * The purpose of this visitor is to traverse through all the nodes and
@@ -30,62 +35,90 @@ import org.eclipse.jdt.core.dom.SimpleName;
  * @since March 8, 2018
  *
  */
+
 public class TypeVisitor extends ASTVisitor {
+	private boolean DEBUG = true;
 
-	private int declarationCount;
-	private int referenceCount;
-	private String type;
-
-	/**
-	 * Complete constructor
-	 * 
-	 * @param type
-	 *            of
-	 */
-	public TypeVisitor(String type) {
-		declarationCount = 0;
-		referenceCount = 0;
-		this.type = type;
-	}
-
-	/**
-	 * Purpose: Increments declarationCount or referenceCount if the node is of the
-	 * desired type.
-	 * 
-	 * Perhaps this is the method we want to use to increment the
-	 * declaration/reference count since its overriding a more general type
-	 * (ASTNode). Is this the right node type? Is there something more general that
-	 * would work?
-	 */
-	public void postVisit(AbstractTypeDeclaration node) {
-		SimpleName name = node.getName();
-		// Check that the node is of the desired type
-		if (name.getIdentifier().equals(type)) {
-			if (name.isDeclaration()) {
-				// The node's name represents a name that is being defined, as opposed to one
-				// being referenced
-				declarationCount++;
-			} else {
-				// the name is one being referenced
-				referenceCount++;
-			}
+	private void debug(String msg){
+		if (DEBUG) {
+			System.out.println("DEBUG >> " + msg);
 		}
 	}
 
-	/**
-	 * 
-	 * @return the number of declarations of input type
-	 */
-	public int getDeclarationCount() {
-		return declarationCount;
+	private static List<String> types;
+	private static Map<String, Integer> decCounter;
+	private static Map<String, Integer> refCounter;
+
+	// constructor, initialize lists and maps
+	public TypeVisitor(){
+		types = new ArrayList<String>();
+		decCounter = new HashMap<String, Integer>();
+		refCounter = new HashMap<String, Integer>();
 	}
 
-	/**
-	 * 
-	 * @return the number of reference of input type
-	 */
-	public int getReferenceCount() {
-		return referenceCount;
+	private static void addTypeToList(String type){
+		if (!types.contains(type)){
+			decCounter.put(type, 0);
+			refCounter.put(type, 0);
+		}
+	}
+
+	private static void incDecCount(String type){
+		// redundant check
+		if (decCounter.containsKey(type)){
+			decCounter.put(type, decCounter.get(type)+1);
+		}
+	}
+
+	private static void incRefCount(String type){
+		// redundant check
+		if (refCounter.containsKey(type)){
+			refCounter.put(type, refCounter.get(type)+1);
+		}
+	}
+
+	// Get all the declarations of Classes and Interfaces
+	public boolean visit(TypeDeclaration node){
+		ITypeBinding typeBind = node.resolveBinding();
+		String type = typeBind.getQualifiedName();
+		addTypeToList(type);
+		incDecCount(type);
+		return true;
+	}
+
+//	// get all the declaration of METHODS
+//	public boolean visit(MethodDeclaration node){
+//		ITypeBinding typeBind = node.resolveBinding();
+//		String type = typeBind.getQualifiedName();
+//
+//		return true;
+//	}
+
+	// get argument variables
+	public boolean visit(SingleVariableDeclaration node){
+		IVariableBinding varBind = node.resolveBinding();
+		ITypeBinding typeBind = varBind.getType();
+		String type = typeBind.getQualifiedName();
+		addTypeToList(type);
+	// TODO: Figure out of this is a declaration or a reference
+		return true;
+	}
+
+	public boolean visit(VariableDeclarationStatement node){
+		ITypeBinding typeBind = node.getType().resolveBinding();
+		String type = typeBind.getQualifiedName();
+		Object o = node.fragments().get(0);
+		if (o instanceof VariableDeclarationFragment){
+			String s = ((VariableDeclarationFragment) o).getName().toString();
+			System.out.println(s + " " + type);
+		}
+		// addTypeToList(type);
+		return true;
+	}
+
+
+	public Map getDecCount(){
+		return decCounter;
 	}
 
 }
