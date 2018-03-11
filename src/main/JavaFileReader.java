@@ -14,7 +14,7 @@ import java.util.Collections;
  * Retrieves source code from Java files.
  *
  * @author Evan Quan
- * @since March 8, 2018
+ * @since March 9, 2018
  */
 public class JavaFileReader {
 
@@ -29,8 +29,8 @@ public class JavaFileReader {
 	 *             if directory cannot be found
 	 * @throws IOException
 	 *             if a Java file in the directory is not able to be read.
-	 *             Hypothetically, this exception should never run as Java
-	 *             files that do not exist or cannot be accessed are ignored.
+	 *             Hypothetically, this exception should never run as Java files
+	 *             that do not exist or cannot be accessed are ignored.
 	 */
 	public static ArrayList<String> getAllJavaFilesToString(String directory)
 			throws DirectoryNotEmptyException, IOException {
@@ -42,14 +42,15 @@ public class JavaFileReader {
 		String filePath;
 		for (String javaFile : javaFileNames) {
 			filePath = directory + "/" + javaFile;
-			javaFilesToString.add(getFileToString(filePath));
+			javaFilesToString.add(getFileContentsToString(filePath));
 		}
 
 		return javaFilesToString;
 	}
 
 	/**
-	 * Reads the contents of a file and returns the contents as a String
+	 * Reads the contents of a file with a given path and returns the contents of
+	 * that file as a String.
 	 *
 	 * @param path
 	 *            of file to read
@@ -57,7 +58,7 @@ public class JavaFileReader {
 	 * @throws IOException
 	 *             if file is not able to be read
 	 */
-	public static String getFileToString(String file) throws IOException {
+	public static String getFileContentsToString(String file) throws IOException {
 		FileReader fileReader = new FileReader(file);
 		BufferedReader bufferedReader = new BufferedReader(fileReader);
 		StringBuffer stringBuffer = new StringBuffer();
@@ -126,6 +127,10 @@ public class JavaFileReader {
 
 	/**
 	 * Cannot be instantiated
+	 * 
+	 * NOTE: As it stands now, this class has no fields (only has methods), making
+	 * instantiation unnecessary. If later down the road, fields are necessary,
+	 * allow class to be instantiated and make methods no longer static as needed.
 	 */
 	private JavaFileReader() {
 	}
