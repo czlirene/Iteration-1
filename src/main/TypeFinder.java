@@ -60,79 +60,86 @@ public class TypeFinder {
 		/* Create AST */
 
 		ASTParser parser;
-// 		String file = 
-// "import static org.junit.Assert.*;" +
-// "import static org.mockito.Mockito.*;" +
-// "import org.junit.After;" +
-// "import org.junit.Before;" +
-// "import org.junit.Test;" +
-// "import org.eclipse.jdt.core.ICompilationUnit;" +
-// "import org.eclipse.jdt.core.dom.AST;" +
-// "import org.eclipse.jdt.core.dom.ASTParser;" +
-// "import org.eclipse.jdt.core.dom.CompilationUnit;" +
-// "public class ASTParser_Tests {" +
-// "	" +
-// "	private ASTParser parser;" +
-// "	" +
-// "	@After" +
-// "	public void tearDown() throws Exception {" +
-// "		parser = null;" +
-// "	}" +
-// "	@Test" +
-// "	public void testCompilationUnitSource() {" +
-// "		parser = ASTParser.newParser(AST.JLS8);" +
-// "		parser.setSource(mock(ICompilationUnit.class));" +
-// "		assertNotNull(parser.createAST(null));" +
-// "	}" +
+		/* String file = 
+"import static org.junit.Assert.*;" +
+"import static org.mockito.Mockito.*;" +
+"import org.junit.After;" +
+"import org.junit.Before;" +
+"import org.junit.Test;" +
+"import org.eclipse.jdt.core.ICompilationUnit;" +
+"import org.eclipse.jdt.core.dom.AST;" +
+"import org.eclipse.jdt.core.dom.ASTParser;" +
+"import org.eclipse.jdt.core.dom.CompilationUnit;" +
+"public class ASTParser_Tests {" +
+"	" +
+"	private ASTParser parser;" +
+"	" +
+"	@After" +
+"	public void tearDown() throws Exception {" +
+"		parser = null;" +
+"	}" +
+"	@Test" +
+"	public void testCompilationUnitSource() {" +
+"		parser = ASTParser.newParser(AST.JLS8);" +
+"		parser.setSource(mock(ICompilationUnit.class));" +
+"		assertNotNull(parser.createAST(null));" +
+"		CompilationUnit cu = parser.createAST(null);" +
+"		cu.accept(new ASTVisitor() {" +
+"			public boolean visit(Assignment node) {" +
+"				}" +
+"			});" +
+"	}" +
+"}"; */
+// 		String file = "package main;" +
+// "import java.util.*;" +
+// "public class MoreTest {" +
+// "		" +
+// "			enum Quark{ UP, DOWN};" +
+// "		public static int add(int a, int b){" +
+// "			int c = a+b;" +
+// "			String wtf = \"hey\";" +
+// "			System.out.println(wtf);" +
+// "			Integer w = 4;" +
+// "			Time shiballs;" +
+// "			return c;" +
+// "		}" +
+// "		" +
+// "		public boolean equals(int i, int j) {" +
+// "			return i == j;" +
+// "		}" +
+// "		" +
+// "		private class Test extends MoreTest{" +
+// "			@Override" +
+// "			public boolean equals(int newI, int newJ) {" +
+// "				return false;" +
+// "			}" +
+// "			" +
+// "			public int fck(int x, int y){" +
+// "				int t = x+y;" +
+// "				return t;" +
+// "			}" +
+// "		}" +
+// "		public static void main (String args[]) {" +
+// "			int fin = add(1,2);" +
+// "		}" +
+// "		public static int d;" +
+// "		public List<String> hello;" +
+// "		public Map<String, Integer> sup;" +
 // "}";
-		String file = "package main;" +
-"import java.util.*;" +
-"public class MoreTest {" +
-"		" +
-"		public static int add(int a, int b){" +
-"			int c = a+b;" +
-"			String wtf = \"hey\";" +
-"			System.out.println(wtf);" +
-"			Integer w = 4;" +
-"			return c;" +
-"		}" +
-"		" +
-"		public boolean equals(int i, int j) {" +
-"			return i == j;" +
-"		}" +
-"		" +
-"		private class Test extends MoreTest{" +
-"			@Override" +
-"			public boolean equals(int newI, int newJ) {" +
-"				return false;" +
-"			}" +
-"			" +
-"			public int fck(int x, int y){" +
-"				int t = x+y;" +
-"				return t;" +
-"			}" +
-"		}" +
-"		public static void main (String args[]) {" +
-"			int fin = add(1,2);" +
-"		}" +
-"		public static int d;" +
-"		public List<String> hello;" +
-"		public Map<String, Integer> sup;" +
-"}";
 		
-		// String file = "public class DoesItWork{\n"
-		// 				+ "private class MaybeWorks{} \n"
-		// 				+ "public void add(){ 1 + 1; }"
-		// 				+ "public void add2(){ add() }"
-		// 				+ "String a;"
-		// 				+ "a = \"Hello\";"
-		// 				+ "int b;"
-		// 				+ "char c;"
-		// 				+ "int d;"
-		// 				+ "Time e;"
-		// 				+ "enum Quark{ UP, DOWN}"
-		// 				+ "}\n"
-		// 				+ "interface PleaseWork{}\n";
+		String file = "public class DoesItWork{\n"
+						+ "private class MaybeWorks{} \n"
+						+ "public void add(){ 1 + 1; }"
+						+ "public void add2(){ add() }"
+						+ "String a;"
+						+ "a = \"Hello\";"
+						+ "int b;"
+						+ "char c;"
+						+ "int d;"
+						+ "Time e;"
+						+ "enum Quark{ UP, DOWN}"
+						+ "}\n"
+						+ "interface PleaseWork{}\n";
 		
 		// String file = "package test;\n" + 
 		// 		" \n" + 
