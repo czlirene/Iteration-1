@@ -1,4 +1,6 @@
+## Eclipse
 /bin/
+.classpath
 
 ## Python stuff from Atom
 .ropeproject
