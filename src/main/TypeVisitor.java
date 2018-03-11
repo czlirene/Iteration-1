@@ -102,7 +102,26 @@ public class TypeVisitor extends ASTVisitor {
 	// 	return true;
 	// }
 
-/* 	public boolean visit(EnumDeclaration node){
+	/** 
+		ClassInstanceCreation; {expr} = new {type}
+		Given how we're instantiating a new class, all of these will be considered as declarations.
+		Counter: Declaration
+	 */
+	public boolean visit(ClassInstanceCreation node){
+		ITypeBinding typeBind = node.resolveTypeBinding();
+		String type = typeBind.getQualifiedName();
+
+		/* Debug ONLY: Get the parent variable name if it exists */
+		String parent = ((VariableDeclarationFragment) node.getParent()).getName().toString();
+		debug(parent ,type);
+
+		addTypeToList(type);
+		incDecCount(type);
+
+		return true;
+	}
+
+	public boolean visit(EnumDeclaration node){
 		ITypeBinding typeBind = node.resolveBinding();
 		String type = typeBind.getQualifiedName();
 
@@ -110,7 +129,7 @@ public class TypeVisitor extends ASTVisitor {
 		incDecCount(type);
 
 		return true;
-	} */
+	}
 
 	/**
 		Field declaration nodes
@@ -152,7 +171,7 @@ public class TypeVisitor extends ASTVisitor {
 			e.g. @Test from org.junit.Test only appears as Test
 		TODO: Determine if declaration or reference
 	*/
-/* 	public boolean visit(MarkerAnnotation node){
+	public boolean visit(MarkerAnnotation node){
 
 		IAnnotationBinding annBind = node.resolveAnnotationBinding();
 		ITypeBinding typeBind = annBind.getAnnotationType();
@@ -163,7 +182,7 @@ public class TypeVisitor extends ASTVisitor {
 		// incDecCount(type);
 		// incRefCount(type);
 		return true;
-	} */
+	}
 
 	/**
 		SingleVariableDeclaration; formal parameter lists, and catch clause variables
@@ -171,7 +190,7 @@ public class TypeVisitor extends ASTVisitor {
 		
 		TODO: Confirm Non-primitive type COUNTER
 	*/
-/* 	public boolean visit(SingleVariableDeclaration node){
+	public boolean visit(SingleVariableDeclaration node){
 		IVariableBinding varBind = node.resolveBinding();
 		ITypeBinding typeBind = varBind.getType();
 		String type = typeBind.getQualifiedName();
@@ -181,7 +200,7 @@ public class TypeVisitor extends ASTVisitor {
 		addTypeToList(type);
 		// check if node is of primitive type
 		if (node.getType().isPrimitiveType()){
-			debug(name + " is PRIMITIVE TYPE");
+			debug(node.getName().toString() + " is PRIMITIVE TYPE");
 			// increase reference count
 			incRefCount(type);
 		} else {
@@ -191,14 +210,14 @@ public class TypeVisitor extends ASTVisitor {
 
 		return true;
 	}
- */
+
 
 	/**
 		TypeDeclaration; union of class and interface declaration nodes
 		Status: Done
 		TODO: Confirm they are only DECLARATIONS
 	*/
-/* 	public boolean visit(TypeDeclaration node){
+	public boolean visit(TypeDeclaration node){
 		ITypeBinding typeBind = node.resolveBinding();
 		String type = typeBind.getQualifiedName();
 
@@ -208,9 +227,9 @@ public class TypeVisitor extends ASTVisitor {
 		incDecCount(type);
 
 		return true;
-	} */
+	}
 
-
+/* TODO: find out if we still need this method */
 // 	public boolean visit(VariableDeclarationFragment node){
 // 		IVariableBinding varBind = node.resolveBinding();
 // 		ITypeBinding typeBind = varBind.getType();
@@ -225,36 +244,22 @@ public class TypeVisitor extends ASTVisitor {
 // 		return true;
 // 	}
 
-	public boolean visit(ClassInstanceCreation node){
-		// IMethodBinding methBind = node.resolveConstructorBinding();
-		ITypeBinding typeBind = node.resolveTypeBinding();
-		// ITypeBinding typeBind = methBind.getDeclaredReceiverType();
-		String type = typeBind.getQualifiedName();
-
-		String parent = ((VariableDeclarationFragment) node.getParent()).getName().toString();
-		debug(parent ,type);
-
-		addTypeToList(type);
-		incDecCount(type);
-
-		return true;
-	}
-
 	/**
 		VariableDeclarationStatement; local variable declaration statement nodes.
 		ADDED: Distinction between Primitive type and others.
 
 		TODO: Confirm Non-primitive type only count as REFERENCES
 	 */
-	/* public boolean visit(VariableDeclarationStatement node){
+	public boolean visit(VariableDeclarationStatement node){
 		ITypeBinding typeBind = node.getType().resolveBinding();
 		String type = typeBind.getQualifiedName();
 		
 		// debugging purpose, get the actual variable name
 		// print out (varName, varType)
 		Object o = node.fragments().get(0);
+		String name = "";
 		if (o instanceof VariableDeclarationFragment){
-			String name = ((VariableDeclarationFragment) o).getName().toString();
+			name = ((VariableDeclarationFragment) o).getName().toString();
 			debug(name, type);
 		}
 
@@ -271,7 +276,7 @@ public class TypeVisitor extends ASTVisitor {
 		}
 
 		return true;
-	} */
+	}
 
 
 	public Map getDecCount(){
@@ -280,5 +285,9 @@ public class TypeVisitor extends ASTVisitor {
 
 	public Map getRefCount(){
 		return refCounter;
+	}
+
+	public List getList(){
+		return types;
 	}
 }

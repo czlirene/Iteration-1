@@ -127,20 +127,34 @@ public class TypeFinder {
 // "		public Map<String, Integer> sup;" +
 // "}";
 
-		String file = "public class DoesItWork{\n"
-						// + "private class MaybeWorks{} \n"
-						// + "public void add(){ 1 + 1; }"
-						// + "public void add2(){ add() }"
+		String file =  "public class DoesItWork{\n"
++ "private class MaybeWorks{} \n"
++ "public void add(){ 1 + 1; }"
++ "public void add2(){ add() }"
++ "String a;"
++ "a = \"Hello\";"
++ "int b;"
++ "char c;"
++ "int d;"
++ "Time e;"
++ "enum Quark{ UP, DOWN}"
++ "}\n"
++ "interface PleaseWork{}\n";
+/* 		String file = "public class DoesItWork{\n"
+						+ "private class MaybeWorks{} \n"
+						+ "public void add(){ 1 + 1; }"
+						+ "public void add2(){ add() }"
 						+ "String j = new String (\"FOO\");"
-						+ "DoesItWork k = new DoesItWork(AST.JLS9);"
-						// + "a = \"Hello\";"
-						// + "int b;"
-						// + "char c;"
-						// + "int d;"
-						// + "Time e;"
-						// + "enum Quark{ UP, DOWN}"
-						// + "}\n"
-						+ "interface PleaseWork{}\n";
+						// + "DoesItWork k = new DoesItWork(AST.JLS9);"
+						+ "String a;"
+						+ "a = \"Hello\";"
+						+ "int b;"
+						+ "char c;"
+						+ "int d;"
+						+ "Time e;"
+						 + "enum Quark{ UP, DOWN}"
+						+ "}\n"
+						+ "interface PleaseWork{}\n"; */
 		
 		// String file = "package test;\n" + 
 		// 		" \n" + 
@@ -170,16 +184,22 @@ public class TypeFinder {
 			TypeVisitor visitor = new TypeVisitor();
 			cu.accept(visitor);
 			
-			System.out.println("========== DECLARATION COUNT ==========");
+			// System.out.println("========== DECLARATION COUNT ==========");
+			System.out.println("========== COUNT ==========");
+			List<String> keys = visitor.getList();
 			Map<String, Integer> decCounter = visitor.getDecCount();
-			for (Map.Entry<String, Integer> kv : decCounter.entrySet()){
-				System.out.println(kv.getKey() + ". Declarations found: " + kv.getValue());
-			}
-			System.out.println("========== REFERENCE COUNT ==========");
 			Map<String, Integer> refCounter = visitor.getRefCount();
-			for (Map.Entry<String, Integer> kv : refCounter.entrySet()){
-				System.out.println(kv.getKey() + ". References found: " + kv.getValue());
+
+			for (String key : keys){
+				System.out.println(key + ". Declarations found: " + decCounter.get(key) + "; References found: " + refCounter.get(key) );
 			}
+			// for (Map.Entry<String, Integer> kv : decCounter.entrySet()){
+			// 	System.out.println(kv.getKey() + ". Declarations found: " + kv.getValue());
+			// }
+			// System.out.println("========== REFERENCE COUNT ==========");
+			// for (Map.Entry<String, Integer> kv : refCounter.entrySet()){
+			// 	System.out.println(kv.getKey() + ". References found: " + kv.getValue());
+			// }
 		// }
 
 	}
