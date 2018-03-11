@@ -58,34 +58,34 @@ public class TypeFinder {
 		int ref_count = 0;
 
 		/* Create AST */
-//		PrimitiveType, SimpleType, AnnotationType,
+
 		ASTParser parser;
-		String file = 
-"import static org.junit.Assert.*;" +
-"import static org.mockito.Mockito.*;" +
-"import org.junit.After;" +
-"import org.junit.Before;" +
-"import org.junit.Test;" +
-"import org.eclipse.jdt.core.ICompilationUnit;" +
-"import org.eclipse.jdt.core.dom.AST;" +
-"import org.eclipse.jdt.core.dom.ASTParser;" +
-"import org.eclipse.jdt.core.dom.CompilationUnit;" +
-"public class ASTParser_Tests {" +
-"	" +
-"	private ASTParser parser;" +
-"	" +
-"	@After" +
-"	public void tearDown() throws Exception {" +
-"		parser = null;" +
-"	}" +
-"	@Test" +
-"	public void testCompilationUnitSource() {" +
-"		parser = ASTParser.newParser(AST.JLS8);" +
-"		parser.setSource(mock(ICompilationUnit.class));" +
-"		assertNotNull(parser.createAST(null));" +
-"	}" +
-"}";
-/* 		String file = "package main;" +
+// 		String file = 
+// "import static org.junit.Assert.*;" +
+// "import static org.mockito.Mockito.*;" +
+// "import org.junit.After;" +
+// "import org.junit.Before;" +
+// "import org.junit.Test;" +
+// "import org.eclipse.jdt.core.ICompilationUnit;" +
+// "import org.eclipse.jdt.core.dom.AST;" +
+// "import org.eclipse.jdt.core.dom.ASTParser;" +
+// "import org.eclipse.jdt.core.dom.CompilationUnit;" +
+// "public class ASTParser_Tests {" +
+// "	" +
+// "	private ASTParser parser;" +
+// "	" +
+// "	@After" +
+// "	public void tearDown() throws Exception {" +
+// "		parser = null;" +
+// "	}" +
+// "	@Test" +
+// "	public void testCompilationUnitSource() {" +
+// "		parser = ASTParser.newParser(AST.JLS8);" +
+// "		parser.setSource(mock(ICompilationUnit.class));" +
+// "		assertNotNull(parser.createAST(null));" +
+// "	}" +
+// "}";
+		String file = "package main;" +
 "import java.util.*;" +
 "public class MoreTest {" +
 "		" +
@@ -118,7 +118,7 @@ public class TypeFinder {
 "		public static int d;" +
 "		public List<String> hello;" +
 "		public Map<String, Integer> sup;" +
-"}"; */
+"}";
 		
 		// String file = "public class DoesItWork{\n"
 		// 				+ "private class MaybeWorks{} \n"
@@ -162,10 +162,16 @@ public class TypeFinder {
 			TypeVisitor visitor = new TypeVisitor();
 			cu.accept(visitor);
 			
-			Map decCounter = visitor.getDecCount();
-			System.out.println(decCounter.toString());
-			Map refCounter = visitor.getRefCount();
-			System.out.println(refCounter.toString());
+			System.out.println("========== DECLARATION COUNT ==========");
+			Map<String, Integer> decCounter = visitor.getDecCount();
+			for (Map.Entry<String, Integer> kv : decCounter.entrySet()){
+				System.out.println(kv.getKey() + ". Declarations found: " + kv.getValue());
+			}
+			System.out.println("========== REFERENCE COUNT ==========");
+			Map<String, Integer> refCounter = visitor.getRefCount();
+			for (Map.Entry<String, Integer> kv : refCounter.entrySet()){
+				System.out.println(kv.getKey() + ". References found: " + kv.getValue());
+			}
 		// }
 
 	}
