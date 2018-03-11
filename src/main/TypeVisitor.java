@@ -3,10 +3,6 @@ package main;
 import java.util.*;
 
 import org.eclipse.jdt.core.dom.*;
-import org.eclipse.jdt.core.dom.ASTVisitor;
-import org.eclipse.jdt.core.dom.AbstractTypeDeclaration;
-import org.eclipse.jdt.core.dom.IVariableBinding;
-import org.eclipse.jdt.core.dom.VariableDeclarationStatement;
 
 
 /* List of visit(X nodes) that I don't need:
@@ -106,7 +102,7 @@ public class TypeVisitor extends ASTVisitor {
 	// 	return true;
 	// }
 
-	public boolean visit(EnumDeclaration node){
+/* 	public boolean visit(EnumDeclaration node){
 		ITypeBinding typeBind = node.resolveBinding();
 		String type = typeBind.getQualifiedName();
 
@@ -114,7 +110,7 @@ public class TypeVisitor extends ASTVisitor {
 		incDecCount(type);
 
 		return true;
-	}
+	} */
 
 	/**
 		Field declaration nodes
@@ -142,8 +138,8 @@ public class TypeVisitor extends ASTVisitor {
 			// increase reference count
 			incRefCount(type);
 		} else {
-			// otherwise, increase declaration count
-			incDecCount(type);
+			// otherwise, increase reference count
+			incRefCount(type);
 		}
 		return true;
 	}
@@ -156,7 +152,7 @@ public class TypeVisitor extends ASTVisitor {
 			e.g. @Test from org.junit.Test only appears as Test
 		TODO: Determine if declaration or reference
 	*/
-	public boolean visit(MarkerAnnotation node){
+/* 	public boolean visit(MarkerAnnotation node){
 
 		IAnnotationBinding annBind = node.resolveAnnotationBinding();
 		ITypeBinding typeBind = annBind.getAnnotationType();
@@ -167,7 +163,7 @@ public class TypeVisitor extends ASTVisitor {
 		// incDecCount(type);
 		// incRefCount(type);
 		return true;
-	}
+	} */
 
 	/**
 		SingleVariableDeclaration; formal parameter lists, and catch clause variables
@@ -175,7 +171,7 @@ public class TypeVisitor extends ASTVisitor {
 		
 		TODO: Confirm Non-primitive type COUNTER
 	*/
-	public boolean visit(SingleVariableDeclaration node){
+/* 	public boolean visit(SingleVariableDeclaration node){
 		IVariableBinding varBind = node.resolveBinding();
 		ITypeBinding typeBind = varBind.getType();
 		String type = typeBind.getQualifiedName();
@@ -195,14 +191,14 @@ public class TypeVisitor extends ASTVisitor {
 
 		return true;
 	}
-
+ */
 
 	/**
 		TypeDeclaration; union of class and interface declaration nodes
 		Status: Done
 		TODO: Confirm they are only DECLARATIONS
 	*/
-	public boolean visit(TypeDeclaration node){
+/* 	public boolean visit(TypeDeclaration node){
 		ITypeBinding typeBind = node.resolveBinding();
 		String type = typeBind.getQualifiedName();
 
@@ -212,8 +208,37 @@ public class TypeVisitor extends ASTVisitor {
 		incDecCount(type);
 
 		return true;
-	}
+	} */
 
+
+// 	public boolean visit(VariableDeclarationFragment node){
+// 		IVariableBinding varBind = node.resolveBinding();
+// 		ITypeBinding typeBind = varBind.getType();
+// 		String type = typeBind.getQualifiedName();
+// 		String name = node.getName().toString();
+// 		debug(name, type);
+// 		ChildPropertyDescriptor initializer = node.getInitializerProperty();
+
+// 		if (initializer != null){
+// 			System.out.println(initializer.toString());
+// }
+// 		return true;
+// 	}
+
+	public boolean visit(ClassInstanceCreation node){
+		// IMethodBinding methBind = node.resolveConstructorBinding();
+		ITypeBinding typeBind = node.resolveTypeBinding();
+		// ITypeBinding typeBind = methBind.getDeclaredReceiverType();
+		String type = typeBind.getQualifiedName();
+
+		String parent = ((VariableDeclarationFragment) node.getParent()).getName().toString();
+		debug(parent ,type);
+
+		addTypeToList(type);
+		incDecCount(type);
+
+		return true;
+	}
 
 	/**
 		VariableDeclarationStatement; local variable declaration statement nodes.
@@ -221,7 +246,7 @@ public class TypeVisitor extends ASTVisitor {
 
 		TODO: Confirm Non-primitive type only count as REFERENCES
 	 */
-	public boolean visit(VariableDeclarationStatement node){
+	/* public boolean visit(VariableDeclarationStatement node){
 		ITypeBinding typeBind = node.getType().resolveBinding();
 		String type = typeBind.getQualifiedName();
 		
@@ -246,7 +271,8 @@ public class TypeVisitor extends ASTVisitor {
 		}
 
 		return true;
-	}
+	} */
+
 
 	public Map getDecCount(){
 		return decCounter;

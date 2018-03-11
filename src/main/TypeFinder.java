@@ -126,19 +126,20 @@ public class TypeFinder {
 // "		public List<String> hello;" +
 // "		public Map<String, Integer> sup;" +
 // "}";
-		
+
 		String file = "public class DoesItWork{\n"
-						+ "private class MaybeWorks{} \n"
-						+ "public void add(){ 1 + 1; }"
-						+ "public void add2(){ add() }"
-						+ "String a;"
-						+ "a = \"Hello\";"
-						+ "int b;"
-						+ "char c;"
-						+ "int d;"
-						+ "Time e;"
-						+ "enum Quark{ UP, DOWN}"
-						+ "}\n"
+						// + "private class MaybeWorks{} \n"
+						// + "public void add(){ 1 + 1; }"
+						// + "public void add2(){ add() }"
+						+ "String j = new String (\"FOO\");"
+						+ "DoesItWork k = new DoesItWork(AST.JLS9);"
+						// + "a = \"Hello\";"
+						// + "int b;"
+						// + "char c;"
+						// + "int d;"
+						// + "Time e;"
+						// + "enum Quark{ UP, DOWN}"
+						// + "}\n"
 						+ "interface PleaseWork{}\n";
 		
 		// String file = "package test;\n" + 

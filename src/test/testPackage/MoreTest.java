@@ -3,18 +3,19 @@ import java.util.*;
 
 public class MoreTest {
 	public class DoesItWork{
-		private class MaybeWorks{} 
-		public void add(){ 1 + 1; }
-		public void add2(){ add() }
-		String a;
-		a ="Hello";
-		int b;
-		char c;
-		int d;
-		Time e;
-		enum Quark{ UP, DOWN};
+//		private class MaybeWorks{} 
+//		public void add(){ 1 + 1; }
+//		public void add2(){ add() }
+		String a = new String("FOOBAR");
+		String k = "Hey";
+		//a ="Hello";
+//		int b;
+//		char c;
+//		int d;
+//		Time e;
+//		enum Quark{ UP, DOWN};
 		}
-		interface PleaseWork{}
+//		interface PleaseWork{}
 		
 		public static void main (String args[]) {
 			int fin = add(1,2);
