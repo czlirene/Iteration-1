@@ -121,9 +121,15 @@ public class TypeVisitor extends ASTVisitor {
 		return true;
 	}
 
+	/**
+		EnumDeclaration; enum ID {...}
+		Counter: Declaration
+	 */
 	public boolean visit(EnumDeclaration node){
 		ITypeBinding typeBind = node.resolveBinding();
 		String type = typeBind.getQualifiedName();
+
+		debug("enum", type);
 
 		addTypeToList(type);
 		incDecCount(type);

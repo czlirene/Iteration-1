@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.nio.file.NotDirectoryException;
 import java.util.*;
 
+import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.dom.*;
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTParser;
@@ -129,17 +130,17 @@ public class TypeFinder {
 
 		String file =  "public class DoesItWork{\n"
 + "private class MaybeWorks{} \n"
-+ "public void add(){ 1 + 1; }"
-+ "public void add2(){ add() }"
-+ "String a;"
-+ "a = \"Hello\";"
-+ "int b;"
-+ "char c;"
-+ "int d;"
-+ "Time e;"
-+ "enum Quark{ UP, DOWN}"
-+ "}\n"
-+ "interface PleaseWork{}\n";
+// + "public void add(){ 1 + 1; }"
+// + "public void add2(){ add() }"
+// + "String a;"
+// + "a = \"Hello\";"
+// + "int b;"
+// + "char c;"
+// + "int d;"
+// + "Time e;"
++ "enum Quark{UP, DOWN}"
++ "}\n";
+// + "interface PleaseWork{}\n";
 /* 		String file = "public class DoesItWork{\n"
 						+ "private class MaybeWorks{} \n"
 						+ "public void add(){ 1 + 1; }"
@@ -178,6 +179,13 @@ public class TypeFinder {
 			// these two are needed for binding to be resolved due to SOURCE is a char[]
 			parser.setEnvironment(null, null, null, true);
 			parser.setUnitName("Name");
+			
+			// ensures nodes are being parsed properly
+			Map options = JavaCore.getOptions();
+			options.put(JavaCore.COMPILER_COMPLIANCE, JavaCore.VERSION_1_8);
+			options.put(JavaCore.COMPILER_CODEGEN_TARGET_PLATFORM, JavaCore.VERSION_1_8);
+			options.put(JavaCore.COMPILER_SOURCE, JavaCore.VERSION_1_8);
+			parser.setCompilerOptions(options);
 
 			final CompilationUnit cu = (CompilationUnit) parser.createAST(null);
 			
