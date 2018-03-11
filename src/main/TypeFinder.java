@@ -60,26 +60,65 @@ public class TypeFinder {
 		/* Create AST */
 //		PrimitiveType, SimpleType, AnnotationType,
 		ASTParser parser;
-		String file = "package main;" +
+		String file = 
+"import static org.junit.Assert.*;" +
+"import static org.mockito.Mockito.*;" +
+"import org.junit.After;" +
+"import org.junit.Before;" +
+"import org.junit.Test;" +
+"import org.eclipse.jdt.core.ICompilationUnit;" +
+"import org.eclipse.jdt.core.dom.AST;" +
+"import org.eclipse.jdt.core.dom.ASTParser;" +
+"import org.eclipse.jdt.core.dom.CompilationUnit;" +
+"public class ASTParser_Tests {" +
+"	" +
+"	private ASTParser parser;" +
+"	" +
+"	@After" +
+"	public void tearDown() throws Exception {" +
+"		parser = null;" +
+"	}" +
+"	@Test" +
+"	public void testCompilationUnitSource() {" +
+"		parser = ASTParser.newParser(AST.JLS8);" +
+"		parser.setSource(mock(ICompilationUnit.class));" +
+"		assertNotNull(parser.createAST(null));" +
+"	}" +
+"}";
+/* 		String file = "package main;" +
 "import java.util.*;" +
 "public class MoreTest {" +
-"		public int add(int a, int b){" +
+"		" +
+"		public static int add(int a, int b){" +
 "			int c = a+b;" +
 "			String wtf = \"hey\";" +
 "			System.out.println(wtf);" +
 "			Integer w = 4;" +
 "			return c;" +
 "		}" +
-"		public class Test {" +
-"			public int add(int x, int y){" +
+"		" +
+"		public boolean equals(int i, int j) {" +
+"			return i == j;" +
+"		}" +
+"		" +
+"		private class Test extends MoreTest{" +
+"			@Override" +
+"			public boolean equals(int newI, int newJ) {" +
+"				return false;" +
+"			}" +
+"			" +
+"			public int fck(int x, int y){" +
 "				int t = x+y;" +
 "				return t;" +
 "			}" +
 "		}" +
+"		public static void main (String args[]) {" +
+"			int fin = add(1,2);" +
+"		}" +
 "		public static int d;" +
 "		public List<String> hello;" +
-"		public Map<String, Integer> sup" +
-"}";
+"		public Map<String, Integer> sup;" +
+"}"; */
 		
 		// String file = "public class DoesItWork{\n"
 		// 				+ "private class MaybeWorks{} \n"
