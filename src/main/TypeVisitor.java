@@ -140,7 +140,7 @@ public class TypeVisitor extends ASTVisitor {
 	/**
 		Field declaration nodes
 		ADDED: Support distinction between Primitive Data types (Reference Only) and others (TBD).
-
+		CHANGED: these should ALL be references..
 		TODO: Confirm Non-Primitive are REF/DECL.
 	*/
 	public boolean visit(FieldDeclaration node){
@@ -171,11 +171,9 @@ public class TypeVisitor extends ASTVisitor {
 
 	/**
 		Marker annotation nodes: @TypeName
-		Status: WIP - Need to find out if FULL QUALIFIED NAME is doable
 		TODO: Check if AnnotationTypeDeclaration is still needed
 		TODO: Cannot recognize full qualified name 
 			e.g. @Test from org.junit.Test only appears as Test
-		TODO: Determine if declaration or reference
 	*/
 	public boolean visit(MarkerAnnotation node){
 
@@ -185,8 +183,7 @@ public class TypeVisitor extends ASTVisitor {
 		debug("", type);
 
 		addTypeToList(type);
-		// incDecCount(type);
-		// incRefCount(type);
+		incRefCount(type);
 		return true;
 	}
 
@@ -235,21 +232,6 @@ public class TypeVisitor extends ASTVisitor {
 		return true;
 	}
 
-/* TODO: find out if we still need this method */
-// 	public boolean visit(VariableDeclarationFragment node){
-// 		IVariableBinding varBind = node.resolveBinding();
-// 		ITypeBinding typeBind = varBind.getType();
-// 		String type = typeBind.getQualifiedName();
-// 		String name = node.getName().toString();
-// 		debug(name, type);
-// 		ChildPropertyDescriptor initializer = node.getInitializerProperty();
-
-// 		if (initializer != null){
-// 			System.out.println(initializer.toString());
-// }
-// 		return true;
-// 	}
-
 	/**
 		VariableDeclarationStatement; local variable declaration statement nodes.
 		ADDED: Distinction between Primitive type and others.
@@ -297,3 +279,19 @@ public class TypeVisitor extends ASTVisitor {
 		return types;
 	}
 }
+
+
+/* TODO: find out if we still need this method */
+// 	public boolean visit(VariableDeclarationFragment node){
+// 		IVariableBinding varBind = node.resolveBinding();
+// 		ITypeBinding typeBind = varBind.getType();
+// 		String type = typeBind.getQualifiedName();
+// 		String name = node.getName().toString();
+// 		debug(name, type);
+// 		ChildPropertyDescriptor initializer = node.getInitializerProperty();
+
+// 		if (initializer != null){
+// 			System.out.println(initializer.toString());
+// }
+// 		return true;
+// 	}

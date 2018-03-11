@@ -128,8 +128,8 @@ public class TypeFinder {
 // "		public Map<String, Integer> sup;" +
 // "}";
 
-		String file =  "public class DoesItWork{\n"
-+ "private class MaybeWorks{} \n"
+		// String file =  "public class DoesItWork{\n"
+// + "private class MaybeWorks{} \n"
 // + "public void add(){ 1 + 1; }"
 // + "public void add2(){ add() }"
 // + "String a;"
@@ -138,8 +138,8 @@ public class TypeFinder {
 // + "char c;"
 // + "int d;"
 // + "Time e;"
-+ "enum Quark{UP, DOWN}"
-+ "}\n";
+// + "enum Quark{UP, DOWN}"
+// + "}\n";
 // + "interface PleaseWork{}\n";
 /* 		String file = "public class DoesItWork{\n"
 						+ "private class MaybeWorks{} \n"
@@ -157,18 +157,20 @@ public class TypeFinder {
 						+ "}\n"
 						+ "interface PleaseWork{}\n"; */
 		
-		// String file = "package test;\n" + 
-		// 		" \n" + 
-		// 		"import java.util.ArrayList;\n" + 
-		// 		" \n" + 
-		// 		"public class Apple {\n" + 
-		// 		"	public static void main(String[] args) {\n" + 
-		// 		"		ArrayList<String> al = null;\n" + 
-		// 		"		int j =0;\n" + 
-		// 		"		System.out.println(j);\n" + 
-		// 		"		System.out.println(al);\n" + 
-		// 		"	}\n" + 
-		// 		"}";
+		String file = "package test;\n" + 
+				" \n" + 
+				"import java.util.ArrayList;\n" + 
+				"import org.junit.Test;\n" + 
+				" \n" + 
+				"public class Apple {\n" + 
+				"	@Test\n" + 
+				"	public static void main(String[] args) {\n" + 
+				"		ArrayList<String> al = null;\n" + 
+				"		int j =0;\n" + 
+				"		System.out.println(j);\n" + 
+				"		System.out.println(al);\n" + 
+				"	}\n" + 
+				"}";
 		
 		// for (String file : javaFiles){
 			parser = ASTParser.newParser(AST.JLS9);
@@ -176,8 +178,9 @@ public class TypeFinder {
 			parser.setKind(ASTParser.K_COMPILATION_UNIT);
 			parser.setResolveBindings(true);
 			parser.setBindingsRecovery(true);
-			// these two are needed for binding to be resolved due to SOURCE is a char[]
+			// these are needed for binding to be resolved due to SOURCE is a char[]
 			parser.setEnvironment(null, null, null, true);
+			// TODO: Fix up the name to be something other than name? 
 			parser.setUnitName("Name");
 			
 			// ensures nodes are being parsed properly
@@ -192,7 +195,6 @@ public class TypeFinder {
 			TypeVisitor visitor = new TypeVisitor();
 			cu.accept(visitor);
 			
-			// System.out.println("========== DECLARATION COUNT ==========");
 			System.out.println("========== COUNT ==========");
 			List<String> keys = visitor.getList();
 			Map<String, Integer> decCounter = visitor.getDecCount();
@@ -201,13 +203,6 @@ public class TypeFinder {
 			for (String key : keys){
 				System.out.println(key + ". Declarations found: " + decCounter.get(key) + "; References found: " + refCounter.get(key) );
 			}
-			// for (Map.Entry<String, Integer> kv : decCounter.entrySet()){
-			// 	System.out.println(kv.getKey() + ". Declarations found: " + kv.getValue());
-			// }
-			// System.out.println("========== REFERENCE COUNT ==========");
-			// for (Map.Entry<String, Integer> kv : refCounter.entrySet()){
-			// 	System.out.println(kv.getKey() + ". References found: " + kv.getValue());
-			// }
 		// }
 
 	}

@@ -1,5 +1,6 @@
 package test.testPackage;
 import java.util.*;
+import org.junit.*;
 
 public class MoreTest {
 	public class DoesItWork{
@@ -35,7 +36,7 @@ public class MoreTest {
 		}
 		
 		private class Test extends MoreTest{
-			@Override
+			@Test
 			public boolean equals(int newI, int newJ) {
 				return false;
 			}
