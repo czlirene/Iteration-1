@@ -61,27 +61,26 @@ public class TypeFinder {
 //		PrimitiveType, SimpleType, AnnotationType,
 		ASTParser parser;
 		String file = "package main;" +
+"import java.util.*;" +
 "public class MoreTest {" +
 "		public int add(int a, int b){" +
 "			int c = a+b;" +
 "			String wtf = \"hey\";" +
 "			System.out.println(wtf);" +
-"			Integer x = 4;" +
+"			Integer w = 4;" +
 "			return c;" +
 "		}" +
 "		public class Test {" +
-"			public int add(int a, int b){" +
-"				int t = a+b;" +
+"			public int add(int x, int y){" +
+"				int t = x+y;" +
 "				return t;" +
 "			}" +
 "		}" +
 "		public static int d;" +
+"		public List<String> hello;" +
+"		public Map<String, Integer> sup" +
 "}";
 		
-
-		
-
-
 		// String file = "public class DoesItWork{\n"
 		// 				+ "private class MaybeWorks{} \n"
 		// 				+ "public void add(){ 1 + 1; }"
@@ -126,6 +125,8 @@ public class TypeFinder {
 			
 			Map decCounter = visitor.getDecCount();
 			System.out.println(decCounter.toString());
+			Map refCounter = visitor.getRefCount();
+			System.out.println(refCounter.toString());
 		// }
 
 	}
