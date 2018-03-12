@@ -82,38 +82,20 @@ public class TypeVisitor extends ASTVisitor {
 
 	/* ----------------------- VISITOR METHODS ----------------------- */
 
-	/**
-		Assignment expression nodes.
-		Status: WIP
-		TODO: Check if this is only reference
-	 */
-	// public boolean visit(ExpressionStatement node){
-	// 	ITypeBinding typeBind = node.resolveTypeBinding();
-	// 	if (typeBind == null){
-	// 		debug("fuck me", "");
-	// 	} else {
-	// 		String type = typeBind.getQualifiedName();
-	// 		debug("", type);
-	// 		addTypeToList(type);
-
-	// 	}
-
-
-	// 	return true;
-	// }
-
 	/** 
 		ClassInstanceCreation; {expr} = new {type}
 		Given how we're instantiating a new class, all of these will be considered as declarations.
 		Counter: Declaration
 	 */
 	public boolean visit(ClassInstanceCreation node){
-		ITypeBinding typeBind = node.resolveTypeBinding();
-		String type = typeBind.getQualifiedName();
+//		String type = node.getType().isQualifiedType();
+		 ITypeBinding typeBind = node.getType().resolveBinding();
+		// String type = typeBind.getPackage().getName();
+		 String type = typeBind.getQualifiedName();
+		// String type = typeBind.getBinaryName();
 
 		/* Debug ONLY: Get the parent variable name if it exists */
-		String parent = ((VariableDeclarationFragment) node.getParent()).getName().toString();
-		debug(parent ,type);
+		debug("ClassInstance" ,type);
 
 		addTypeToList(type);
 		incDecCount(type);
@@ -140,7 +122,7 @@ public class TypeVisitor extends ASTVisitor {
 	/**
 		Field declaration nodes
 		ADDED: Support distinction between Primitive Data types (Reference Only) and others (TBD).
-		CHANGED: these should ALL be references..
+			>> Revert: Disabled distinctions.
 		TODO: Confirm Non-Primitive are REF/DECL.
 	*/
 	public boolean visit(FieldDeclaration node){
@@ -157,40 +139,53 @@ public class TypeVisitor extends ASTVisitor {
 
 		// Add current node's type to the list of types
 		addTypeToList(type);
-		// check if node is of primitive type
-		if (node.getType().isPrimitiveType()){
-			debug(name + " is PRIMITIVE TYPE");
-			// increase reference count
-			incRefCount(type);
-		} else {
-			// otherwise, increase reference count
-			incRefCount(type);
-		}
+		incRefCount(type);
+		// // check if node is of primitive type
+		// if (node.getType().isPrimitiveType()){
+		// 	debug(name + " is PRIMITIVE TYPE");
+		// 	// increase reference count
+		// 	incRefCount(type);
+		// } else {
+		// 	// otherwise, increase reference count
+		// 	incRefCount(type);
+		// }
 		return true;
 	}
 
 	/**
 		Marker annotation nodes: @TypeName
-		TODO: Check if AnnotationTypeDeclaration is still needed
-		TODO: Cannot recognize full qualified name 
-			e.g. @Test from org.junit.Test only appears as Test
+		TODO: Cannot recognize full qualified name; ONLY from imports, works for java.lang.*
+			e.g. @Test from org.junit.Test only appears as package.Test
 	*/
 	public boolean visit(MarkerAnnotation node){
-
 		IAnnotationBinding annBind = node.resolveAnnotationBinding();
 		ITypeBinding typeBind = annBind.getAnnotationType();
 		String type = typeBind.getQualifiedName();
-		debug("", type);
+		debug("Annotation", type);
 
 		addTypeToList(type);
 		incRefCount(type);
 		return true;
 	}
 
+	public boolean visit(MethodDeclaration node){
+		ITypeBinding typeBind = node.getReturnType2().resolveBinding();
+		String type = typeBind.getQualifiedName();
+		
+		if (!type.equals("void")){
+			debug(node.getName().toString(), type);
+			addTypeToList(type);
+			incRefCount(type);
+		}
+
+		return true;
+
+	}
+
 	/**
 		SingleVariableDeclaration; formal parameter lists, and catch clause variables
 		ADDED: Distinction between Primitive type and others
-		
+			>> Revert: Disabled distinctions.
 		TODO: Confirm Non-primitive type COUNTER
 	*/
 	public boolean visit(SingleVariableDeclaration node){
@@ -201,7 +196,9 @@ public class TypeVisitor extends ASTVisitor {
 
 		// Add current node's type to the list of types
 		addTypeToList(type);
-		// check if node is of primitive type
+		incRefCount(type);
+		
+/* 		// check if node is of primitive type
 		if (node.getType().isPrimitiveType()){
 			debug(node.getName().toString() + " is PRIMITIVE TYPE");
 			// increase reference count
@@ -209,16 +206,13 @@ public class TypeVisitor extends ASTVisitor {
 		} else {
 			// otherwise, increase declaration count
 			incDecCount(type);
-		}
+		} */
 
 		return true;
 	}
 
-
 	/**
 		TypeDeclaration; union of class and interface declaration nodes
-		Status: Done
-		TODO: Confirm they are only DECLARATIONS
 	*/
 	public boolean visit(TypeDeclaration node){
 		ITypeBinding typeBind = node.resolveBinding();
@@ -235,33 +229,35 @@ public class TypeVisitor extends ASTVisitor {
 	/**
 		VariableDeclarationStatement; local variable declaration statement nodes.
 		ADDED: Distinction between Primitive type and others.
-
+			>> Revert: Disabled distinction
+		Note: For any imported packages, you must include the package qualified name in the code itself
+			  in order for this parser to bind it as the type
 		TODO: Confirm Non-primitive type only count as REFERENCES
 	 */
 	public boolean visit(VariableDeclarationStatement node){
-		ITypeBinding typeBind = node.getType().resolveBinding();
-		String type = typeBind.getQualifiedName();
-		
-		// debugging purpose, get the actual variable name
-		// print out (varName, varType)
 		Object o = node.fragments().get(0);
-		String name = "";
 		if (o instanceof VariableDeclarationFragment){
-			name = ((VariableDeclarationFragment) o).getName().toString();
+			// get the variable name, debug only
+			String name = ((VariableDeclarationFragment) o).getName().toString();
+			// get the type binding of the variable
+			ITypeBinding typeBind = ((VariableDeclarationFragment) o).resolveBinding().getType();
+			String type = typeBind.getQualifiedName();
+
 			debug(name, type);
+			addTypeToList(type);
+			incRefCount(type);
 		}
 
 		// Add current node's type to the list of types
-		addTypeToList(type);
 		// check if node is of primitive type
-		if (node.getType().isPrimitiveType()){
+		/* if (node.getType().isPrimitiveType()){
 			debug(name + " is PRIMITIVE TYPE");
 			// increase reference count
 			incRefCount(type);
 		} else {
 			// otherwise, increase declaration count
 			incDecCount(type);
-		}
+		} */
 
 		return true;
 	}
@@ -295,3 +291,39 @@ public class TypeVisitor extends ASTVisitor {
 // }
 // 		return true;
 // 	}
+
+
+	/**
+		Assignment expression nodes.
+		Status: WIP
+		TODO: Check if this is only reference
+	 */
+	// public boolean visit(ExpressionStatement node){
+	// 	ITypeBinding typeBind = node.resolveTypeBinding();
+	// 	if (typeBind == null){
+	// 		debug("fuck me", "");
+	// 	} else {
+	// 		String type = typeBind.getQualifiedName();
+	// 		debug("", type);
+	// 		addTypeToList(type);
+
+	// 	}
+
+
+	// 	return true;
+	// }
+
+		// public boolean visit(MethodInvocation node){
+	// 	IMethodBinding methBind = node.resolveMethodBinding();
+
+	// 	if (methBind != null){
+	// 	ITypeBinding typeBind = methBind.getDeclaringClass();
+	// 	String type = typeBind.getQualifiedName();
+	// 	System.out.println("u fucked");
+	// 	System.out.println(type);
+	// 	// System.out.println(methBind.getKey());
+ 	// 	} else {
+	// 		 System.out.println("null");
+	// 	 }
+	// 	return true;
+	// }

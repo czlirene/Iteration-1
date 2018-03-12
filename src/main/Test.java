@@ -33,35 +33,35 @@ public class Test {
         final CompilationUnit cu = (CompilationUnit) parser.createAST(null);
 
         cu.accept(new ASTVisitor() {
-            public boolean visit(MethodDeclaration node) {
-                if (node.getName().getIdentifier().equals("testSearch")) {
-                    Block block = node.getBody();
-                    block.accept(new ASTVisitor() {
-                        public boolean visit(MethodInvocation node) {
-                            System.out.println("Name: " + node.getName());
-
-                            Expression expression = node.getExpression();
-                            if (expression != null) {
-                                System.out.println("Expr: " + expression.toString());
-                                ITypeBinding typeBinding = expression.resolveTypeBinding();
-                                if (typeBinding != null) {
-                                    System.out.println("Type: " + typeBinding.getName());
-                                }
-                            }
-                            IMethodBinding binding = node.resolveMethodBinding();
-                            if (binding != null) {
-                                ITypeBinding type = binding.getDeclaringClass();
-                                if (type != null) {
-                                    System.out.println("Decl: " + type.getName());
-                                }
-                            }
-
-                            return true;
-                        }
-                    });
-                }
-                return true;
-            }
+//            public boolean visit(MethodDeclaration node) {
+//                if (node.getName().getIdentifier().equals("testSearch")) {
+//                    Block block = node.getBody();
+//                    block.accept(new ASTVisitor() {
+//                        public boolean visit(MethodInvocation node) {
+//                            System.out.println("Name: " + node.getName());
+//
+//                            Expression expression = node.getExpression();
+//                            if (expression != null) {
+//                                System.out.println("Expr: " + expression.toString());
+//                                ITypeBinding typeBinding = expression.resolveTypeBinding();
+//                                if (typeBinding != null) {
+//                                    System.out.println("Type: " + typeBinding.getName());
+//                                }
+//                            }
+//                            IMethodBinding binding = node.resolveMethodBinding();
+//                            if (binding != null) {
+//                                ITypeBinding type = binding.getDeclaringClass();
+//                                if (type != null) {
+//                                    System.out.println("Decl: " + type.getName());
+//                                }
+//                            }
+//
+//                            return true;
+//                        }
+//                    });
+//                }
+//                return true;
+//            }
         });
     }
 }
