@@ -15,7 +15,7 @@ import main.JavaFileReader;
  * JUnit 4 Test for {@link JavaFileReader} class
  *
  * @author Evan Quan
- * @since March 8, 2018
+ * @since 12 March 2018
  *
  */
 public class JavaFileReaderTest {
@@ -23,7 +23,7 @@ public class JavaFileReaderTest {
 	/**
 	 * The expected string representation of TestClass
 	 */
-	private static String TestClassString = "package test;" + TestSuite.lineSeparator + TestSuite.lineSeparator
+	private static final String TestClassString = "package test;" + TestSuite.lineSeparator + TestSuite.lineSeparator
 			+ "public class TestClass {" + TestSuite.lineSeparator + TestSuite.lineSeparator + "}"
 			+ TestSuite.lineSeparator;
 
@@ -85,7 +85,7 @@ public class JavaFileReaderTest {
 	 */
 	@Test
 	public void testGetFileToStringForRelativeDirectoryPath() throws IOException {
-		String relativePath = TestSuite.BASEDIR.concat("TestClass.java");
+		String relativePath = TestSuite.TEST_DIR.concat("TestClass.java");
 		String result = JavaFileReader.getFileContentsToString(relativePath);
 
 		assertEquals(TestClassString, result);

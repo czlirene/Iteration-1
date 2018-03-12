@@ -173,7 +173,8 @@ public class TypeFinder {
 				"}";
 		
 		// for (String file : javaFiles){
-			parser = ASTParser.newParser(AST.JLS9);
+			@SuppressWarnings("deprecation")
+			parser = ASTParser.newParser(AST.JLS8);
 			parser.setSource(file.toCharArray());
 			parser.setKind(ASTParser.K_COMPILATION_UNIT);
 			parser.setResolveBindings(true);
