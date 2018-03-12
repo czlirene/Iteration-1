@@ -8,7 +8,7 @@ import main.BigIncrementer;
 /**
  * Compares the run times of incrementing with int, {@link BigInteger}, and
  * {@link BigIncrementer}
- * 
+ *
  * @author Evan Quan
  * @since March 9, 2018
  *
@@ -31,7 +31,7 @@ public class BigIncrementerRuntimeTest {
 	/**
 	 * Tests incrementing time from 0 to i_count with int, BigInteger, and
 	 * BigIncrementor
-	 * 
+	 *
 	 * @param i_count
 	 *            the maximum count that the tests increment to
 	 */
@@ -71,7 +71,7 @@ public class BigIncrementerRuntimeTest {
 		}
 		timeElapsed = (new Date()).getTime() - startTime;
 		System.out.println("END: " + timeElapsed + "ms");
-		if (bigInt.toString().equals(incr.toString())) {
+		if (bigInt.toString().equals(Integer.toString(num)) && bigInt.toString().equals(incr.toString())) {
 			System.out.println("PASSED");
 		} else {
 			System.out.println("FAILED");

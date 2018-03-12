@@ -61,6 +61,16 @@ TypeVisitor
 BigIncrementer
 - Tracks declaration and reference counts
 
+Diagrams
+--------
+State
+- Our classes (main package)
+- ASTParser, ASTNode, ASTParser
+
+Sequence
+- 
+
+
 Resources
 ---------
 - [ASTParser Javadoc](https://help.eclipse.org/mars/index.jsp?topic=%2Forg.eclipse.jdt.doc.isv%2Freference%2Fapi%2Forg%2Feclipse%2Fjdt%2Fcore%2Fdom%2FASTParser.html)
