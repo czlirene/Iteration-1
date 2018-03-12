@@ -1,4 +1,6 @@
-package main;
+package main.FUCK;
+import java.nio.file.NotDirectoryException;
+
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTParser;
 import org.eclipse.jdt.core.dom.ASTVisitor;
@@ -9,30 +11,43 @@ import org.eclipse.jdt.core.dom.IMethodBinding;
 import org.eclipse.jdt.core.dom.ITypeBinding;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.MethodInvocation;
+
+import main.JavaFileReader;
 public class Test {
 
-    public static String str = "package javaproject;" // package for all classes
-            + "class Dummy {" //
-            + "   void testSearch(String queryStr, String dateStr, SearchResources twitter1) {" //
-            + "      Query query = new Query(queryStr).until(dateStr);" //
-            + "      QueryResult queryResult = twitter1.search(query);" //
-            + "   }" //
-            + "}";
+//	public static int a, b, c;
 
+//    public static String str = "package javaproject;" // package for all classes
+//            + "class Dummy {" //
+//            + "   void testSearch(String queryStr, String dateStr, SearchResources twitter1) {" //
+//            + "      Query query = new Query(queryStr).until(dateStr);" //
+//            + "      QueryResult queryResult = twitter1.search(query);" //
+//            + "   }" //
+//            + "}";
+//
     public void main(String[] args) {
-        ASTParser parser = ASTParser.newParser(AST.JLS4);
-        parser.setSource(str.toCharArray());
-        parser.setKind(ASTParser.K_COMPILATION_UNIT);
-        parser.setResolveBindings(true);
-
-//        parser.setEnvironment( // apply classpath
-//                new String[] { "\\" }, //
-//                null, null, true);
-//        parser.setUnitName("any_name");
-
-        final CompilationUnit cu = (CompilationUnit) parser.createAST(null);
-
-        cu.accept(new ASTVisitor() {
+		try {
+			java_files_as_string = JavaFileReader.getAllJavaFilesToString(directory);
+		} catch (NotDirectoryException nde){
+			System.err.println("Error: Invalid Directory");
+			System.exit(0);
+		} catch (Exception e){
+			e.printStackTrace();
+		}
+    }
+//        ASTParser parser = ASTParser.newParser(AST.JLS4);
+//        parser.setSource(str.toCharArray());
+//        parser.setKind(ASTParser.K_COMPILATION_UNIT);
+//        parser.setResolveBindings(true);
+//
+////        parser.setEnvironment( // apply classpath
+////                new String[] { "\\" }, //
+////                null, null, true);
+////        parser.setUnitName("any_name");
+//
+//        final CompilationUnit cu = (CompilationUnit) parser.createAST(null);
+//
+//        cu.accept(new ASTVisitor() {
 //            public boolean visit(MethodDeclaration node) {
 //                if (node.getName().getIdentifier().equals("testSearch")) {
 //                    Block block = node.getBody();
@@ -62,6 +77,6 @@ public class Test {
 //                }
 //                return true;
 //            }
-        });
+//        });
     }
 }

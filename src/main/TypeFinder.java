@@ -12,33 +12,35 @@ import org.eclipse.jdt.core.dom.ASTVisitor;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 
 public class TypeFinder {
-	private boolean DEBUG = true;
+	private static boolean DEBUG = true;
 
-	private void debug(String msg){
+	private static void debug(String msg){
 		if (DEBUG) {
 			System.out.println("DEBUG >> " + msg);
 		}
 	}
 
 	/* GLOBAL VARIABLES */
-	// 
+	//
 	private static final int VALID_ARGUMENT_COUNT = 2;
 
 	private static String directory;
 	private static String java_type;
 
-	private static List<String> java_files_as_string = new ArrayList<String>();		// initialize it 
+	private static List<String> java_files_as_string = new ArrayList<String>();		// initialize it
 
 	private static void initFinder(String[] args){
 		// Check if user has inputed a valid number arguments.
-		if (args.length != VALID_ARGUMENT_COUNT) {
+/* 		if (args.length != VALID_ARGUMENT_COUNT) {
 			// Display usage, exit program.
 			System.out.println("Usage: java TypeFinder <directory> <type>");
 			System.exit(0);
-		}
+		} */
 
-		directory = args[0];
-		java_type = args[1];
+		// directory = args[0];
+		directory = "/home/slchan/eclipse-workspace/SENG300G1/src/main/FUCK/";
+		// java_type = args[1];
+		java_type = "no";
 
 		try {
 			java_files_as_string = JavaFileReader.getAllJavaFilesToString(directory);
@@ -53,137 +55,30 @@ public class TypeFinder {
 
 	public static void main(String[] args) {
 		/* Initialization process */
-		// initFinder(args);
-
-		int dec_count = 0;
-		int ref_count = 0;
+		initFinder(args);
 
 		/* Create AST */
 
 		ASTParser parser;
-		/* String file = 
-"import static org.junit.Assert.*;" +
-"import static org.mockito.Mockito.*;" +
-"import org.junit.After;" +
-"import org.junit.Before;" +
-"import org.junit.Test;" +
-"import org.eclipse.jdt.core.ICompilationUnit;" +
-"import org.eclipse.jdt.core.dom.AST;" +
-"import org.eclipse.jdt.core.dom.ASTParser;" +
-"import org.eclipse.jdt.core.dom.CompilationUnit;" +
-"public class ASTParser_Tests {" +
-"	" +
-"	private ASTParser parser;" +
-"	" +
-"	@After" +
-"	public void tearDown() throws Exception {" +
-"		parser = null;" +
-"	}" +
-"	@Test" +
-"	public void testCompilationUnitSource() {" +
-"		parser = ASTParser.newParser(AST.JLS8);" +
-"		parser.setSource(mock(ICompilationUnit.class));" +
-"		assertNotNull(parser.createAST(null));" +
-"		CompilationUnit cu = parser.createAST(null);" +
-"		cu.accept(new ASTVisitor() {" +
-"			public boolean visit(Assignment node) {" +
-"				}" +
-"			});" +
-"	}" +
-"}"; */
-// 		String file = "package main;" +
-// "import java.util.*;" +
-// "public class MoreTest {" +
-// "		" +
-// "			enum Quark{ UP, DOWN};" +
-// "		public static int add(int a, int b){" +
-// "			int c = a+b;" +
-// "			String wtf = \"hey\";" +
-// "			System.out.println(wtf);" +
-// "			Integer w = 4;" +
-// "			Time shiballs;" +
-// "			return c;" +
-// "		}" +
-// "		" +
-// "		public boolean equals(int i, int j) {" +
-// "			return i == j;" +
-// "		}" +
-// "		" +
-// "		private class Test extends MoreTest{" +
-// "			@Override" +
-// "			public boolean equals(int newI, int newJ) {" +
-// "				return false;" +
-// "			}" +
-// "			" +
-// "			public int fck(int x, int y){" +
-// "				int t = x+y;" +
-// "				return t;" +
-// "			}" +
-// "		}" +
-// "		public static void main (String args[]) {" +
-// "			int fin = add(1,2);" +
-// "		}" +
-// "		public static int d;" +
-// "		public List<String> hello;" +
-// "		public Map<String, Integer> sup;" +
-// "}";
 
-		// String file =  "public class DoesItWork{\n"
-// + "private class MaybeWorks{} \n"
-// + "public void add(){ 1 + 1; }"
-// + "public void add2(){ add() }"
-// + "String a;"
-// + "a = \"Hello\";"
-// + "int b;"
-// + "char c;"
-// + "int d;"
-// + "Time e;"
-// + "enum Quark{UP, DOWN}"
-// + "}\n";
-// + "interface PleaseWork{}\n";
-/* 		String file = "public class DoesItWork{\n"
-						+ "private class MaybeWorks{} \n"
-						+ "public void add(){ 1 + 1; }"
-						+ "public void add2(){ add() }"
-						+ "String j = new String (\"FOO\");"
-						// + "DoesItWork k = new DoesItWork(AST.JLS9);"
-						+ "String a;"
-						+ "a = \"Hello\";"
-						+ "int b;"
-						+ "char c;"
-						+ "int d;"
-						+ "Time e;"
-						 + "enum Quark{ UP, DOWN}"
-						+ "}\n"
-						+ "interface PleaseWork{}\n"; */
-		
-		String file = "package test;\n" + 
-				" \n" + 
-				"import java.util.ArrayList;\n" + 
-				"import org.junit.Test;\n" + 
-				" \n" + 
-				"public class Apple {\n" + 
-				"	@Test\n" + 
-				"	public static void main(String[] args) {\n" + 
-				"		ArrayList<String> al = null;\n" + 
-				"		int j =0;\n" + 
-				"		System.out.println(j);\n" + 
-				"		System.out.println(al);\n" + 
-				"	}\n" + 
-				"}";
-		
-		// for (String file : javaFiles){
-			@SuppressWarnings("deprecation")
+		// String file =
+
+		for (String file : java_files_as_string){
+			debug(file);
+
 			parser = ASTParser.newParser(AST.JLS8);
 			parser.setSource(file.toCharArray());
 			parser.setKind(ASTParser.K_COMPILATION_UNIT);
 			parser.setResolveBindings(true);
 			parser.setBindingsRecovery(true);
 			// these are needed for binding to be resolved due to SOURCE is a char[]
-			parser.setEnvironment(null, null, null, true);
-			// TODO: Fix up the name to be something other than name? 
+			String[] srcPath = {"/home/slchan/eclipse-workspace/SENG300G1/src/"};
+			String[] classPath = {"/home/slchan/eclipse-workspace/SENG300G1/bin/"};
+			parser.setEnvironment(classPath, srcPath, null, true);
+			// parser.setEnvironment(null, null, null, true);
+			// TODO: Fix up the name to be something other than name?
 			parser.setUnitName("Name");
-			
+
 			// ensures nodes are being parsed properly
 			Map options = JavaCore.getOptions();
 			options.put(JavaCore.COMPILER_COMPLIANCE, JavaCore.VERSION_1_8);
@@ -192,10 +87,10 @@ public class TypeFinder {
 			parser.setCompilerOptions(options);
 
 			final CompilationUnit cu = (CompilationUnit) parser.createAST(null);
-			
+
 			TypeVisitor visitor = new TypeVisitor();
 			cu.accept(visitor);
-			
+
 			System.out.println("========== COUNT ==========");
 			List<String> keys = visitor.getList();
 			Map<String, Integer> decCounter = visitor.getDecCount();
@@ -204,7 +99,7 @@ public class TypeFinder {
 			for (String key : keys){
 				System.out.println(key + ". Declarations found: " + decCounter.get(key) + "; References found: " + refCounter.get(key) );
 			}
-		// }
+		}
 
 	}
 }
