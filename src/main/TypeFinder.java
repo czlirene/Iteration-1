@@ -4,12 +4,8 @@ import java.io.IOException;
 import java.nio.file.NotDirectoryException;
 import java.util.*;
 
-import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.dom.*;
-import org.eclipse.jdt.core.dom.AST;
-import org.eclipse.jdt.core.dom.ASTParser;
-import org.eclipse.jdt.core.dom.ASTVisitor;
-import org.eclipse.jdt.core.dom.CompilationUnit;
+import org.eclipse.jdt.core.JavaCore;
 
 public class TypeFinder {
 	private static boolean DEBUG = true;

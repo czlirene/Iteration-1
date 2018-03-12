@@ -40,7 +40,6 @@ public class TypeVisitor extends ASTVisitor {
 	private static Map<String, Integer> decCounter;
 	private static Map<String, Integer> refCounter;
 
-
 	/**
 	 * constructor
 	 * Intialize the list of types, and the HashMaps for the counters to null.
