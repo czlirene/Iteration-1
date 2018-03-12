@@ -13,7 +13,7 @@ import main.TypeFinder;
 
 /**
  * JUnit 4 Tests for {@link TypeFinder} class
- * 
+ *
  * @author Evan Quan
  * @since March 8, 2018
  *
@@ -26,6 +26,12 @@ public class TypeFinderTest {
 	private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
 	private final ByteArrayOutputStream errContent = new ByteArrayOutputStream();
 
+	@After
+	public void restoreStream() {
+		System.setOut(System.out);
+		System.setErr(System.err);
+	}
+
 	/**
 	 * outContent tracks standard output
 	 */
@@ -33,12 +39,6 @@ public class TypeFinderTest {
 	public void setUpStream() {
 		System.setOut(new PrintStream(outContent));
 		System.setErr(new PrintStream(errContent));
-	}
-
-	@After
-	public void restoreStream() {
-		System.setOut(System.out);
-		System.setErr(System.err);
 	}
 
 	/**
@@ -51,7 +51,7 @@ public class TypeFinderTest {
 		String type = "String";
 		String[] args = { invalidDirectory, type };
 		TypeFinder.main(args);
-		String expected = TypeFinder.INVALID_DIRECTORY_ERROR_MESSAGE + "\n";
+		String expected = TypeFinder.INVALID_DIRECTORY_ERROR_MESSAGE + TestSuite.lineSeparator;
 		String results = errContent.toString();
 		assertEquals(expected, results);
 	}
@@ -64,7 +64,7 @@ public class TypeFinderTest {
 	public void testNoArguments() {
 		String[] args = {};
 		TypeFinder.main(args);
-		String expected = TypeFinder.PROPER_USE_MESSAGE + "\n";
+		String expected = TypeFinder.PROPER_USE_MESSAGE + TestSuite.lineSeparator;
 		String results = outContent.toString();
 		assertEquals(expected, results);
 	}
@@ -77,7 +77,7 @@ public class TypeFinderTest {
 	public void testThreeArguments() {
 		String[] args = { "", "", "" };
 		TypeFinder.main(args);
-		String expected = TypeFinder.PROPER_USE_MESSAGE + "\n";
+		String expected = TypeFinder.PROPER_USE_MESSAGE + TestSuite.lineSeparator;
 		String results = outContent.toString();
 		assertEquals(expected, results);
 	}

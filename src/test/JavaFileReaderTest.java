@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.nio.file.NotDirectoryException;
 import java.util.ArrayList;
 
-import org.junit.Before;
 import org.junit.Test;
 
 import main.JavaFileReader;
@@ -22,41 +21,16 @@ import main.JavaFileReader;
 public class JavaFileReaderTest {
 
 	/**
-	 * The expected string representation of ReadMeTestClass
+	 * The expected string representation of TestClass
 	 */
-	private static String TestClassString = "package test;\n\npublic class TestClass {\n\n}\n";
-
-	/**
-	 * Run before each test case
-	 *
-	 * @throws Exception
-	 */
-	@Before
-	public void setUp() {
-	}
-
-	/**
-	 * Check that all the contents of all Java files (and only Java files) can be
-	 * retrieved as Strings from the testPackage directory
-	 * 
-	 * @throws NotDirectoryException
-	 * @throws IOException
-	 */
-	@Test
-	public void testGetAllJavaFilesToStringForTestPackage() throws NotDirectoryException, IOException {
-		ArrayList<String> results = JavaFileReader.getAllJavaFilesToString(TestSuite.JAVA_FILE_READER_TEST_DIR);
-		String appleSource = "package test.javaFileReaderTestPackage;\n\npublic class Apple {\n\n}\n";
-		String bananaSource = "package test.javaFileReaderTestPackage;\n\npublic class Banana {\n\n}\n";
-		String zebraSource = "package test.javaFileReaderTestPackage;\n\npublic class Zebra {\n\n}\n";
-		assertEquals(appleSource, results.get(0));
-		assertEquals(bananaSource, results.get(1));
-		assertEquals(zebraSource, results.get(2));
-	}
+	private static String TestClassString = "package test;" + TestSuite.lineSeparator + TestSuite.lineSeparator
+			+ "public class TestClass {" + TestSuite.lineSeparator + TestSuite.lineSeparator + "}"
+			+ TestSuite.lineSeparator;
 
 	/**
 	 * Check that a NotDirectoryException is thrown if an invalid directory is
 	 * searched
-	 * 
+	 *
 	 * @throws NotDirectoryException
 	 * @throws IOException
 	 */
@@ -65,6 +39,42 @@ public class JavaFileReaderTest {
 	public void testGetAllJavaFilesToStringForInvalidDirectory() throws NotDirectoryException, IOException {
 		String invalidDirectory = "";
 		ArrayList<String> results = JavaFileReader.getAllJavaFilesToString(invalidDirectory);
+	}
+
+	/**
+	 * Check that all the contents of all Java files (and only Java files) can be
+	 * retrieved as Strings from the javaFileReaderTestPackage directory
+	 *
+	 * @throws NotDirectoryException
+	 * @throws IOException
+	 */
+	@Test
+	public void testGetAllJavaFilesToStringForTestPackage() throws NotDirectoryException, IOException {
+		ArrayList<String> results = JavaFileReader.getAllJavaFilesToString(TestSuite.JAVA_FILE_READER_TEST_DIR);
+		String appleSource = "package test.javaFileReaderTestPackage;" + TestSuite.lineSeparator
+				+ TestSuite.lineSeparator + "public class Apple {" + TestSuite.lineSeparator + TestSuite.lineSeparator
+				+ "}" + TestSuite.lineSeparator;
+		String bananaSource = "package test.javaFileReaderTestPackage;" + TestSuite.lineSeparator
+				+ TestSuite.lineSeparator + "public class Banana {" + TestSuite.lineSeparator + TestSuite.lineSeparator
+				+ "}" + TestSuite.lineSeparator;
+		String zebraSource = "package test.javaFileReaderTestPackage;" + TestSuite.lineSeparator
+				+ TestSuite.lineSeparator + "public class Zebra {" + TestSuite.lineSeparator + TestSuite.lineSeparator
+				+ "}" + TestSuite.lineSeparator;
+		assertEquals(appleSource, results.get(0));
+		assertEquals(bananaSource, results.get(1));
+		assertEquals(zebraSource, results.get(2));
+	}
+
+	/**
+	 * Check that trying to read from an invalid file throws a FileNotFoundException
+	 *
+	 * @throws IOException
+	 */
+	@SuppressWarnings("unused")
+	@Test(expected = FileNotFoundException.class)
+	public void testGetFileToStringForInvalidFilePath() throws IOException {
+		String invalidFilePath = "";
+		String result = JavaFileReader.getFileContentsToString(invalidFilePath);
 	}
 
 	/**
@@ -82,21 +92,6 @@ public class JavaFileReaderTest {
 	}
 
 	/**
-	 * Check if all the names of Java files of testPackage directory can be acquired
-	 *
-	 * @throws NotDirectoryException
-	 */
-	@Test
-	public void testGetJavaFileNamesForTestPackage() throws NotDirectoryException {
-		ArrayList<String> javaFileNames = JavaFileReader.getJavaFileNames(TestSuite.JAVA_FILE_READER_TEST_DIR);
-
-		assertEquals("Apple.java", javaFileNames.get(0));
-		assertEquals("Banana.java", javaFileNames.get(1));
-		assertEquals("Zebra.java", javaFileNames.get(2));
-
-	}
-
-	/**
 	 * Check if a NotDirectoryException is thrown if an invalid directory argument
 	 * is used
 	 *
@@ -110,15 +105,18 @@ public class JavaFileReaderTest {
 	}
 
 	/**
-	 * Check that trying to read from an invalid file throws a FileNotFoundException
+	 * Check if all the names of Java files of testPackage directory can be acquired
 	 *
-	 * @throws IOException
+	 * @throws NotDirectoryException
 	 */
-	@SuppressWarnings("unused")
-	@Test(expected = FileNotFoundException.class)
-	public void testGetFileToStringForInvalidFilePath() throws IOException {
-		String invalidFilePath = "";
-		String result = JavaFileReader.getFileContentsToString(invalidFilePath);
+	@Test
+	public void testGetJavaFileNamesForTestPackage() throws NotDirectoryException {
+		ArrayList<String> javaFileNames = JavaFileReader.getJavaFileNames(TestSuite.JAVA_FILE_READER_TEST_DIR);
+
+		assertEquals("Apple.java", javaFileNames.get(0));
+		assertEquals("Banana.java", javaFileNames.get(1));
+		assertEquals("Zebra.java", javaFileNames.get(2));
+
 	}
 
 }
