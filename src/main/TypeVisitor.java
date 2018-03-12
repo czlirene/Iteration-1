@@ -7,8 +7,12 @@
  * number of declarations of references for each of the java types present.
  * 
  * @author Sze Lok Irene Chan
- * @version 2.5
- * @since 11 March 2018
+ * @version 2.6
+ * 	> Epiphany on the difference between Declaration and Reference. 
+ * 		- now adhering to the following definition:
+ * 			DECLARATION: When X is being defined
+ * 			REFERENCE  : When you're referring to something that's already predefined.
+ * @since 12 March 2018
  */
 package main;
 
@@ -138,8 +142,8 @@ public class TypeVisitor extends ASTVisitor {
 	 */
 	@Override
 	public boolean visit(ClassInstanceCreation node){
-		 ITypeBinding typeBind = node.getType().resolveBinding();
-		 String type = typeBind.getQualifiedName();
+		ITypeBinding typeBind = node.getType().resolveBinding();
+		String type = typeBind.getQualifiedName();
 
 		/* Debug ONLY: Get the parent variable name if it exists */
 		debug("ClassInstanceCreation" ,type);
@@ -328,13 +332,16 @@ public class TypeVisitor extends ASTVisitor {
 		return true;
 	}
 
-	/**
-		VariableDeclarationStatement; local variable declaration statement nodes.
-		ADDED: Distinction between Primitive type and others.
-			>> Revert: Disabled distinction
+/* 	public boolean visit(VariableDeclaration node){
+		IVariableBinding varBind = node.resolveBinding();
+		ITypeBinding typeBind = varBind.getType();
+		String type = typeBind.getQualifiedName();
 
-		TODO: Confirm Non-primitive type only count as REFERENCES
-	 */
+		if (node.getName().isDeclaration()){
+			debug(varBind.getName(), type);
+		}
+		return true;
+	} */
 
 	/**
 	 * Visits a local variable declaration statement node type. 
@@ -360,11 +367,21 @@ public class TypeVisitor extends ASTVisitor {
 				// debug only: get the name of the variable
 				String name = ((VariableDeclarationFragment) fragment).getName().toString();
 				ITypeBinding typeBind = ((VariableDeclarationFragment) fragment).resolveBinding().getType();
+
+				boolean isDeclaration = ((VariableDeclarationFragment) fragment).getName().isDeclaration();
 				String type = typeBind.getQualifiedName();
 
-				debug(name, type);
 				addTypeToList(type);
-				incRefCount(type);
+				debug(name, type);
+
+				// Check if it's a primitive type -- they are all references
+				if (isDeclaration){
+					incDecCount(type);
+				} else {
+//					debug(name, type);
+					incRefCount(type);
+				}
+
 			}
 		}
 

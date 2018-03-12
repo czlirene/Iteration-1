@@ -14,7 +14,7 @@ import org.eclipse.jdt.core.dom.MethodInvocation;
 
 import main.JavaFileReader;
 public class Test {
-
+	
 //	public static int a, b, c;
 
 //    public static String str = "package javaproject;" // package for all classes
@@ -25,15 +25,9 @@ public class Test {
 //            + "   }" //
 //            + "}";
 //
+	public class Foo2{};
     public void main(String[] args) {
-		try {
-			java_files_as_string = JavaFileReader.getAllJavaFilesToString(directory);
-		} catch (NotDirectoryException nde){
-			System.err.println("Error: Invalid Directory");
-			System.exit(0);
-		} catch (Exception e){
-			e.printStackTrace();
-		}
+    	SomeClass a,b,c,d,e = new Foo2(), g, k, l, m = new Foo2();
     }
 //        ASTParser parser = ASTParser.newParser(AST.JLS4);
 //        parser.setSource(str.toCharArray());
@@ -79,4 +73,3 @@ public class Test {
 //            }
 //        });
     }
-}
