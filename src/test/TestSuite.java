@@ -10,8 +10,8 @@ import org.junit.runners.Suite;
 /**
  * All Test suites go here.
  */
-@Suite.SuiteClasses({ BigIncrementerVaryingStartsTest.class, BigIncrementerDefaultTest.class,
-		TypeVisitorFindFooTest.class, TypeFinderTest.class, JavaFileReaderTest.class, PassTest.class })
+@Suite.SuiteClasses({ BigIncrementerVaryingStartsTest.class, BigIncrementerDefaultTest.class, TypeVisitorFooTest.class,
+		TypeFinderTest.class, JavaFileReaderTest.class, PassTest.class })
 
 /**
  * Runs all test classes
@@ -31,7 +31,8 @@ public class TestSuite {
 	/**
 	 * test.testPackage package directory is contained in test package directory
 	 */
-	public static String JAVA_FILE_READER_TEST_DIR = TEST_DIR.concat("javaFileReaderTestPackage/");
+	public static final String JAVA_FILE_READER_TEST_DIR = TEST_DIR.concat("javaFileReaderTestPackage/");
+	public static final String TYPE_VISITOR_TEST_DIR = TEST_DIR.concat("typeVisitorTestPackage/");
 	/**
 	 * Line separator changes depending on operating system. JUnitTests dealing with
 	 * file contents should consider this.

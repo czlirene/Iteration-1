@@ -14,17 +14,15 @@ import main.TypeVisitor;
 
 /**
  * JUnit 4 Tests for {@link TypeVisitor} class. Checks type declaration and
- * reference counts to Foo.
+ * reference counts for Foo
  *
  * @author Evan Quan
  * @since 12 March 2018
  *
  */
-public class TypeVisitorFindFooTest {
+public class TypeVisitorFooTest {
 
 	private static final String type = "Foo";
-	private static final int DECLARATION = 0;
-	private static final int REFERENCE = 1;
 
 	/**
 	 * Configures ASTParser and visitor for source file
@@ -58,11 +56,16 @@ public class TypeVisitorFindFooTest {
 		TypeVisitor visitor = new TypeVisitor();
 		cu.accept(visitor);
 
-		int[] results = { (int) visitor.getDecCount().get(type), (int) visitor.getRefCount().get(type) };
+		int[] results = { visitor.getDecCount().get(type), visitor.getRefCount().get(type) };
 
-		assertEquals(expectedDeclarationCount, results[DECLARATION]);
-		assertEquals(expectedReferenceCount, results[REFERENCE]);
+		assertEquals(expectedDeclarationCount, results[0]);
+		assertEquals(expectedReferenceCount, results[1]);
 
+	}
+
+	@Test
+	public void testOtherClassDeclaration_Dec_0_Ref_0() {
+		configureParser("class Other {}", 0, 0);
 	}
 
 	@Test
@@ -86,33 +89,50 @@ public class TypeVisitorFindFooTest {
 	}
 
 	@Test
-	public void testMethodReturn_Dec_0_Ref_1() {
-		configureParser("public Foo methodName() {}", 0, 1);
+	public void testMethodReturn_Dec_1_Ref_1() {
+		configureParser("public class Foo{ public Foo methodName() {}}", 1, 1);
 	}
 
 	@Test
-	public void testDeclareVariable_Dec_0_Ref_1() {
-		configureParser("Foo foo;", 0, 1);
+	public void testDeclareVariable_Dec_1_Ref_1() {
+		configureParser("public class Foo{ Foo foo;}", 1, 1);
 	}
 
 	@Test
-	public void testSetVariable_Dec_0_Ref_0() {
-		configureParser("foo = anotherFoo;", 0, 0);
+	public void testSetVariable_Dec_1_Ref_0() {
+		configureParser("public class Foo{ foo = anotherFoo;}", 1, 0);
 	}
 
 	@Test
-	public void testDeclareAndInstantiateVariable_Dec_0_Ref_2() {
-		configureParser("Foo foo = new Foo();", 0, 2);
+	public void testDeclareAndInstantiateVariable_Dec_1_Ref_2() {
+		configureParser("public class Foo{ Foo foo = new Foo();}", 1, 2);
 	}
 
 	@Test
-	public void testInstantiateVariable_Dec_0_Ref_1() {
-		configureParser("foo = new Foo();", 0, 1);
+	public void testInstantiateVariable_Dec_1_Ref_1() {
+		configureParser("public class Other{ foo = new Foo();}", 1, 1);
+	}
+
+	/**
+	 * NOTE: This may not be correct
+	 */
+	@Test
+	public void testOtherParamterizedTypes_Dec_1_Ref_4() {
+		configureParser("public class Foo{ Foo foo = new FooChild<String, Integer>();}", 1, 1);
 	}
 
 	@Test
-	public void testParamterizedTypes_Dec_0_Ref_4() {
-		configureParser("Foo foo = new Foo<Foo, Foo();", 0, 4);
+	public void testParameterizedTypes_Dec_0_Ref_2() {
+		configureParser("public class Other{ ArrayList<Foo> list = new ArrayList<Foo>()", 0, 2);
 	}
 
+	@Test
+	public void testDoubleParameterizedTypes_Dec_0_Ref_4() {
+		configureParser("public class Other{ HashMap<Foo, Foo> map = new ArrayList<Foo, Foo>()", 0, 4);
+	}
+
+	@Test
+	public void testPackageFoo_Dec_0_Ref_0() {
+		configureParser("package bar; public class Foo {}", 0, 0);
+	}
 }

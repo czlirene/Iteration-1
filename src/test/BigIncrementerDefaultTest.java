@@ -40,31 +40,4 @@ public class BigIncrementerDefaultTest {
 		in.increment();
 		assertEquals(expected, in.toString());
 	}
-
-	/**
-	 * Check that incrementer works for 10 increments
-	 */
-	@Test
-	public void testIncrement_TEN() {
-		int count = 10;
-		String expected = "10";
-		for (int i = 0; i < count; i++) {
-			in.increment();
-		}
-		assertEquals(expected, in.toString());
-	}
-
-	/**
-	 * Check that incrementer works for 1000000000 increments
-	 */
-	@Test
-	public void testIncrement_BILLION() {
-		int count = 1000000000;
-		String expected = "1000000000";
-		for (int i = 0; i < count; i++) {
-			in.increment();
-		}
-		assertEquals(expected, in.toString());
-	}
-
 }
