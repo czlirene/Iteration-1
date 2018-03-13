@@ -7,9 +7,13 @@ public class Bar {
 	 */
 	public static final Foo foo = new Foo();
 
-	public Foo<String, Integer> foo2;
-
+	@Foo
 	public Foo getFoo() {
 		return new Foo();
+	}
+
+	@Foo
+	public void bar() {
+
 	}
 }

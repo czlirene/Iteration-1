@@ -17,12 +17,13 @@ import main.TypeVisitor;
  * reference counts for Foo
  *
  * @author Evan Quan
- * @since 12 March 2018
+ * @since 13 March 2018
  *
  */
 public class TypeVisitorFooTest {
 
 	private static final String type = "Foo";
+	private static final String ls = TestSuite.lineSeparator;
 
 	/**
 	 * Configures ASTParser and visitor for source file
@@ -76,6 +77,14 @@ public class TypeVisitorFooTest {
 	}
 
 	/**
+	 * Check if an @link annotation in Javadoc counts as a reference
+	 */
+	@Test
+	public void testTypeAnnotation_Dec_0_Ref_1() {
+		configureParser("/**" + ls + " * {@link Foo}" + ls + " */" + ls + "public class Other{}", 0, 1);
+	}
+
+	/**
 	 * Check if a class declaration of another type does not affect declaration
 	 * count
 	 */
@@ -120,8 +129,8 @@ public class TypeVisitorFooTest {
 	 * Check if an annotation reference is counted as a reference
 	 */
 	@Test
-	public void testAnnotation_Dec_0_Ref_0() {
-		configureParser("@Foo public void method() {}", 0, 1);
+	public void testAnnotationReference_Dec_0_Ref_1() {
+		configureParser("public class Other{@Foo public void method() {}}", 0, 1);
 	}
 
 	/**
@@ -182,8 +191,17 @@ public class TypeVisitorFooTest {
 	 * generic parameter
 	 */
 	@Test
-	public void testOtherParamterizedTypes_Dec_0_Ref_2() {
+	public void test1ParamterizedTypeAndInstantiated_Dec_0_Ref_2() {
 		configureParser("public class Other{ Bar<Foo> bar = new Bar<Foo>();}", 0, 2);
+	}
+
+	/**
+	 * TODO bar not defined elsewhere, ASTParser doesn't know Bar can accept 1
+	 * generic parameter
+	 */
+	@Test
+	public void test1ParamterizedType_Dec_0_Ref_1() {
+		configureParser("public class Other{ Bar<Foo> bar;}", 0, 1);
 	}
 
 	/**
@@ -191,8 +209,30 @@ public class TypeVisitorFooTest {
 	 * generic parameters
 	 */
 	@Test
-	public void testDoubleParameterizedTypes_Dec_0_Ref_4() {
-		configureParser("public class Other{ Bar<Foo, Foo> bar = new Bar<Foo, Foo>()", 0, 4);
+	public void test2ParameterizedTypesAndInstantiated_Dec_0_Ref_4() {
+		configureParser("public class Other{ Bar<Foo, Foo> bar = new Bar<Foo, Foo>();}", 0, 4);
+	}
+
+	@Test
+	public void test3ParameterizedTypesAndInstantiatedMixed_dec_0_Ref_4() {
+		configureParser("public class Other{ Bar<Foo, String, Foo> bar = new Bar<Foo, String, Foo>();}", 0, 4);
+	}
+
+	/**
+	 * TODO bar not defined elsewhere, ASTParser doesn't know Bar can accept 2
+	 * generic parameters
+	 */
+	@Test
+	public void test2ParameterizedTypes_Dec_0_Ref_2() {
+		configureParser("public class Other{ Bar<Foo, Foo> bar;}", 0, 2);
+	}
+
+	/**
+	 * Check that
+	 */
+	@Test
+	public void test3ParameterizedTypesMixed_Dec_0_Ref_2() {
+		configureParser("public class Other{ Bar<Foo, String, Foo> bar;}", 0, 2);
 	}
 
 	/**
@@ -202,6 +242,31 @@ public class TypeVisitorFooTest {
 	@Test
 	public void testInstantiateInsideOtherConstructor_Dec_0_Ref_1() {
 		configureParser("public class Other{ Other2 other = new Other2(new Foo());}", 0, 1);
+	}
+
+	/**
+	 * Check that declaring an variable inside a method counts as a reference
+	 */
+	@Test
+	public void testDeclareInsideMethod_Dec_0_Ref_1() {
+		configureParser("public class Other{ public void bar() {Foo f;}", 0, 1);
+	}
+
+	/**
+	 * Check that declaring an variable inside a method counts as a reference
+	 */
+	@Test
+	public void testDeclareAndInstantiateInsideMethod_Dec_0_Ref_2() {
+		configureParser("public class Other{ public void bar() {Foo f = new Foo();}", 0, 2);
+	}
+
+	/**
+	 * Check that returning an instance directly from constructor counts as a
+	 * reference
+	 */
+	@Test
+	public void testReturnConstructor_Dec_0_Ref_2() {
+		configureParser("public class Other{public Foo bar() {return new Foo();}", 0, 2);
 	}
 
 	/**

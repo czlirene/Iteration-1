@@ -1,7 +1,7 @@
 package test.typeFinderTestPackage;
 
 /**
- * {@link Foo} {@link Foo} {@link Foo} {@link Foo}
+ * {@link Foo}
  */
 public class Other {
 

@@ -6,6 +6,7 @@ import org.junit.Test;
  * Test for JUnit. Should always pass.
  * 
  * @author Evan Quan
+ * @since 13 March 2018
  *
  */
 public class PassTest {

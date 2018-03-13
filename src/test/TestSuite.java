@@ -18,7 +18,7 @@ import org.junit.runners.Suite;
  * Runs all test classes
  *
  * @author Evan Quan
- * @since 12 March 2018
+ * @since 13 March 2018
  *
  */
 public class TestSuite {
