@@ -29,7 +29,7 @@ public class TypeFinder {
 
 	// Special salt gauge version (for Irene)
 	// Disable commandline, and prints all types and counts
-	public static final boolean IDEBUG = false;
+	public static final boolean IDEBUG = true;
 	
 	/* GLOBAL VARIABLES */
 	/**
@@ -171,7 +171,7 @@ public class TypeFinder {
 				Map<String, Integer> decCounter = visitor.getDecCount();
 				Map<String, Integer> refCounter = visitor.getRefCount();
 
-				increment the total counter
+//				increment the total counter
 				if (types.contains(java_type)) {
 				decl_count += decCounter.get(java_type);
 				ref_count += refCounter.get(java_type);

@@ -18,6 +18,7 @@ import main.JavaFileReader;
 public class Test {
 	
 	/**
+	 * MoreTest
 	 * {@link MoreTest }
 	 * @author slchan
 	 *
