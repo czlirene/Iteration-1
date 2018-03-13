@@ -83,26 +83,30 @@ public class JavaFileReader {
 	/**
 	 * Get the names of all the Java files in a given directory, with extension
 	 *
-	 * @param directory
+	 * @param directoryPath
 	 *            path of interest
 	 * @return all the Java file names in the directory, in alphabetical order
 	 * @throws NotDirectoryException
 	 *             if directory cannot be found
 	 */
-	public static ArrayList<String> getJavaFileNames(String directory) throws NotDirectoryException {
+	public static ArrayList<String> getJavaFileNames(String directoryPath) throws NotDirectoryException {
 		ArrayList<String> javaFileNames = new ArrayList<String>();
 
 		// Get all the files in the directory
-		File[] files = new File(directory).listFiles();
+		File directory = new File(directoryPath);
+		File[] files = directory.listFiles();
 		// If this pathname does not denote a directory, then listFiles() returns null.
 		if (files == null) {
-			throw new NotDirectoryException(directory);
+			throw new NotDirectoryException(directoryPath);
 		}
 
 		for (File file : files) {
 			// Only accept Java files
 			if (file.isFile() && isJavaFile(file.getName())) {
 				javaFileNames.add(file.getName());
+				if (TypeFinder.DEBUG) {
+					System.out.println(file.getName());
+				}
 			}
 		}
 

@@ -10,8 +10,16 @@ import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTParser;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 
+import test.TestSuite;
+
 public class TypeFinder {
-	private static boolean DEBUG = true;
+
+	/**
+	 * Salt gauge
+	 * 
+	 * Set to true if salty, else false
+	 */
+	public static final boolean DEBUG = false;
 
 	private static void debug(String msg) {
 		if (DEBUG) {
@@ -74,25 +82,26 @@ public class TypeFinder {
 	 */
 	private static boolean initFinder(String[] args) {
 		// Check if user has inputed a valid number arguments.
-/* 		if (args.length != VALID_ARGUMENT_COUNT) {
-			// Display error msg, and usage, then exit program.
+		if (args.length != VALID_ARGUMENT_COUNT) {
 			System.err.println(INV_ARG_MSG);
 			System.err.println(USAGE_MSG);
 			return false;
-		} */
+		}
 
-/* 		directory = args[DIRECTORY_PATH];
-		java_type = args[JAVA_TYPE]; */
-		
-		 directory = "/home/slchan/eclipse-workspace/SENG300G1/src/main/FUCK/";
-		 java_type = "no";
-		
+		if (DEBUG) {
+			directory = TestSuite.SOURCE_DIR.concat("main/FUCK/");
+			java_type = "no";
+		} else {
+			directory = args[DIRECTORY_PATH];
+			java_type = args[JAVA_TYPE];
+		}
 
 		try {
 			// retrieve all java files (read to string) in directory, and store in ArrayList
 			java_files_as_string = JavaFileReader.getAllJavaFilesToString(directory);
 		} catch (NotDirectoryException nde) {
 			System.err.println(INVALID_DIRECTORY_ERROR_MESSAGE);
+			System.out.println("Hi");
 			return false;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -145,21 +154,27 @@ public class TypeFinder {
 
 			// increment the total counter
 			// if (types.contains(java_type)) {
-			// 	decl_count += decCounter.get(java_type);
-			// 	ref_count += refCounter.get(java_type);
+			// decl_count += decCounter.get(java_type);
+			// ref_count += refCounter.get(java_type);
 			// }
 
-			
-			  System.out.println("========== DEBUG COUNT =========="); 
-			  List<String> keys = visitor.getList();
-			  Map<String, Integer> decCounter = visitor.getDecCount();
-			  Map<String, Integer> refCounter = visitor.getRefCount();
-			  
-			  for (String key : keys){ System.out.println(key + ". Declarations found: " +
-			  decCounter.get(key) + "; References found: " + refCounter.get(key)); }
-			
+			if (DEBUG) {
+				System.out.println("========== DEBUG COUNT ==========");
+			}
+			List<String> keys = visitor.getList();
+			Map<String, Integer> decCounter = visitor.getDecCount();
+			Map<String, Integer> refCounter = visitor.getRefCount();
+
+			if (DEBUG) {
+				for (String key : keys) {
+					System.out.println(key + ". Declarations found: " + decCounter.get(key) + "; References found: "
+							+ refCounter.get(key));
+				}
+			}
+
 		}
 		// System.out
-		// 		.println(java_type + ". Declarations found: " + decl_count + "; references found: " + ref_count + ".");
+		// .println(java_type + ". Declarations found: " + decl_count + "; references
+		// found: " + ref_count + ".");
 	}
 }
