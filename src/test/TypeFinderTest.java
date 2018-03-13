@@ -76,8 +76,9 @@ public class TypeFinderTest {
 	public void testNoArguments() {
 		String[] args = {};
 		TypeFinder.main(args);
-		String expected = TypeFinder.PROPER_USE_MESSAGE + TestSuite.lineSeparator;
-		String results = outContent.toString();
+		String expected = TypeFinder.INV_ARG_MSG + TestSuite.lineSeparator + TypeFinder.USAGE_MSG
+				+ TestSuite.lineSeparator;
+		String results = errContent.toString();
 		assertEquals(expected, results);
 	}
 
@@ -89,8 +90,9 @@ public class TypeFinderTest {
 	public void testThreeArguments() {
 		String[] args = { "", "", "" };
 		TypeFinder.main(args);
-		String expected = TypeFinder.PROPER_USE_MESSAGE + TestSuite.lineSeparator;
-		String results = outContent.toString();
+		String expected = TypeFinder.INV_ARG_MSG + TestSuite.lineSeparator + TypeFinder.USAGE_MSG
+				+ TestSuite.lineSeparator;
+		String results = errContent.toString();
 		assertEquals(expected, results);
 	}
 

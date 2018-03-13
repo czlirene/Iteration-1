@@ -28,7 +28,8 @@ public class TypeVisitorFooTest {
 	 * Configures ASTParser and visitor for source file
 	 * 
 	 * @param source
-	 *            of CompilationUnit
+	 * @param expectedDeclarationCount
+	 * @param expectedReferenceCount
 	 */
 	private static void configureParser(String source, int expectedDeclarationCount, int expectedReferenceCount) {
 		ASTParser parser = ASTParser.newParser(AST.JLS8);
@@ -95,8 +96,13 @@ public class TypeVisitorFooTest {
 	}
 
 	@Test
-	public void testAnnotationDeclaration_Dec_1_Ref_0() {
-		configureParser("@interface Foo {}", 1, 0);
+	public void testAnnotationDeclaration_Dec_0_Ref_0() {
+		configureParser("@interface Foo {}", 0, 0);
+	}
+
+	@Test
+	public void testAnnotation_Dec_0_Ref_0() {
+		configureParser("@Foo public void method() {}", 0, 1);
 	}
 
 	@Test
@@ -121,7 +127,7 @@ public class TypeVisitorFooTest {
 
 	@Test
 	public void testInstantiateVariable_Dec_1_Ref_1() {
-		configureParser("public class Other{ foo = new Foo();}", 1, 1);
+		configureParser("public class Other{ foo = new Foo();}", 0, 1);
 	}
 
 	/**
