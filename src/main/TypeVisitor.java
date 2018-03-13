@@ -1,14 +1,18 @@
 /**
  * TypeVisitor.java
- * 
- * A visitor for abstract syntax trees. 
+ *
+ * A visitor for abstract syntax trees.
  * For each different concrete AST node type T, the visitor will locate
  * the different java types present in the source code, and count the
  * number of declarations of references for each of the java types present.
- * 
+ *
  * @author Sze Lok Irene Chan
- * @version 2.5
- * @since 11 March 2018
+ * @version 2.6
+ * 	> Epiphany on the difference between Declaration and Reference.
+ * 		- now adhering to the following definition:
+ * 			DECLARATION: When X is being defined
+ * 			REFERENCE  : When you're referring to something that's already predefined.
+ * @since 12 March 2018
  */
 package main;
 
@@ -74,7 +78,7 @@ public class TypeVisitor extends ASTVisitor {
 	 * Checks if the passed type already exists within the types list. [false -> add
 	 * type to list create entry <type, 0> in decCounter create entry <type, 0> in
 	 * refCounter] [true -> do nothing]
-	 * 
+	 *
 	 * @param type
 	 *            : String, java type
 	 */
@@ -88,7 +92,7 @@ public class TypeVisitor extends ASTVisitor {
 
 	/**
 	 * Increment the counter value for a given type in decCounter.
-	 * 
+	 *
 	 * @param type
 	 *            : String, java type
 	 */
@@ -101,7 +105,7 @@ public class TypeVisitor extends ASTVisitor {
 
 	/**
 	 * Increment the counter value for a given type in refCounter.
-	 * 
+	 *
 	 * @param type
 	 *            : String, java type
 	 */
@@ -114,7 +118,7 @@ public class TypeVisitor extends ASTVisitor {
 
 	/**
 	 * Accessor method. Fetches the map of declaration counter.
-	 * 
+	 *
 	 * @return HashMap : decCounter
 	 */
 	public Map<String, Integer> getDecCount() {
@@ -123,7 +127,7 @@ public class TypeVisitor extends ASTVisitor {
 
 	/**
 	 * Accessor method. Fetches the map of reference counter.
-	 * 
+	 *
 	 * @return HashMap : refCounter
 	 */
 	public Map<String, Integer> getRefCount() {
@@ -132,7 +136,7 @@ public class TypeVisitor extends ASTVisitor {
 
 	/**
 	 * Accessor method. Fetches the list of types.
-	 * 
+	 *
 	 * @return ArrayList<String> : types
 	 */
 	public ArrayList<String> getList() {
@@ -148,9 +152,9 @@ public class TypeVisitor extends ASTVisitor {
 	 * Visits a Class instance creation expression AST node type. Determine the type
 	 * of the Class instance being created, add it to types, and increment its
 	 * type's counter value in decCounter.
-	 * 
+	 *
 	 * CounterType: DECLARATION
-	 * 
+	 *
 	 * @param node
 	 *            : ClassInstanceCreation
 	 * @return boolean : True to visit the children of this node
@@ -173,9 +177,9 @@ public class TypeVisitor extends ASTVisitor {
 	 * Visits a Enum declaration AST node type. Determine the type of the Enum
 	 * identifier, add it to types, and increment its type's counter value in
 	 * decCounter.
-	 * 
+	 *
 	 * CounterType: DECLARATION
-	 * 
+	 *
 	 * @param node
 	 *            : EnumDeclaration
 	 * @return boolean : True to visit the children of this node
@@ -197,12 +201,12 @@ public class TypeVisitor extends ASTVisitor {
 	 * Visits a Field declaration node type. This type of node collects MULTIPLE
 	 * VARIABLE DECL FRAGMENT into a single body declaration. They all share the
 	 * same base type.
-	 * 
+	 *
 	 * Determine the type of the Field identifier, add it to types, and increment
 	 * its type's counter value in refCounter based on the number of fragments.
-	 * 
+	 *
 	 * CounterType: REFERENCE
-	 * 
+	 *
 	 * @param node
 	 *            : FieldDeclaration
 	 * @return boolean : True to visit the children of this node
@@ -230,16 +234,16 @@ public class TypeVisitor extends ASTVisitor {
 	/**
 	 * Visits a Marker annotation node type. Marker annotation "@<typeName>" is
 	 * equivalent to normal annotation "@<typeName>()"
-	 * 
+	 *
 	 * Determine the type of annotation, add it to types, and increment its type's
 	 * counter value in refCounter.
-	 * 
+	 *
 	 * CounterType: REFERENCE
-	 * 
+	 *
 	 * @param node
 	 *            : MarkerAnnotation
 	 * @return boolean : True to visit the children of this node
-	 * 
+	 *
 	 *         TODO: Cannot recognize full qualified names for IMPORTS. Works for
 	 *         java.lang.* e.g. @Test from org.junit.Test appears as
 	 *         <currentPackage>.Test
@@ -261,12 +265,12 @@ public class TypeVisitor extends ASTVisitor {
 	 * Visits a Method declaration node type. Method declaration is a union of
 	 * method declaration and constructor declaration. (void is not a type, any void
 	 * methods will be ignored)
-	 * 
+	 *
 	 * Determine if the method is a constructor. [true -> true] [false -> get return
 	 * type of method add type to types increment reference count return true]
-	 * 
+	 *
 	 * CounterType: REFERENCE
-	 * 
+	 *
 	 * @param node
 	 *            : MethodDeclaration
 	 * @return boolean : True to visit the children of this node
@@ -296,12 +300,12 @@ public class TypeVisitor extends ASTVisitor {
 	 * Visits a single variable declaration node type. These are used only in formal
 	 * parameter lists, and catch clauses. They are not used for field declarations,
 	 * and regular variable declaration statements
-	 * 
+	 *
 	 * Determine the type of variable, add it to types, and increment the counter
 	 * value associated to the type in refCounter.
-	 * 
+	 *
 	 * CounterType: REFERENCE
-	 * 
+	 *
 	 * @param node
 	 *            : SingleVariableDeclaration
 	 * @return boolean : True to visit the children of this node
@@ -324,12 +328,12 @@ public class TypeVisitor extends ASTVisitor {
 	/**
 	 * Visits a type declaration node type. Type declaration node is the union of
 	 * class declaration, and interface declaration.
-	 * 
+	 *
 	 * Determine the type of class, add it to types, and increment the declaration
 	 * counter associated to the type.
-	 * 
+	 *
 	 * CounterType: DECLARATION
-	 * 
+	 *
 	 * @param node
 	 *            : TypeDeclaration
 	 * @return boolean : True to visit the children of this node
@@ -351,7 +355,7 @@ public class TypeVisitor extends ASTVisitor {
 	 * VariableDeclarationStatement; local variable declaration statement nodes.
 	 * ADDED: Distinction between Primitive type and others. >> Revert: Disabled
 	 * distinction
-	 * 
+	 *
 	 * TODO: Confirm Non-primitive type only count as REFERENCES
 	 */
 
@@ -359,17 +363,17 @@ public class TypeVisitor extends ASTVisitor {
 	 * Visits a local variable declaration statement node type. This type of node
 	 * contains several variable declaration fragments into a statement. They all
 	 * have the same base type and modifier.
-	 * 
+	 *
 	 * Determine the type of variable, add it to types, and increment the
 	 * declaration counter associated to the type depending on the number of
 	 * fragments.
-	 * 
+	 *
 	 * Note: For any imported packages methods/classes, you must include the full
 	 * qualified name in the code itself in order for this parser to bind it as the
 	 * type
-	 * 
+	 *
 	 * CounterType: REFERENCE
-	 * 
+	 *
 	 * @param node
 	 *            : VariableDeclarationStatement
 	 * @return boolean : True to visit the children of this node
@@ -382,11 +386,21 @@ public class TypeVisitor extends ASTVisitor {
 				// debug only: get the name of the variable
 				String name = ((VariableDeclarationFragment) fragment).getName().toString();
 				ITypeBinding typeBind = ((VariableDeclarationFragment) fragment).resolveBinding().getType();
+
+				boolean isDeclaration = ((VariableDeclarationFragment) fragment).getName().isDeclaration();
 				String type = typeBind.getQualifiedName();
 
-				debug(name, type);
 				addTypeToList(type);
-				incRefCount(type);
+				debug(name, type);
+
+				// Check if it's a primitive type -- they are all references
+				if (isDeclaration){
+					incDecCount(type);
+				} else {
+//					debug(name, type);
+					incRefCount(type);
+				}
+
 			}
 		}
 
