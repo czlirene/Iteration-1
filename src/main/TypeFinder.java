@@ -74,19 +74,19 @@ public class TypeFinder {
 	 */
 	private static boolean initFinder(String[] args) {
 		// Check if user has inputed a valid number arguments.
-		if (args.length != VALID_ARGUMENT_COUNT) {
+/* 		if (args.length != VALID_ARGUMENT_COUNT) {
 			// Display error msg, and usage, then exit program.
 			System.err.println(INV_ARG_MSG);
 			System.err.println(USAGE_MSG);
 			return false;
-		}
+		} */
 
-		directory = args[DIRECTORY_PATH];
-		java_type = args[JAVA_TYPE];
-		/*
-		 * directory = "/home/slchan/eclipse-workspace/SENG300G1/src/main/FUCK/";
-		 * java_type = "no";
-		 */
+/* 		directory = args[DIRECTORY_PATH];
+		java_type = args[JAVA_TYPE]; */
+		
+		 directory = "/home/slchan/eclipse-workspace/SENG300G1/src/main/FUCK/";
+		 java_type = "no";
+		
 
 		try {
 			// retrieve all java files (read to string) in directory, and store in ArrayList
@@ -139,26 +139,27 @@ public class TypeFinder {
 			TypeVisitor visitor = new TypeVisitor();
 			cu.accept(visitor);
 
-			List<String> types = visitor.getList();
-			Map<String, Integer> decCounter = visitor.getDecCount();
-			Map<String, Integer> refCounter = visitor.getRefCount();
+			// List<String> types = visitor.getList();
+			// Map<String, Integer> decCounter = visitor.getDecCount();
+			// Map<String, Integer> refCounter = visitor.getRefCount();
 
 			// increment the total counter
-			if (types.contains(java_type)) {
-				decl_count += decCounter.get(java_type);
-				ref_count += refCounter.get(java_type);
-			}
+			// if (types.contains(java_type)) {
+			// 	decl_count += decCounter.get(java_type);
+			// 	ref_count += refCounter.get(java_type);
+			// }
 
-			/*
-			 * System.out.println("========== DEBUG COUNT =========="); List<String> keys =
-			 * visitor.getList(); Map<String, Integer> decCounter = visitor.getDecCount();
-			 * Map<String, Integer> refCounter = visitor.getRefCount();
-			 * 
-			 * for (String key : keys){ System.out.println(key + ". Declarations found: " +
-			 * decCounter.get(key) + "; References found: " + refCounter.get(key)); }
-			 */
+			
+			  System.out.println("========== DEBUG COUNT =========="); 
+			  List<String> keys = visitor.getList();
+			  Map<String, Integer> decCounter = visitor.getDecCount();
+			  Map<String, Integer> refCounter = visitor.getRefCount();
+			  
+			  for (String key : keys){ System.out.println(key + ". Declarations found: " +
+			  decCounter.get(key) + "; References found: " + refCounter.get(key)); }
+			
 		}
-		System.out
-				.println(java_type + ". Declarations found: " + decl_count + "; references found: " + ref_count + ".");
+		// System.out
+		// 		.println(java_type + ". Declarations found: " + decl_count + "; references found: " + ref_count + ".");
 	}
 }

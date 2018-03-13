@@ -143,8 +143,7 @@ public class TypeVisitor extends ASTVisitor {
 	}
 
 	/*
-	 * ============================== ASTVisitor FUNCTIONS
-	 * ==============================
+	 * ============================== ASTVisitor FUNCTIONS ==============================
 	 */
 	/**
 	 * Visits a Class instance creation expression AST node type. Determine the type
@@ -159,14 +158,32 @@ public class TypeVisitor extends ASTVisitor {
 	 */
 	@Override
 	public boolean visit(ClassInstanceCreation node) {
-		ITypeBinding typeBind = node.getType().resolveBinding();
-		String type = typeBind.getQualifiedName();
+		boolean isParameterized = node.getType().isParameterizedType();
+		if (isParameterized) {
+			ITypeBinding typeBind = node.getType().resolveBinding().getTypeDeclaration();
+			String type = typeBind.getQualifiedName();
 
-		/* Debug ONLY: Get the parent variable name if it exists */
-		debug("ClassInstanceCreation", type);
+			addTypeToList(type);
+			incRefCount(type);
+			debug("ClassInstanceCreation", type);
 
-		addTypeToList(type);
-		incRefCount(type);
+			// inc count for all the arguments
+			for (ITypeBinding paramBind : node.getType().resolveBinding().getTypeArguments()) {
+				String paramType = paramBind.getQualifiedName();
+				debug("param", paramType);
+				addTypeToList(paramType);
+				incRefCount(paramType);
+			}
+		} else {
+			ITypeBinding typeBind = node.getType().resolveBinding();
+			String type = typeBind.getQualifiedName();
+
+			/* Debug ONLY: Get the parent variable name if it exists */
+			debug("ClassInstanceCreation", type);
+
+			addTypeToList(type);
+			incRefCount(type);
+		}
 
 		return true;
 	}
@@ -219,7 +236,6 @@ public class TypeVisitor extends ASTVisitor {
 
 			addTypeToList(type);
 			incRefCount(type);
-
 			for (Object fragment : node.fragments()) {
 				if (fragment instanceof VariableDeclarationFragment) {
 					// debug only: get the name of the variable
@@ -331,8 +347,7 @@ public class TypeVisitor extends ASTVisitor {
 	 *
 	 * CounterType: REFERENCE
 	 *
-	 * @param node
-	 *            : SingleVariableDeclaration
+	 * @param node: SingleVariableDeclaration
 	 * @return boolean : True to visit the children of this node
 	 */
 	@Override
@@ -347,13 +362,7 @@ public class TypeVisitor extends ASTVisitor {
 			addTypeToList(type);
 			incRefCount(type);
 
-			for (Object fragment : node.fragments()) {
-				if (fragment instanceof VariableDeclarationFragment) {
-					// debug only: get the name of the variable
-					String name = ((VariableDeclarationFragment) fragment).getName().toString();
-					debug(name, type);
-				}
-			}
+			debug(node.getName().toString(), type);
 
 			// inc count for all the arguments
 			for (ITypeBinding paramBind : node.getType().resolveBinding().getTypeArguments()) {
