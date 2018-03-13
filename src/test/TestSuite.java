@@ -10,8 +10,8 @@ import org.junit.runners.Suite;
 /**
  * All Test suites go here.
  */
-@Suite.SuiteClasses({ BigIncrementerVaryingStartsTest.class, BigIncrementerDefaultTest.class, TypeVisitorFooTest.class,
-		TypeFinderTest.class, JavaFileReaderTest.class, PassTest.class })
+@Suite.SuiteClasses({ BigIncrementerVaryingStartsTest.class, BigIncrementerDefaultTest.class, JavaFileReaderTest.class,
+		PassTest.class })
 
 /**
  * Runs all test classes

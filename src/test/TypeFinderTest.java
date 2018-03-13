@@ -21,6 +21,18 @@ import main.TypeFinder;
 public class TypeFinderTest {
 
 	/**
+	 * Get string of expected TyepFinder output
+	 * 
+	 * @param java_type
+	 * @param decl_count
+	 * @param ref_count
+	 * @return
+	 */
+	private static final String typeFinderResults(int java_type, int decl_count, int ref_count) {
+		return java_type + ". Declarations found: " + decl_count + "; references found: " + ref_count + ".\n";
+	}
+
+	/**
 	 * Contents of standard output
 	 */
 	private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();

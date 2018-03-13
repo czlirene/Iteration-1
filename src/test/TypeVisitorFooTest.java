@@ -56,10 +56,21 @@ public class TypeVisitorFooTest {
 		TypeVisitor visitor = new TypeVisitor();
 		cu.accept(visitor);
 
-		int[] results = { visitor.getDecCount().get(type), visitor.getRefCount().get(type) };
+		int decl_count = 0;
+		int ref_count = 0;
+		try {
+			decl_count = visitor.getDecCount().get(type);
+		} catch (Exception e) {
 
-		assertEquals(expectedDeclarationCount, results[0]);
-		assertEquals(expectedReferenceCount, results[1]);
+		}
+		try {
+			ref_count = visitor.getRefCount().get(type);
+		} catch (Exception e) {
+
+		}
+
+		assertEquals(expectedDeclarationCount, decl_count);
+		assertEquals(expectedReferenceCount, ref_count);
 
 	}
 
