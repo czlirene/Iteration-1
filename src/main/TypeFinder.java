@@ -101,7 +101,6 @@ public class TypeFinder {
 			java_files_as_string = JavaFileReader.getAllJavaFilesToString(directory);
 		} catch (NotDirectoryException nde) {
 			System.err.println(INVALID_DIRECTORY_ERROR_MESSAGE);
-			System.out.println("Hi");
 			return false;
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -167,8 +166,8 @@ public class TypeFinder {
 
 			if (DEBUG) {
 				for (String key : keys) {
-					System.out.println(key + ". Declarations found: " + decCounter.get(key) + "; References found: "
-							+ refCounter.get(key));
+					System.out.println(key + ". Declarations found: " + decCounter.get(key) + "; references found: "
+							+ refCounter.get(key) + ".");
 				}
 			}
 

@@ -141,7 +141,7 @@ public class TypeVisitorBuiltInTest {
 	 */
 	@Test
 	public void testJavaUtilHashMapImportedParameterized_Dec_0_Ref_1() {
-		configureParser("import java.util.HashMap class Foo { HashMap<String, Integer> map;", "java.util.HashMap}", 0,
+		configureParser("import java.util.HashMap class Foo { HashMap<String, Integer> map;}", "java.util.HashMap", 0,
 				1);
 	}
 
@@ -162,7 +162,7 @@ public class TypeVisitorBuiltInTest {
 	 */
 	@Test
 	public void testJavaLangStringParameterizedHashMap_Dec_0_Ref_1() {
-		configureParser("import java.util.HashMap class Foo { HashMap<String, Integer> map;", "java.lang.String}", 0,
+		configureParser("import java.util.HashMap class Foo { HashMap<String, Integer> map;}", "java.lang.String", 0,
 				1);
 	}
 
@@ -178,12 +178,23 @@ public class TypeVisitorBuiltInTest {
 	}
 
 	/**
+	 * Check that a reference to String as both generic parameters of
+	 * java.util.HashMap defaults to java.lang.String
+	 */
+	@Test
+	public void testJavaLangStringParameterizedAndDeclaredHashMap_Dec_0_Ref_4() {
+		configureParser(
+				"import java.util.HashMap class Foo { HashMap<String, String> map = new HashMap<String, String>();}",
+				"java.lang.String", 0, 4);
+	}
+
+	/**
 	 * Check that a reference to String as a generic parameter of Foo defaults to
 	 * java.lang.String
 	 */
 	@Test
 	public void testJavaLangStringParameterizedFoo_Dec_0_Ref_1() {
-		configureParser("class Other { Foo<String> foo;", "java.lang.String}", 0, 1);
+		configureParser("class Other { Foo<String> foo;}", "java.lang.String", 0, 1);
 	}
 
 	/**
@@ -201,7 +212,7 @@ public class TypeVisitorBuiltInTest {
 	 */
 	@Test
 	public void testJavaLangStringParameterizedList_Dec_0_Ref_1() {
-		configureParser("import java.util.List; class Other { List<String> list;", "java.lang.String}", 0, 1);
+		configureParser("import java.util.List; class Other { List<String> list;}", "java.lang.String", 0, 1);
 	}
 
 	/**

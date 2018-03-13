@@ -100,10 +100,18 @@ public class TypeFinderTest {
 	 * Check that the correct number of declarations and references can be found
 	 * from the test.testPackage directory
 	 */
-	// @Test
-	// public void testTestPackageDirectory() {
-	// // TODO
-	// // String results = outContents.toString():
-	// }
+	@Test
+	public void testTestPackageDirectory() {
+		String[] args = { TestSuite.TYPE_FINDER_TEST_DIR, "test.typeFinderTestPackage.Foo" };
+		TypeFinder.main(args);
+		int expectedDec = 1;
+		int expectedRef = 11;
+		String expectedOut = "Declarations found: " + expectedDec + "; references found: " + expectedRef + ".\n";
+		String expectedErr = "";
+		String outResults = outContent.toString();
+		String errResults = errContent.toString();
+		assertEquals(expectedErr, errResults);
+		assertEquals(expectedOut, outResults);
+	}
 
 }

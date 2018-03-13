@@ -27,10 +27,10 @@ import org.eclipse.jdt.core.dom.VariableDeclarationStatement;
  * the java types present.
  *
  * @author Sze Lok Irene Chan
- * @version 2.8
- * 			+Fixed VariableDeclarationStatement; They are all considered references now
- * 			+ ParameterizedType fixed: all TypeArguments will be resolved, EXCEPT in the case where
- * 				ClassX is never declared in any files in ClassX<Type, Type>.
+ * @version 2.8 +Fixed VariableDeclarationStatement; They are all considered
+ *          references now + ParameterizedType fixed: all TypeArguments will be
+ *          resolved, EXCEPT in the case where ClassX is never declared in any
+ *          files in ClassX<Type, Type>.
  * 
  * @TODO: Parametized Type: Increment references
  * @since 12 March 2018
@@ -42,7 +42,7 @@ public class TypeVisitor extends ASTVisitor {
 	/**
 	 * Debug methods TODO: Remove these before submission
 	 */
-	private boolean DEBUG = true;
+	private boolean DEBUG = false;
 
 	private void debug(String msg) {
 		if (DEBUG) {
@@ -147,13 +147,14 @@ public class TypeVisitor extends ASTVisitor {
 	}
 
 	/*
-	 * ============================== ASTVisitor FUNCTIONS ==============================
+	 * ============================== ASTVisitor FUNCTIONS
+	 * ==============================
 	 */
 
-//	@Override
-//	public boolean visit(AnnotationTypeDeclaration node){
-//		return true;
-//	}
+	// @Override
+	// public boolean visit(AnnotationTypeDeclaration node){
+	// return true;
+	// }
 
 	/**
 	 * Visits a Class instance creation expression AST node type. Determine the type
@@ -162,7 +163,8 @@ public class TypeVisitor extends ASTVisitor {
 	 * 
 	 * CounterType: REFERENCE
 	 * 
-	 * @param node : ClassInstanceCreation
+	 * @param node
+	 *            : ClassInstanceCreation
 	 * @return boolean : True to visit the children of this node
 	 */
 	@Override
@@ -356,7 +358,8 @@ public class TypeVisitor extends ASTVisitor {
 	 *
 	 * CounterType: REFERENCE
 	 *
-	 * @param node: SingleVariableDeclaration
+	 * @param node:
+	 *            SingleVariableDeclaration
 	 * @return boolean : True to visit the children of this node
 	 */
 	@Override
