@@ -1,4 +1,5 @@
 package main.FUCK;
+import java.util.*;
 import java.nio.file.NotDirectoryException;
 
 import org.eclipse.jdt.core.dom.AST;
@@ -26,8 +27,11 @@ public class Test {
 //            + "}";
 //
 	public class Foo2{};
+	public List<String> a;
+	public List<Integer> b;
     public void main(String[] args) {
-    	SomeClass a,b,c,d,e = new Foo2(), g, k, l, m = new Foo2();
+    	String s;
+
     }
 //        ASTParser parser = ASTParser.newParser(AST.JLS4);
 //        parser.setSource(str.toCharArray());

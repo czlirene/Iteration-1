@@ -7,11 +7,10 @@
  * number of declarations of references for each of the java types present.
  * 
  * @author Sze Lok Irene Chan
- * @version 2.6
- * 	> Epiphany on the difference between Declaration and Reference. 
- * 		- now adhering to the following definition:
- * 			DECLARATION: When X is being defined
- * 			REFERENCE  : When you're referring to something that's already predefined.
+ * @version 2.7
+ *	 +Fixed VariableDeclarationStatement; They are all considered references now
+ * 
+ * @TODO: Parametized Type: Increment references
  * @since 12 March 2018
  */
 package main;
@@ -129,13 +128,12 @@ public class TypeVisitor extends ASTVisitor {
 	}
 	
 /* ============================== ASTVisitor FUNCTIONS ============================== */
-
 	/**
 	 * Visits a Class instance creation expression AST node type.
 	 * Determine the type of the Class instance being created, add it to types, 
-	 * and increment its type's counter value in decCounter.
+	 * and increment its type's counter value in refCounter.
 	 * 
-	 * CounterType: DECLARATION
+	 * CounterType: REFERENCE
 	 * 
 	 * @param node : ClassInstanceCreation
 	 * @return boolean : True to visit the children of this node
@@ -146,10 +144,10 @@ public class TypeVisitor extends ASTVisitor {
 		String type = typeBind.getQualifiedName();
 
 		/* Debug ONLY: Get the parent variable name if it exists */
-		debug("ClassInstanceCreation" ,type);
+		debug("ClassInstanceCreation",type);
 
 		addTypeToList(type);
-		incDecCount(type);
+		incRefCount(type);
 
 		return true;
 	}
@@ -193,24 +191,48 @@ public class TypeVisitor extends ASTVisitor {
 	 */
 	@Override
 	public boolean visit(FieldDeclaration node){
-		ITypeBinding typeBind = node.getType().resolveBinding();
-		String type = typeBind.getQualifiedName();
+		boolean isParameterized = node.getType().isParameterizedType();
 
-		addTypeToList(type);
+		if (isParameterized){
+			ITypeBinding typeBind = node.getType().resolveBinding().getTypeDeclaration();
+			String type = typeBind.getQualifiedName();
 
-		// iterate through all the fragments, and increment the type counter
-		for (Object fragment : node.fragments()){
-			if (fragment instanceof VariableDeclarationFragment){
-				// debug only: get the name of the variable
-				String name = ((VariableDeclarationFragment) fragment).getName().toString();
-				debug(name, type);
+			addTypeToList(type);
+			incRefCount(type);
 
-				incRefCount(type);
+			for (Object fragment : node.fragments()){
+				if (fragment instanceof VariableDeclarationFragment){
+					// debug only: get the name of the variable
+					String name = ((VariableDeclarationFragment) fragment).getName().toString();
+					debug(name, type);
+				}
+			}
+
+			// inc count for all the arguments
+			for (ITypeBinding paramBind : node.getType().resolveBinding().getTypeArguments()){
+				String paramType = paramBind.getQualifiedName();
+				debug("param", paramType);
+				addTypeToList(paramType);
+				incRefCount(paramType);
+			}
+		} else {
+			ITypeBinding typeBind = node.getType().resolveBinding();
+			String type = typeBind.getQualifiedName();
+
+			addTypeToList(type);
+
+			// iterate through all the fragments, and increment the type counter
+			for (Object fragment : node.fragments()){
+				if (fragment instanceof VariableDeclarationFragment){
+					// debug only: get the name of the variable
+					String name = ((VariableDeclarationFragment) fragment).getName().toString();
+					debug(name, type);
+					incRefCount(type);
+				}
 			}
 		}
 		return true;
 	}
-
 
 	/**
 	 * Visits a Marker annotation node type. 
@@ -254,6 +276,7 @@ public class TypeVisitor extends ASTVisitor {
 	 * 
 	 * CounterType: REFERENCE
 	 * 
+	 * @TODO: Get parameters
 	 * @param node : MethodDeclaration
 	 * @return boolean : True to visit the children of this node
 	 */
@@ -278,7 +301,6 @@ public class TypeVisitor extends ASTVisitor {
 		return true;
 	}
 
-
 	/**
 	 * Visits a single variable declaration node type. 
 	 * These are used only in formal parameter lists, and catch clauses. 
@@ -294,15 +316,44 @@ public class TypeVisitor extends ASTVisitor {
 	 */
 	@Override
 	public boolean visit(SingleVariableDeclaration node){
-		IVariableBinding varBind = node.resolveBinding();
-		ITypeBinding typeBind = varBind.getType();
-		String type = typeBind.getQualifiedName();
+		boolean isParameterized = node.getType().isParameterizedType();
 
-		// debug only: print variable name, and its type
-		debug(node.getName().toString(), type);
+		// get parameterized variables
+		if (isParameterized){
+			ITypeBinding typeBind = node.getType().resolveBinding().getTypeDeclaration();
+			String type = typeBind.getQualifiedName();
 
-		addTypeToList(type);
-		incRefCount(type);
+			addTypeToList(type);
+			incRefCount(type);
+
+			for (Object fragment : node.fragments()){
+				if (fragment instanceof VariableDeclarationFragment){
+					// debug only: get the name of the variable
+					String name = ((VariableDeclarationFragment) fragment).getName().toString();
+					debug(name, type);
+				}
+			}
+
+			// inc count for all the arguments
+			for (ITypeBinding paramBind : node.getType().resolveBinding().getTypeArguments()){
+				String paramType = paramBind.getQualifiedName();
+				debug("param", paramType);
+				addTypeToList(paramType);
+				incRefCount(paramType);
+			}
+
+
+		} else {
+			IVariableBinding varBind = node.resolveBinding();
+			ITypeBinding typeBind = varBind.getType();
+			String type = typeBind.getQualifiedName();
+
+			// debug only: print variable name, and its type
+			debug(node.getName().toString(), type);
+
+			addTypeToList(type);
+			incRefCount(type);
+		}
 
 		return true;
 	}
@@ -361,29 +412,52 @@ public class TypeVisitor extends ASTVisitor {
 	 * @return boolean : True to visit the children of this node
 	 */
 	public boolean visit(VariableDeclarationStatement node){
-		// iterate through all the fragments, and increment the type counter
-		for (Object fragment : node.fragments()){
-			if (fragment instanceof VariableDeclarationFragment){
-				// debug only: get the name of the variable
-				String name = ((VariableDeclarationFragment) fragment).getName().toString();
-				ITypeBinding typeBind = ((VariableDeclarationFragment) fragment).resolveBinding().getType();
+		boolean isParameterized = node.getType().isParameterizedType();
+		
+		// get parameterized variables
+		if (isParameterized){
+			ITypeBinding typeBind = node.getType().resolveBinding().getTypeDeclaration();
+			String type = typeBind.getQualifiedName();
 
-				boolean isDeclaration = ((VariableDeclarationFragment) fragment).getName().isDeclaration();
-				String type = typeBind.getQualifiedName();
+			addTypeToList(type);
+			incRefCount(type);
 
-				addTypeToList(type);
-				debug(name, type);
+			for (Object fragment : node.fragments()){
+				if (fragment instanceof VariableDeclarationFragment){
+					// debug only: get the name of the variable
+					String name = ((VariableDeclarationFragment) fragment).getName().toString();
+					debug(name, type);
+				}
+			}
 
-				// Check if it's a primitive type -- they are all references
-				if (isDeclaration){
-					incDecCount(type);
-				} else {
-//					debug(name, type);
+			// inc count for all the arguments
+			for (ITypeBinding paramBind : node.getType().resolveBinding().getTypeArguments()){
+				String paramType = paramBind.getQualifiedName();
+				debug("param", paramType);
+				addTypeToList(paramType);
+				incRefCount(paramType);
+			}
+
+
+		} else {
+			// iterate through all the fragments, and increment the type counter
+			for (Object fragment : node.fragments()){
+				if (fragment instanceof VariableDeclarationFragment){
+					// debug only: get the name of the variable
+					String name = ((VariableDeclarationFragment) fragment).getName().toString();
+					ITypeBinding typeBind = ((VariableDeclarationFragment) fragment).resolveBinding().getType();
+
+					boolean isDeclaration = ((VariableDeclarationFragment) fragment).getName().isDeclaration();
+					String type = typeBind.getQualifiedName();
+
+					addTypeToList(type);
+					debug(name, type);
 					incRefCount(type);
 				}
-
 			}
+
 		}
+
 
 		return true;
 	}
