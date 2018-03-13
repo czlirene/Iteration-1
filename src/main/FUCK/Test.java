@@ -16,6 +16,12 @@ import org.eclipse.jdt.core.dom.MethodInvocation;
 
 import main.JavaFileReader;
 public class Test {
+	
+	/**
+	 * {@link MoreTest }
+	 * @author slchan
+	 *
+	 */
 	@interface ClassPreamble {
 		   String author();
 		   String date();
