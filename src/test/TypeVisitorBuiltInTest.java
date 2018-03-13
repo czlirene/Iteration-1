@@ -136,7 +136,8 @@ public class TypeVisitorBuiltInTest {
 	}
 
 	/**
-	 * Check that a reference of
+	 * Check that a reference to HashMap<String,Integer> defaults to
+	 * java.util.HashMap with java.util.HashMap import
 	 */
 	@Test
 	public void testJavaUtilHashMapImportedParameterized_Dec_0_Ref_1() {
@@ -144,6 +145,10 @@ public class TypeVisitorBuiltInTest {
 				1);
 	}
 
+	/**
+	 * Check that a reference to HashMap<String, Integer> defaults to
+	 * java.util.HashMap with java.util.HashMap import
+	 */
 	@Test
 	public void testJavaUtilHashMapImportedParameterizedAndDeclared_Dec_0_Ref_2() {
 		configureParser(
@@ -151,12 +156,20 @@ public class TypeVisitorBuiltInTest {
 				"java.util.HashMap", 0, 2);
 	}
 
+	/**
+	 * Check that a reference to String as a generic parameter of java.util.HashMap
+	 * defaults to java.lang.String
+	 */
 	@Test
 	public void testJavaLangStringParameterizedHashMap_Dec_0_Ref_1() {
 		configureParser("import java.util.HashMap class Foo { HashMap<String, Integer> map;", "java.lang.String}", 0,
 				1);
 	}
 
+	/**
+	 * Check that a reference to String as a generic parameter of java.util.HashMap
+	 * defaults to java.lang.String
+	 */
 	@Test
 	public void testJavaLangStringParameterizedAndDeclaredHashMap_Dec_0_Ref_2() {
 		configureParser(
@@ -164,14 +177,41 @@ public class TypeVisitorBuiltInTest {
 				"java.lang.String", 0, 2);
 	}
 
+	/**
+	 * Check that a reference to String as a generic parameter of Foo defaults to
+	 * java.lang.String
+	 */
 	@Test
 	public void testJavaLangStringParameterizedFoo_Dec_0_Ref_1() {
-		configureParser("class Other { Foo<String> list;", "java.lang.String}", 0, 1);
+		configureParser("class Other { Foo<String> foo;", "java.lang.String}", 0, 1);
 	}
 
+	/**
+	 * Check that a reference to String as a generic parameter of Foo defaults to
+	 * java.lang.String
+	 */
+	@Test
+	public void testJavaLangStringParameterizedAndDeclaredFoo_Dec_0_Ref_2() {
+		configureParser("class Other { Foo<String> foo = new Foo<String>();}", "java.lang.String", 0, 2);
+	}
+
+	/**
+	 * Check that a reference to String as a generic parameter of Foo defaults to
+	 * java.lang.String
+	 */
+	@Test
+	public void testJavaLangStringParameterizedList_Dec_0_Ref_1() {
+		configureParser("import java.util.List; class Other { List<String> list;", "java.lang.String}", 0, 1);
+	}
+
+	/**
+	 * Check that a reference to String as a generic parameter of Foo defaults to
+	 * java.lang.String
+	 */
 	@Test
 	public void testJavaLangStringParameterizedAndDeclaredList_Dec_0_Ref_2() {
-		configureParser("class Other { Foo<String> list = new Foo<String>();}", "java.lang.String", 0, 2);
+		configureParser("import java.util.List; class Other { List<String> list = new List<String>();}",
+				"java.lang.String", 0, 2);
 	}
 
 }

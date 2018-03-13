@@ -75,81 +75,141 @@ public class TypeVisitorFooTest {
 
 	}
 
+	/**
+	 * Check if a class declaration of another type does not affect declaration
+	 * count
+	 */
 	@Test
 	public void testOtherClassDeclaration_Dec_0_Ref_0() {
 		configureParser("class Other {}", 0, 0);
 	}
 
+	/**
+	 * Check if a class declaration is counted as a declaration
+	 */
 	@Test
 	public void testClassDeclaration_Dec_1_Ref_0() {
 		configureParser("class Foo {}", 1, 0);
 	}
 
+	/**
+	 * Check if an interface declaration is counted as a declaration
+	 */
 	@Test
 	public void testInterfaceDeclaration_Dec_1_Ref_0() {
 		configureParser("interface Foo {}", 1, 0);
 	}
 
+	/**
+	 * Check if an enum declaration is counted as a declaration
+	 */
 	@Test
 	public void testEnumDeclaration_Dec_1_Ref_0() {
 		configureParser("enum Foo {}", 1, 0);
 	}
 
+	/**
+	 * Check if an annotation declaration is counted as a declaration
+	 */
 	@Test
-	public void testAnnotationDeclaration_Dec_0_Ref_0() {
-		configureParser("@interface Foo {}", 0, 0);
+	public void testAnnotationDeclaration_Dec_1_Ref_0() {
+		configureParser("@interface Foo {}", 1, 0);
 	}
 
+	/**
+	 * Check if an annotation reference is counted as a reference
+	 */
 	@Test
 	public void testAnnotation_Dec_0_Ref_0() {
 		configureParser("@Foo public void method() {}", 0, 1);
 	}
 
+	/**
+	 * Check if a return type reference in a method declaration is counted as a
+	 * reference
+	 */
 	@Test
-	public void testMethodReturn_Dec_1_Ref_1() {
-		configureParser("public class Foo{ public Foo methodName() {}}", 1, 1);
-	}
-
-	@Test
-	public void testDeclareVariable_Dec_1_Ref_1() {
-		configureParser("public class Foo{ Foo foo;}", 1, 1);
-	}
-
-	@Test
-	public void testSetVariable_Dec_1_Ref_0() {
-		configureParser("public class Foo{ foo = anotherFoo;}", 1, 0);
-	}
-
-	@Test
-	public void testDeclareAndInstantiateVariable_Dec_1_Ref_2() {
-		configureParser("public class Foo{ Foo foo = new Foo();}", 1, 2);
-	}
-
-	@Test
-	public void testInstantiateVariable_Dec_1_Ref_1() {
-		configureParser("public class Other{ foo = new Foo();}", 0, 1);
+	public void testMethodReturn_Dec_0_Ref_1() {
+		configureParser("public class Other{ public Foo methodName() {}}", 0, 1);
 	}
 
 	/**
-	 * NOTE: This may not be correct
+	 * Check if a variable declaration is counted as a reference
 	 */
 	@Test
-	public void testOtherParamterizedTypes_Dec_1_Ref_4() {
-		configureParser("public class Foo{ Foo foo = new FooChild<String, Integer>();}", 1, 1);
+	public void testDeclareVariable_Dec_0_Ref_1() {
+		configureParser("public class Other{ Foo foo;}", 0, 1);
 	}
 
+	/**
+	 * Check if a a variable declaration and setting as another variable's value is
+	 * counted as a reference
+	 */
 	@Test
-	public void testParameterizedTypes_Dec_0_Ref_2() {
-		configureParser("public class Other{ ArrayList<Foo> list = new ArrayList<Foo>()", 0, 2);
+	public void testSetVariable_Dec_0_Ref_0() {
+		configureParser("public class Other { Foo foo = anotherFoo;}", 0, 1);
 	}
 
+	/**
+	 * Check if a variable declaration and instantiating it with a constructor is
+	 * counted as 2 references
+	 */
+	@Test
+	public void testDeclareAndInstantiateVariable_Dec_0_Ref_2() {
+		configureParser("public class Other { Foo foo = new Foo();}", 0, 2);
+	}
+
+	/**
+	 * Check that instantiating an instance of a Parent of Foo with the constructor
+	 * of Foo counts 1 reference
+	 */
+	@Test
+	public void testInstantiateVariableOfParent_Dec_1_Ref_1() {
+		configureParser("public class Other{ FooParent foo = new Foo();}", 0, 1);
+	}
+
+	/**
+	 * Check that instantiating an instance of a Child of Foo in a variable of type
+	 * Foo counts as 1 reference
+	 */
+	@Test
+	public void testInstantiatingVariableOfChild_Dec_0_Ref_1() {
+		configureParser("public class Other{ Foo foo = new FooChild();}", 0, 1);
+	}
+
+	/**
+	 * TODO bar not defined elsewhere, ASTParser doesn't know Bar can accept 1
+	 * generic parameter
+	 */
+	@Test
+	public void testOtherParamterizedTypes_Dec_0_Ref_2() {
+		configureParser("public class Other{ Bar<Foo> bar = new Bar<Foo>();}", 0, 2);
+	}
+
+	/**
+	 * TODO bar not defined elsewhere, ASTParser doesn't know Bar can accept 2
+	 * generic parameters
+	 */
 	@Test
 	public void testDoubleParameterizedTypes_Dec_0_Ref_4() {
-		configureParser("public class Other{ HashMap<Foo, Foo> map = new ArrayList<Foo, Foo>()", 0, 4);
+		configureParser("public class Other{ Bar<Foo, Foo> bar = new Bar<Foo, Foo>()", 0, 4);
 	}
 
+	/**
+	 * Check that a reference of Foo instantiated inside a parameter of another
+	 * constructor is counted
+	 */
 	@Test
-	public void testPackageFoo_Dec_0_Ref_0() {
-		configureParser("package bar; public class Foo {}", 0, 0);
+	public void testInstantiateInsideOtherConstructor_Dec_0_Ref_1() {
+		configureParser("public class Other{ Other2 other = new Other2(new Foo());}", 0, 1);
+	}
+
+	/**
+	 * Check that an instantiation of another class inside a Foo constructor counts
+	 * the reference
+	 */
+	@Test
+	public void testInstantiateOtherInsideConstructor_Dec_0_Ref_2() {
+		configureParser("public class Other{ Foo foo = new Foo(new Other2());}", 0, 2);
 	}
 }

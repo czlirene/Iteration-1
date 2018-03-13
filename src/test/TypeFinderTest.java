@@ -55,7 +55,7 @@ public class TypeFinderTest {
 
 	/**
 	 * Check that inputting an invalid directory prompts the user with an Invalid
-	 * Directory error message to screen
+	 * Foo * Directory error message to screen
 	 */
 	@Test
 	public void testInvalidDirectory() {
