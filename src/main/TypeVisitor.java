@@ -69,17 +69,17 @@ public class TypeVisitor extends ASTVisitor {
 	}
 
 	/*
-	 * ============================== HELPER FUNCTIONS
-	 * ==============================
+	 * ============================== HELPER FUNCTIONS ==============================
 	 */
 
 	/**
-	 * Checks if the passed type already exists within the types list. [false -> add
-	 * type to list create entry <type, 0> in decCounter create entry <type, 0> in
-	 * refCounter] [true -> do nothing]
+	 * Checks if the passed type already exists within the types list. 
+	 * [false -> add type to list 
+	 * 			 create entry <type, 0> in decCounter 
+	 * 			 create entry <type, 0> in refCounter] 
+	 * [true -> do nothing]
 	 *
-	 * @param type
-	 *            : String, java type
+	 * @param type : String, java type
 	 */
 	private static void addTypeToList(String type) {
 		if (!types.contains(type)) {
@@ -92,8 +92,7 @@ public class TypeVisitor extends ASTVisitor {
 	/**
 	 * Increment the counter value for a given type in decCounter.
 	 *
-	 * @param type
-	 *            : String, java type
+	 * @param type: String, java type
 	 */
 	private static void incDecCount(String type) {
 		// Check if the type exists, then increment their associated value by 1
@@ -105,8 +104,7 @@ public class TypeVisitor extends ASTVisitor {
 	/**
 	 * Increment the counter value for a given type in refCounter.
 	 *
-	 * @param type
-	 *            : String, java type
+	 * @param type : String, java type
 	 */
 	private static void incRefCount(String type) {
 		// Check if the type exists, then increment their associated value by 1
@@ -174,8 +172,7 @@ public class TypeVisitor extends ASTVisitor {
 	 *
 	 * CounterType: DECLARATION
 	 *
-	 * @param node
-	 *            : EnumDeclaration
+	 * @param node : EnumDeclaration
 	 * @return boolean : True to visit the children of this node
 	 */
 	@Override
@@ -201,8 +198,7 @@ public class TypeVisitor extends ASTVisitor {
 	 *
 	 * CounterType: REFERENCE
 	 *
-	 * @param node
-	 *            : FieldDeclaration
+	 * @param node : FieldDeclaration
 	 * @return boolean : True to visit the children of this node
 	 */
 	@Override
@@ -259,11 +255,10 @@ public class TypeVisitor extends ASTVisitor {
 	 *
 	 * CounterType: REFERENCE
 	 *
-	 * @param node
-	 *            : MarkerAnnotation
+	 * @param node : MarkerAnnotation
 	 * @return boolean : True to visit the children of this node
 	 *
-	 *         TODO: Cannot recognize full qualified names for IMPORTS. Works for
+	 * TODO: Cannot recognize full qualified names for IMPORTS. Works for
 	 *         java.lang.* e.g. @Test from org.junit.Test appears as
 	 *         <currentPackage>.Test
 	 */
@@ -290,7 +285,8 @@ public class TypeVisitor extends ASTVisitor {
 	 *
 	 * CounterType: REFERENCE
 	 * 
-	 * @TODO: Get parameters
+	 * TODO: Get parameters
+	 * 
 	 * @param node : MethodDeclaration
 	 * @return boolean : True to visit the children of this node
 	 */
@@ -325,8 +321,7 @@ public class TypeVisitor extends ASTVisitor {
 	 *
 	 * CounterType: REFERENCE
 	 *
-	 * @param node
-	 *            : SingleVariableDeclaration
+	 * @param node : SingleVariableDeclaration
 	 * @return boolean : True to visit the children of this node
 	 */
 	@Override
@@ -382,8 +377,7 @@ public class TypeVisitor extends ASTVisitor {
 	 *
 	 * CounterType: DECLARATION
 	 *
-	 * @param node
-	 *            : TypeDeclaration
+	 * @param node : TypeDeclaration
 	 * @return boolean : True to visit the children of this node
 	 */
 	@Override
@@ -400,14 +394,6 @@ public class TypeVisitor extends ASTVisitor {
 	}
 
 	/**
-	 * VariableDeclarationStatement; local variable declaration statement nodes.
-	 * ADDED: Distinction between Primitive type and others. >> Revert: Disabled
-	 * distinction
-	 *
-	 * TODO: Confirm Non-primitive type only count as REFERENCES
-	 */
-
-	/**
 	 * Visits a local variable declaration statement node type. This type of node
 	 * contains several variable declaration fragments into a statement. They all
 	 * have the same base type and modifier.
@@ -422,8 +408,7 @@ public class TypeVisitor extends ASTVisitor {
 	 *
 	 * CounterType: REFERENCE
 	 *
-	 * @param node
-	 *            : VariableDeclarationStatement
+	 * @param node : VariableDeclarationStatement
 	 * @return boolean : True to visit the children of this node
 	 */
 	public boolean visit(VariableDeclarationStatement node){
