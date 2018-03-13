@@ -14,8 +14,8 @@ import test.TestSuite;
 
 /**
  * Takes a pathname to indicate a directory of interest and a String to indicate
- * a fully qualified name of a Java type. Counts the number of declaratinos of a
- * Java type and references of each occurrence of taht type within that
+ * a fully qualified name of a Java type. Counts the number of declarations of a
+ * Java type and references of each occurrence of that type within that
  * directory.
  * 
  * @author Sze Lok Irene Chan
@@ -25,16 +25,16 @@ import test.TestSuite;
  */
 public class TypeFinder {
 
+	// Special salt gauge version (for Irene)
+	// Disable commandline, and prints all types and counts
+	// TODO: Remove this later
+	public static final boolean IDEBUG = true;
+
 	private static void debug(String msg) {
 		if (IDEBUG) {
 			System.out.println("DEBUG >> " + msg);
 		}
 	}
-
-	// Special salt gauge version (for Irene)
-	// Disable commandline, and prints all types and counts
-	// TODO: Remove this later
-	public static final boolean IDEBUG = false;
 
 	/* GLOBAL VARIABLES */
 	/**
@@ -67,6 +67,9 @@ public class TypeFinder {
 	 */
 	public static final String USAGE_MESSAGE = "Usage: java TypeFinder <directory> <Java type>";
 
+	/**
+	 * TODO This is currently unused.
+	 */
 	public static final String PROG_DESCRIPTION_MSG = "Determine the numerical count of declarations and references of a specified Java type for all Java files found in the given directory.";
 
 	/**
