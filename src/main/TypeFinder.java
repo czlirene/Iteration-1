@@ -1,11 +1,14 @@
 package main;
 
-import java.io.IOException;
 import java.nio.file.NotDirectoryException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
-import org.eclipse.jdt.core.dom.*;
 import org.eclipse.jdt.core.JavaCore;
+import org.eclipse.jdt.core.dom.AST;
+import org.eclipse.jdt.core.dom.ASTParser;
+import org.eclipse.jdt.core.dom.CompilationUnit;
 
 public class TypeFinder {
 	private static boolean DEBUG = true;
@@ -43,14 +46,16 @@ public class TypeFinder {
 	 */
 	public static final String YOU_DUN_GOOFED_UP_MESSAGE = "Error: This should never run.";
 	/**
-	 * Error message when the user inputs an incorrect number of command line
-	 * arguments when running the program. Prompts the user on what the program does
-	 * and how to use it properly.
+	 * Prompts the user on how to use the program properly.
 	 */
 	public static final String USAGE_MSG = "Usage: java TypeFinder <directory> <Java type>";
 
 	public static final String PROG_DESCRIPTION_MSG = "Determine the numerical count of declarations and references of a specified Java type for all Java files found in the given directory.";
 
+	/**
+	 * Error message when the user inputs an incorrect number of command line
+	 * arguments when running the program.
+	 */
 	public static final String INV_ARG_MSG = "Error: Invalid number of arguments.";
 
 	private static String directory;
@@ -60,39 +65,52 @@ public class TypeFinder {
 
 	private static List<String> java_files_as_string = new ArrayList<String>(); // initialize it
 
-	private static void initFinder(String[] args) {
+	/**
+	 * Retrieves Java source from directory to initialize TypeFinder
+	 * 
+	 * @param args
+	 *            command line arguments
+	 * @return true if java source successfully retrieved, else false
+	 */
+	private static boolean initFinder(String[] args) {
 		// Check if user has inputed a valid number arguments.
 		if (args.length != VALID_ARGUMENT_COUNT) {
 			// Display error msg, and usage, then exit program.
 			System.err.println(INV_ARG_MSG);
 			System.err.println(USAGE_MSG);
-			System.exit(0);
+			return false;
 		}
 
-		directory = args[0];
-		java_type = args[1];
-		/* directory = "/home/slchan/eclipse-workspace/SENG300G1/src/main/FUCK/";
-		java_type = "no"; */
+		directory = args[DIRECTORY_PATH];
+		java_type = args[JAVA_TYPE];
+		/*
+		 * directory = "/home/slchan/eclipse-workspace/SENG300G1/src/main/FUCK/";
+		 * java_type = "no";
+		 */
 
 		try {
 			// retrieve all java files (read to string) in directory, and store in ArrayList
 			java_files_as_string = JavaFileReader.getAllJavaFilesToString(directory);
 		} catch (NotDirectoryException nde) {
-			System.err.println("Error: Invalid Directory");
-			System.exit(0);
+			System.err.println(INVALID_DIRECTORY_ERROR_MESSAGE);
+			return false;
 		} catch (Exception e) {
 			e.printStackTrace();
+			return false;
 		}
+		return true;
 	}
 
 	public static void main(String[] args) {
 		/* Initialization process */
-		initFinder(args);
+		if (!initFinder(args)) {
+			return;
+		}
 
 		/* Create AST */
 		ASTParser parser;
 
-		for (String file : java_files_as_string){
+		for (String file : java_files_as_string) {
 			debug(file);
 
 			parser = ASTParser.newParser(AST.JLS8);
@@ -110,7 +128,7 @@ public class TypeFinder {
 			parser.setUnitName("SENG300GrpIt1");
 
 			// ensures nodes are being parsed properly
-			Map options = JavaCore.getOptions();
+			Map<String, String> options = JavaCore.getOptions();
 			options.put(JavaCore.COMPILER_COMPLIANCE, JavaCore.VERSION_1_8);
 			options.put(JavaCore.COMPILER_CODEGEN_TARGET_PLATFORM, JavaCore.VERSION_1_8);
 			options.put(JavaCore.COMPILER_SOURCE, JavaCore.VERSION_1_8);
@@ -126,20 +144,21 @@ public class TypeFinder {
 			Map<String, Integer> refCounter = visitor.getRefCount();
 
 			// increment the total counter
-			if (types.contains(java_type)){
+			if (types.contains(java_type)) {
 				decl_count += decCounter.get(java_type);
 				ref_count += refCounter.get(java_type);
 			}
 
-/* 			System.out.println("========== DEBUG COUNT ==========");
-			List<String> keys = visitor.getList();
-			Map<String, Integer> decCounter = visitor.getDecCount();
-			Map<String, Integer> refCounter = visitor.getRefCount();
-
-			for (String key : keys){
-				System.out.println(key + ". Declarations found: " + decCounter.get(key) + "; References found: " + refCounter.get(key));
-			} */
+			/*
+			 * System.out.println("========== DEBUG COUNT =========="); List<String> keys =
+			 * visitor.getList(); Map<String, Integer> decCounter = visitor.getDecCount();
+			 * Map<String, Integer> refCounter = visitor.getRefCount();
+			 * 
+			 * for (String key : keys){ System.out.println(key + ". Declarations found: " +
+			 * decCounter.get(key) + "; References found: " + refCounter.get(key)); }
+			 */
 		}
-		System.out.println(java_type + ". Declarations found: " + decl_count + "; References found: " + ref_count);
+		System.out
+				.println(java_type + ". Declarations found: " + decl_count + "; references found: " + ref_count + ".");
 	}
 }

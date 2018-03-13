@@ -21,6 +21,18 @@ import main.TypeFinder;
 public class TypeFinderTest {
 
 	/**
+	 * Get string of expected TyepFinder output
+	 * 
+	 * @param java_type
+	 * @param decl_count
+	 * @param ref_count
+	 * @return
+	 */
+	private static final String typeFinderResults(int java_type, int decl_count, int ref_count) {
+		return java_type + ". Declarations found: " + decl_count + "; references found: " + ref_count + ".\n";
+	}
+
+	/**
 	 * Contents of standard output
 	 */
 	private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
@@ -64,8 +76,9 @@ public class TypeFinderTest {
 	public void testNoArguments() {
 		String[] args = {};
 		TypeFinder.main(args);
-		String expected = TypeFinder.PROPER_USE_MESSAGE + TestSuite.lineSeparator;
-		String results = outContent.toString();
+		String expected = TypeFinder.INV_ARG_MSG + TestSuite.lineSeparator + TypeFinder.USAGE_MSG
+				+ TestSuite.lineSeparator;
+		String results = errContent.toString();
 		assertEquals(expected, results);
 	}
 
@@ -77,8 +90,9 @@ public class TypeFinderTest {
 	public void testThreeArguments() {
 		String[] args = { "", "", "" };
 		TypeFinder.main(args);
-		String expected = TypeFinder.PROPER_USE_MESSAGE + TestSuite.lineSeparator;
-		String results = outContent.toString();
+		String expected = TypeFinder.INV_ARG_MSG + TestSuite.lineSeparator + TypeFinder.USAGE_MSG
+				+ TestSuite.lineSeparator;
+		String results = errContent.toString();
 		assertEquals(expected, results);
 	}
 

@@ -31,7 +31,8 @@ public class TypeVisitorPackageFooTest {
 	 * Configures ASTParser and visitor for source file
 	 * 
 	 * @param source
-	 *            of CompilationUnit
+	 * @param expectedDeclarationCount
+	 * @param expectedReferenceCount
 	 */
 	private static void configureParser(String source, int expectedDeclarationCount, int expectedReferenceCount) {
 		ASTParser parser = ASTParser.newParser(AST.JLS8);
@@ -59,25 +60,51 @@ public class TypeVisitorPackageFooTest {
 		TypeVisitor visitor = new TypeVisitor();
 		cu.accept(visitor);
 
-		int[] results = { visitor.getDecCount().get(type), visitor.getRefCount().get(type) };
+		int decl_count = 0;
+		int ref_count = 0;
+		try {
+			decl_count = visitor.getDecCount().get(type);
+		} catch (Exception e) {
 
-		assertEquals(expectedDeclarationCount, results[0]);
-		assertEquals(expectedReferenceCount, results[1]);
+		}
+		try {
+			ref_count = visitor.getRefCount().get(type);
+		} catch (Exception e) {
+
+		}
+
+		assertEquals(expectedDeclarationCount, decl_count);
+		assertEquals(expectedReferenceCount, ref_count);
 
 	}
 
 	@Test
-	public void testDefaultPackage_Dec_0_Ref_0() {
+	public void testDefaultPackageDeclaration_Dec_0_Ref_0() {
 		configureParser("class Foo {}", 0, 0);
 	}
 
 	@Test
-	public void testOtherPackage_Dec_0_Ref_0() {
+	public void testDefaultPackageReference_Dec_0_Ref_0() {
+		configureParser("class Other { Foo f; }", 0, 0);
+	}
+
+	@Test
+	public void testOtherPackageDeclaration_Dec_0_Ref_0() {
 		configureParser("package other; class Foo {}", 0, 0);
 	}
 
 	@Test
-	public void testBarPackage_Dec_1_Ref_0() {
+	public void testOtherPackageReference_Dec_0_Ref_0() {
+		configureParser("package other; class Other { Foo f; }", 0, 0);
+	}
+
+	@Test
+	public void testBarPackageDeclaration_Dec_1_Ref_0() {
 		configureParser("package bar; class Foo {}", 1, 0);
+	}
+
+	@Test
+	public void testBarPackageReference_Dec_0_Ref_1() {
+		configureParser("package bar; class Other { Foo f; }", 0, 1);
 	}
 }
