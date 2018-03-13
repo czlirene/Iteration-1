@@ -27,10 +27,9 @@ public class Test {
 //            + "}";
 
 //	public class Foo2{};
-	public List<Boolean> a;
-//	public List<Integer> b;
-    public void main(HashMap<Character, Integer> args) {
-			List too = new ArrayList<String>();
+	public List<Boolean> a;A	
+    public void main(HashMap<Character, Character> args) {
+    	Foo<String,Integer> too = new Foo<String,Integer>();
 //        ASTParser parser = ASTParser.newParser(AST.JLS4);
 //        parser.setSource(str.toCharArray());
 //        parser.setKind(ASTParser.K_COMPILATION_UNIT);
