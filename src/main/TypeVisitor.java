@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.eclipse.jdt.core.dom.ASTVisitor;
+import org.eclipse.jdt.core.dom.AnnotationTypeDeclaration;
 import org.eclipse.jdt.core.dom.ClassInstanceCreation;
 import org.eclipse.jdt.core.dom.EnumDeclaration;
 import org.eclipse.jdt.core.dom.FieldDeclaration;
@@ -13,6 +14,7 @@ import org.eclipse.jdt.core.dom.ITypeBinding;
 import org.eclipse.jdt.core.dom.IVariableBinding;
 import org.eclipse.jdt.core.dom.MarkerAnnotation;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
+import org.eclipse.jdt.core.dom.NormalAnnotation;
 import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
@@ -32,10 +34,7 @@ import org.eclipse.jdt.core.dom.VariableDeclarationStatement;
  * 			+ ParameterizedType fixed: all TypeArguments will be resolved, EXCEPT in the case where
  * 				ClassX is never declared in any files in ClassX<Type, Type>.
  * 
- * @TODO: Parametized Type: Increment references
  * @since 12 March 2018
- * 
- * 
  */
 public class TypeVisitor extends ASTVisitor {
 
@@ -73,8 +72,7 @@ public class TypeVisitor extends ASTVisitor {
 	}
 
 	/*
-	 * ============================== HELPER FUNCTIONS
-	 * ==============================
+	 * ============================== HELPER FUNCTIONS ==============================
 	 */
 
 	/**
@@ -82,8 +80,7 @@ public class TypeVisitor extends ASTVisitor {
 	 * type to list create entry <type, 0> in decCounter create entry <type, 0> in
 	 * refCounter] [true -> do nothing]
 	 *
-	 * @param type
-	 *            : String, java type
+	 * @param type: String, java type
 	 */
 	private static void addTypeToList(String type) {
 		if (!types.contains(type)) {
@@ -150,10 +147,18 @@ public class TypeVisitor extends ASTVisitor {
 	 * ============================== ASTVisitor FUNCTIONS ==============================
 	 */
 
-//	@Override
-//	public boolean visit(AnnotationTypeDeclaration node){
-//		return true;
-//	}
+	@Override
+	public boolean visit(AnnotationTypeDeclaration node){
+		ITypeBinding typeBind = node.resolveBinding();
+		String type = typeBind.getQualifiedName();
+
+		debug("ATD", type);
+
+		addTypeToList(type);
+		incDecCount(type);
+
+		return true;
+	}
 
 	/**
 	 * Visits a Class instance creation expression AST node type. Determine the type
@@ -292,9 +297,10 @@ public class TypeVisitor extends ASTVisitor {
 	 *            : MarkerAnnotation
 	 * @return boolean : True to visit the children of this node
 	 *
-	 *         TODO: Cannot recognize full qualified names for IMPORTS. Works for
+	 * TODO: Cannot recognize full qualified names for IMPORTS. Works for
 	 *         java.lang.* e.g. @Test from org.junit.Test appears as
 	 *         <currentPackage>.Test
+	 * @throw THIS MAY THROW NullPointerException
 	 */
 	@Override
 	public boolean visit(MarkerAnnotation node) {
@@ -302,7 +308,7 @@ public class TypeVisitor extends ASTVisitor {
 		ITypeBinding typeBind = annBind.getAnnotationType();
 		String type = typeBind.getQualifiedName();
 
-		debug("Annotation", type);
+		debug("MarkerAnnotation", type);
 
 		addTypeToList(type);
 		incRefCount(type);
@@ -343,6 +349,23 @@ public class TypeVisitor extends ASTVisitor {
 			}
 		}
 
+		return true;
+	}
+
+	/**
+	 * TODO: NormalAnnotation node type.
+	 */
+	@Override
+	public boolean visit(NormalAnnotation node){
+		IAnnotationBinding annBind = node.resolveAnnotationBinding();
+		ITypeBinding typeBind = annBind.getAnnotationType();
+		String type = typeBind.getQualifiedName();
+
+		debug("NormalAnn", type);
+		
+		addTypeToList(type);
+		incRefCount(type);
+		
 		return true;
 	}
 
