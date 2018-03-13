@@ -1,4 +1,4 @@
-package main.FUCK;
+package test.testPackage;
 import java.util.*;
 import org.junit.*;
 

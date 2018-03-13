@@ -1,43 +1,18 @@
 package main.FUCK;
 import java.util.*;
 import java.nio.file.NotDirectoryException;
-import org.junit.*;
+import org.junit.Test;
 
-import org.eclipse.jdt.core.dom.AST;
-import org.eclipse.jdt.core.dom.ASTParser;
-import org.eclipse.jdt.core.dom.ASTVisitor;
-import org.eclipse.jdt.core.dom.Block;
-import org.eclipse.jdt.core.dom.CompilationUnit;
-import org.eclipse.jdt.core.dom.Expression;
-import org.eclipse.jdt.core.dom.IMethodBinding;
-import org.eclipse.jdt.core.dom.ITypeBinding;
-import org.eclipse.jdt.core.dom.MethodDeclaration;
-import org.eclipse.jdt.core.dom.MethodInvocation;
+public class Test2 {
+	
+	private class Foo{
+		
+	}
+//	@Test(expected=NullPointerException.class)
+	public Foo testHashMap_Dec_0_Ref_1(Foo sups) {
+		return new Foo();
+	}
 
-import main.JavaFileReader;
-public class Test {
-	
-	/**
-	 * MoreTest
-	 * {@link MoreTest }
-	 * @author slchan
-	 *
-	 */
-	@interface ClassPreamble {
-		   String author();
-		   String date();
-		   int currentRevision() default 1;
-		   String lastModified() default "N/A";
-		   String lastModifiedBy() default "N/A";
-		   // Note use of array
-		   String[] reviewers();
-		}
-	
-	@ClassPreamble(author = "", date = "", reviewers = { "" })
-	public static void main () {}
-	
-	@Deprecated
-	public static void main2 () {}
 
 //	public static int a, b, c;
 //

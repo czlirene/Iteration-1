@@ -29,12 +29,10 @@ import org.eclipse.jdt.core.dom.VariableDeclarationStatement;
  * the java types present.
  *
  * @author Sze Lok Irene Chan
- * @version 2.8
- * 			+Fixed VariableDeclarationStatement; They are all considered references now
- * 			+ ParameterizedType fixed: all TypeArguments will be resolved, EXCEPT in the case where
- * 				ClassX is never declared in any files in ClassX<Type, Type>.
+ * @version 2.9
+ * 			+ AnnotationTypeDeclaration, NormalAnnotation should work normally.
  * 
- * @since 12 March 2018
+ * @since 13 March 2018
  */
 public class TypeVisitor extends ASTVisitor {
 
@@ -362,7 +360,7 @@ public class TypeVisitor extends ASTVisitor {
 		String type = typeBind.getQualifiedName();
 
 		debug("NormalAnn", type);
-		
+
 		addTypeToList(type);
 		incRefCount(type);
 		
