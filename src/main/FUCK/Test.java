@@ -1,6 +1,7 @@
 package main.FUCK;
 import java.util.*;
 import java.nio.file.NotDirectoryException;
+import org.junit.*;
 
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.ASTParser;
@@ -16,6 +17,28 @@ import org.eclipse.jdt.core.dom.MethodInvocation;
 import main.JavaFileReader;
 public class Test {
 	
+	/**
+	 * MoreTest
+	 * {@link MoreTest }
+	 * @author slchan
+	 *
+	 */
+	@interface ClassPreamble {
+		   String author();
+		   String date();
+		   int currentRevision() default 1;
+		   String lastModified() default "N/A";
+		   String lastModifiedBy() default "N/A";
+		   // Note use of array
+		   String[] reviewers();
+		}
+	
+	@ClassPreamble(author = "", date = "", reviewers = { "" })
+	public static void main () {}
+	
+	@Deprecated
+	public static void main2 () {}
+
 //	public static int a, b, c;
 //
 //    public static String str = "package javaproject;" // package for all classes
@@ -27,9 +50,9 @@ public class Test {
 //            + "}";
 
 //	public class Foo2{};
-	public List<Boolean> a;A	
-    public void main(HashMap<Character, Character> args) {
-    	Foo<String,Integer> too = new Foo<String,Integer>();
+//	public List<Boolean> a;A	
+//    public void main(HashMap<Character, Character> args) {
+//    	Foo<String,Integer> too = new Foo<String,Integer>();
 //        ASTParser parser = ASTParser.newParser(AST.JLS4);
 //        parser.setSource(str.toCharArray());
 //        parser.setKind(ASTParser.K_COMPILATION_UNIT);
@@ -74,6 +97,4 @@ public class Test {
 //            }
 //        });
 //    	String s;
-
-    }
     }
