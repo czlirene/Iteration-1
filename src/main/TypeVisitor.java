@@ -1,72 +1,96 @@
 /**
  * TypeVisitor.java
- * 
- * A visitor for abstract syntax trees. 
+ *
+ * A visitor for abstract syntax trees.
  * For each different concrete AST node type T, the visitor will locate
  * the different java types present in the source code, and count the
  * number of declarations of references for each of the java types present.
- * 
+ *
  * @author Sze Lok Irene Chan
+<<<<<<< HEAD
  * @version 2.7
  *	 +Fixed VariableDeclarationStatement; They are all considered references now
  * 
  * @TODO: Parametized Type: Increment references
+=======
+ * @version 2.6
+ * 	> Epiphany on the difference between Declaration and Reference.
+ * 		- now adhering to the following definition:
+ * 			DECLARATION: When X is being defined
+ * 			REFERENCE  : When you're referring to something that's already predefined.
+>>>>>>> dedbbeb16761b40e1a32a2aa7f42147e34664898
  * @since 12 March 2018
  */
 package main;
 
-import java.util.*;
-import org.eclipse.jdt.core.dom.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.eclipse.jdt.core.dom.ASTVisitor;
+import org.eclipse.jdt.core.dom.ClassInstanceCreation;
+import org.eclipse.jdt.core.dom.EnumDeclaration;
+import org.eclipse.jdt.core.dom.FieldDeclaration;
+import org.eclipse.jdt.core.dom.IAnnotationBinding;
+import org.eclipse.jdt.core.dom.ITypeBinding;
+import org.eclipse.jdt.core.dom.IVariableBinding;
+import org.eclipse.jdt.core.dom.MarkerAnnotation;
+import org.eclipse.jdt.core.dom.MethodDeclaration;
+import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
+import org.eclipse.jdt.core.dom.TypeDeclaration;
+import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
+import org.eclipse.jdt.core.dom.VariableDeclarationStatement;
 
 public class TypeVisitor extends ASTVisitor {
 
-/**
- * Debug methods
- * TODO: Remove these before submission
- */
+	/**
+	 * Debug methods TODO: Remove these before submission
+	 */
 	private boolean DEBUG = true;
 
-	private void debug(String msg){
+	private void debug(String msg) {
 		if (DEBUG) {
 			System.out.println("DEBUG >> " + msg);
 		}
 	}
-	
-	private void debug(String var, String type){
+
+	private void debug(String var, String type) {
 		if (DEBUG) {
 			System.out.println("DEBUG >> " + var + " : " + type);
 		}
 	}
 
 	// Global variables
-	private static List<String> types;
-	private static Map<String, Integer> decCounter;
-	private static Map<String, Integer> refCounter;
+	private static ArrayList<String> types;
+	private static HashMap<String, Integer> decCounter;
+	private static HashMap<String, Integer> refCounter;
 
 	/**
-	 * constructor
-	 * Intialize the list of types, and the HashMaps for the counters to null.
+	 * constructor Intialize the list of types, and the HashMaps for the counters to
+	 * null.
 	 */
-	public TypeVisitor(){
-		// initialize list and counters to null 
+	public TypeVisitor() {
+		// initialize list and counters to null
 		types = new ArrayList<String>();
 		decCounter = new HashMap<String, Integer>();
 		refCounter = new HashMap<String, Integer>();
 	}
 
-/* ============================== HELPER FUNCTIONS ============================== */
+	/*
+	 * ============================== HELPER FUNCTIONS
+	 * ==============================
+	 */
 
 	/**
-	 * Checks if the passed type already exists within the types list.
-	 * [false -> add type to list
-	 * 			 create entry <type, 0> in decCounter
-	 * 			 create entry <type, 0> in refCounter]
-	 * [true -> do nothing]	
-	 * 
-	 * @param type : String, java type 
+	 * Checks if the passed type already exists within the types list. [false -> add
+	 * type to list create entry <type, 0> in decCounter create entry <type, 0> in
+	 * refCounter] [true -> do nothing]
+	 *
+	 * @param type
+	 *            : String, java type
 	 */
-	private static void addTypeToList(String type){
-		if (!types.contains(type)){
+	private static void addTypeToList(String type) {
+		if (!types.contains(type)) {
 			types.add(type);
 			decCounter.put(type, 0);
 			refCounter.put(type, 0);
@@ -75,57 +99,57 @@ public class TypeVisitor extends ASTVisitor {
 
 	/**
 	 * Increment the counter value for a given type in decCounter.
-	 * 
-	 * @param type : String, java type
+	 *
+	 * @param type
+	 *            : String, java type
 	 */
-	private static void incDecCount(String type){
+	private static void incDecCount(String type) {
 		// Check if the type exists, then increment their associated value by 1
-		if (decCounter.containsKey(type)){
-			decCounter.put(type, decCounter.get(type)+1);
+		if (decCounter.containsKey(type)) {
+			decCounter.put(type, decCounter.get(type) + 1);
 		}
 	}
 
 	/**
 	 * Increment the counter value for a given type in refCounter.
-	 *  
-	 * @param type : String, java type
+	 *
+	 * @param type
+	 *            : String, java type
 	 */
-	private static void incRefCount(String type){
+	private static void incRefCount(String type) {
 		// Check if the type exists, then increment their associated value by 1
-		if (refCounter.containsKey(type)){
-			refCounter.put(type, refCounter.get(type)+1);
+		if (refCounter.containsKey(type)) {
+			refCounter.put(type, refCounter.get(type) + 1);
 		}
 	}
 
 	/**
-	 * Accessor method.
-	 * Fetches the map of declaration counter.
-	 * 
+	 * Accessor method. Fetches the map of declaration counter.
+	 *
 	 * @return HashMap : decCounter
 	 */
-	public Map getDecCount(){
+	public Map<String, Integer> getDecCount() {
 		return decCounter;
 	}
 
 	/**
-	 * Accessor method.
-	 * Fetches the map of reference counter.
-	 * 
+	 * Accessor method. Fetches the map of reference counter.
+	 *
 	 * @return HashMap : refCounter
 	 */
-	public Map getRefCount(){
+	public Map<String, Integer> getRefCount() {
 		return refCounter;
 	}
 
 	/**
-	 * Accessor method.
-	 * Fetches the list of types.
-	 * 
+	 * Accessor method. Fetches the list of types.
+	 *
 	 * @return ArrayList<String> : types
 	 */
-	public List getList(){
+	public ArrayList<String> getList() {
 		return types;
 	}
+<<<<<<< HEAD
 	
 /* ============================== ASTVisitor FUNCTIONS ============================== */
 	/**
@@ -136,15 +160,36 @@ public class TypeVisitor extends ASTVisitor {
 	 * CounterType: REFERENCE
 	 * 
 	 * @param node : ClassInstanceCreation
+=======
+
+	/*
+	 * ============================== ASTVisitor FUNCTIONS
+	 * ==============================
+	 */
+
+	/**
+	 * Visits a Class instance creation expression AST node type. Determine the type
+	 * of the Class instance being created, add it to types, and increment its
+	 * type's counter value in decCounter.
+	 *
+	 * CounterType: DECLARATION
+	 *
+	 * @param node
+	 *            : ClassInstanceCreation
+>>>>>>> dedbbeb16761b40e1a32a2aa7f42147e34664898
 	 * @return boolean : True to visit the children of this node
 	 */
 	@Override
-	public boolean visit(ClassInstanceCreation node){
+	public boolean visit(ClassInstanceCreation node) {
 		ITypeBinding typeBind = node.getType().resolveBinding();
 		String type = typeBind.getQualifiedName();
 
 		/* Debug ONLY: Get the parent variable name if it exists */
+<<<<<<< HEAD
 		debug("ClassInstanceCreation",type);
+=======
+		debug("ClassInstanceCreation", type);
+>>>>>>> dedbbeb16761b40e1a32a2aa7f42147e34664898
 
 		addTypeToList(type);
 		incRefCount(type);
@@ -153,17 +198,18 @@ public class TypeVisitor extends ASTVisitor {
 	}
 
 	/**
-	 * Visits a Enum declaration AST node type. 
-	 * Determine the type of the Enum identifier, add it to types,
-	 * and increment its type's counter value in decCounter.
-	 * 
+	 * Visits a Enum declaration AST node type. Determine the type of the Enum
+	 * identifier, add it to types, and increment its type's counter value in
+	 * decCounter.
+	 *
 	 * CounterType: DECLARATION
-	 * 
-	 * @param node : EnumDeclaration
+	 *
+	 * @param node
+	 *            : EnumDeclaration
 	 * @return boolean : True to visit the children of this node
 	 */
 	@Override
-	public boolean visit(EnumDeclaration node){
+	public boolean visit(EnumDeclaration node) {
 		ITypeBinding typeBind = node.resolveBinding();
 		String type = typeBind.getQualifiedName();
 
@@ -176,29 +222,44 @@ public class TypeVisitor extends ASTVisitor {
 	}
 
 	/**
-	 * Visits a Field declaration node type. 
-	 * This type of node collects MULTIPLE VARIABLE DECL FRAGMENT
-	 * into a single body declaration. They all share the same base type.
-	 * 
-	 * Determine the type of the Field identifier, add it to types,
-	 * and increment its type's counter value in refCounter based on the
-	 * number of fragments.
-	 * 
+	 * Visits a Field declaration node type. This type of node collects MULTIPLE
+	 * VARIABLE DECL FRAGMENT into a single body declaration. They all share the
+	 * same base type.
+	 *
+	 * Determine the type of the Field identifier, add it to types, and increment
+	 * its type's counter value in refCounter based on the number of fragments.
+	 *
 	 * CounterType: REFERENCE
-	 * 
-	 * @param node : FieldDeclaration
+	 *
+	 * @param node
+	 *            : FieldDeclaration
 	 * @return boolean : True to visit the children of this node
 	 */
 	@Override
+<<<<<<< HEAD
 	public boolean visit(FieldDeclaration node){
 		boolean isParameterized = node.getType().isParameterizedType();
+=======
+	public boolean visit(FieldDeclaration node) {
+		ITypeBinding typeBind = node.getType().resolveBinding();
+		String type = typeBind.getQualifiedName();
+>>>>>>> dedbbeb16761b40e1a32a2aa7f42147e34664898
 
 		if (isParameterized){
 			ITypeBinding typeBind = node.getType().resolveBinding().getTypeDeclaration();
 			String type = typeBind.getQualifiedName();
 
+<<<<<<< HEAD
 			addTypeToList(type);
 			incRefCount(type);
+=======
+		// iterate through all the fragments, and increment the type counter
+		for (Object fragment : node.fragments()) {
+			if (fragment instanceof VariableDeclarationFragment) {
+				// debug only: get the name of the variable
+				String name = ((VariableDeclarationFragment) fragment).getName().toString();
+				debug(name, type);
+>>>>>>> dedbbeb16761b40e1a32a2aa7f42147e34664898
 
 			for (Object fragment : node.fragments()){
 				if (fragment instanceof VariableDeclarationFragment){
@@ -235,22 +296,24 @@ public class TypeVisitor extends ASTVisitor {
 	}
 
 	/**
-	 * Visits a Marker annotation node type. 
-	 * Marker annotation "@<typeName>" is equivalent to normal annotation "@<typeName>()"
-	 * 
-	 * Determine the type of annotation, add it to types,
-	 * and increment its type's counter value in refCounter.
-	 * 
+	 * Visits a Marker annotation node type. Marker annotation "@<typeName>" is
+	 * equivalent to normal annotation "@<typeName>()"
+	 *
+	 * Determine the type of annotation, add it to types, and increment its type's
+	 * counter value in refCounter.
+	 *
 	 * CounterType: REFERENCE
-	 * 
-	 * @param node : MarkerAnnotation
+	 *
+	 * @param node
+	 *            : MarkerAnnotation
 	 * @return boolean : True to visit the children of this node
-	 * 
-	 * TODO: Cannot recognize full qualified names for IMPORTS. Works for java.lang.*
-	 * 		e.g. @Test from org.junit.Test appears as <currentPackage>.Test
+	 *
+	 *         TODO: Cannot recognize full qualified names for IMPORTS. Works for
+	 *         java.lang.* e.g. @Test from org.junit.Test appears as
+	 *         <currentPackage>.Test
 	 */
 	@Override
-	public boolean visit(MarkerAnnotation node){
+	public boolean visit(MarkerAnnotation node) {
 		IAnnotationBinding annBind = node.resolveAnnotationBinding();
 		ITypeBinding typeBind = annBind.getAnnotationType();
 		String type = typeBind.getQualifiedName();
@@ -263,33 +326,35 @@ public class TypeVisitor extends ASTVisitor {
 	}
 
 	/**
-	 * Visits a Method declaration node type. 
-	 * Method declaration is a union of method declaration and constructor declaration.
-	 * (void is not a type, any void methods will be ignored)
-	 * 
-	 * Determine if the method is a constructor. 
-	 * [true  -> true]
-	 * [false -> get return type of method
-	 * 			 add type to types
-	 * 			 increment reference count
-	 * 			 return true]
-	 * 
+	 * Visits a Method declaration node type. Method declaration is a union of
+	 * method declaration and constructor declaration. (void is not a type, any void
+	 * methods will be ignored)
+	 *
+	 * Determine if the method is a constructor. [true -> true] [false -> get return
+	 * type of method add type to types increment reference count return true]
+	 *
 	 * CounterType: REFERENCE
+<<<<<<< HEAD
 	 * 
 	 * @TODO: Get parameters
 	 * @param node : MethodDeclaration
+=======
+	 *
+	 * @param node
+	 *            : MethodDeclaration
+>>>>>>> dedbbeb16761b40e1a32a2aa7f42147e34664898
 	 * @return boolean : True to visit the children of this node
 	 */
 	@Override
-	public boolean visit(MethodDeclaration node){
+	public boolean visit(MethodDeclaration node) {
 		boolean isConstructor = node.isConstructor();
 
-		if (!isConstructor){
+		if (!isConstructor) {
 			ITypeBinding typeBind = node.getReturnType2().resolveBinding();
 			String type = typeBind.getQualifiedName();
 
 			// ignore all void methods
-			if (!type.equals("void")){
+			if (!type.equals("void")) {
 				// debug only: print the method name, and its type
 				debug(node.getName().toString(), type);
 
@@ -297,26 +362,34 @@ public class TypeVisitor extends ASTVisitor {
 				incRefCount(type);
 			}
 		}
-		
+
 		return true;
 	}
 
 	/**
-	 * Visits a single variable declaration node type. 
-	 * These are used only in formal parameter lists, and catch clauses. 
-	 * They are not used for field declarations, and regular variable declaration statements
-	 * 
-	 * Determine the type of variable, add it to types,
-	 * and increment the counter value associated to the type in refCounter.
-	 * 
+	 * Visits a single variable declaration node type. These are used only in formal
+	 * parameter lists, and catch clauses. They are not used for field declarations,
+	 * and regular variable declaration statements
+	 *
+	 * Determine the type of variable, add it to types, and increment the counter
+	 * value associated to the type in refCounter.
+	 *
 	 * CounterType: REFERENCE
-	 * 
-	 * @param node : SingleVariableDeclaration
+	 *
+	 * @param node
+	 *            : SingleVariableDeclaration
 	 * @return boolean : True to visit the children of this node
 	 */
 	@Override
+<<<<<<< HEAD
 	public boolean visit(SingleVariableDeclaration node){
 		boolean isParameterized = node.getType().isParameterizedType();
+=======
+	public boolean visit(SingleVariableDeclaration node) {
+		IVariableBinding varBind = node.resolveBinding();
+		ITypeBinding typeBind = varBind.getType();
+		String type = typeBind.getQualifiedName();
+>>>>>>> dedbbeb16761b40e1a32a2aa7f42147e34664898
 
 		// get parameterized variables
 		if (isParameterized){
@@ -359,58 +432,59 @@ public class TypeVisitor extends ASTVisitor {
 	}
 
 	/**
-	 * Visits a type declaration node type. 
-	 * Type declaration node is the union of class declaration, and interface declaration.
-	 * 
-	 * Determine the type of class, add it to types,
-	 * and increment the declaration counter associated to the type.
-	 * 
+	 * Visits a type declaration node type. Type declaration node is the union of
+	 * class declaration, and interface declaration.
+	 *
+	 * Determine the type of class, add it to types, and increment the declaration
+	 * counter associated to the type.
+	 *
 	 * CounterType: DECLARATION
-	 * 
-	 * @param node : TypeDeclaration
+	 *
+	 * @param node
+	 *            : TypeDeclaration
 	 * @return boolean : True to visit the children of this node
 	 */
 	@Override
-	public boolean visit(TypeDeclaration node){
+	public boolean visit(TypeDeclaration node) {
 		ITypeBinding typeBind = node.resolveBinding();
 		String type = typeBind.getQualifiedName();
 
 		debug(node.getName().toString(), type);
-		
+
 		addTypeToList(type);
 		incDecCount(type);
 
 		return true;
 	}
 
-/* 	public boolean visit(VariableDeclaration node){
-		IVariableBinding varBind = node.resolveBinding();
-		ITypeBinding typeBind = varBind.getType();
-		String type = typeBind.getQualifiedName();
-
-		if (node.getName().isDeclaration()){
-			debug(varBind.getName(), type);
-		}
-		return true;
-	} */
+	/**
+	 * VariableDeclarationStatement; local variable declaration statement nodes.
+	 * ADDED: Distinction between Primitive type and others. >> Revert: Disabled
+	 * distinction
+	 *
+	 * TODO: Confirm Non-primitive type only count as REFERENCES
+	 */
 
 	/**
-	 * Visits a local variable declaration statement node type. 
-	 * This type of node contains several variable declaration fragments into a statement.
-	 * They all have the same base type and modifier.
-	 * 
-	 * Determine the type of variable, add it to types,
-	 * and increment the declaration counter associated to the type
-	 * depending on the number of fragments.
-	 * 
-	 * Note: For any imported packages methods/classes, you must include the full 
-	 * qualified name in the code itself in order for this parser to bind it as the type
-	 * 
+	 * Visits a local variable declaration statement node type. This type of node
+	 * contains several variable declaration fragments into a statement. They all
+	 * have the same base type and modifier.
+	 *
+	 * Determine the type of variable, add it to types, and increment the
+	 * declaration counter associated to the type depending on the number of
+	 * fragments.
+	 *
+	 * Note: For any imported packages methods/classes, you must include the full
+	 * qualified name in the code itself in order for this parser to bind it as the
+	 * type
+	 *
 	 * CounterType: REFERENCE
-	 * 
-	 * @param node : VariableDeclarationStatement
+	 *
+	 * @param node
+	 *            : VariableDeclarationStatement
 	 * @return boolean : True to visit the children of this node
 	 */
+<<<<<<< HEAD
 	public boolean visit(VariableDeclarationStatement node){
 		boolean isParameterized = node.getType().isParameterizedType();
 		
@@ -418,6 +492,16 @@ public class TypeVisitor extends ASTVisitor {
 		if (isParameterized){
 			ITypeBinding typeBind = node.getType().resolveBinding().getTypeDeclaration();
 			String type = typeBind.getQualifiedName();
+=======
+	@Override
+	public boolean visit(VariableDeclarationStatement node) {
+		// iterate through all the fragments, and increment the type counter
+		for (Object fragment : node.fragments()) {
+			if (fragment instanceof VariableDeclarationFragment) {
+				// debug only: get the name of the variable
+				String name = ((VariableDeclarationFragment) fragment).getName().toString();
+				ITypeBinding typeBind = ((VariableDeclarationFragment) fragment).resolveBinding().getType();
+>>>>>>> dedbbeb16761b40e1a32a2aa7f42147e34664898
 
 			addTypeToList(type);
 			incRefCount(type);
@@ -464,54 +548,50 @@ public class TypeVisitor extends ASTVisitor {
 
 }
 
-
 /* TODO: find out if we still need this method */
-// 	public boolean visit(VariableDeclarationFragment node){
-// 		IVariableBinding varBind = node.resolveBinding();
-// 		ITypeBinding typeBind = varBind.getType();
-// 		String type = typeBind.getQualifiedName();
-// 		String name = node.getName().toString();
-// 		debug(name, type);
-// 		ChildPropertyDescriptor initializer = node.getInitializerProperty();
+// public boolean visit(VariableDeclarationFragment node){
+// IVariableBinding varBind = node.resolveBinding();
+// ITypeBinding typeBind = varBind.getType();
+// String type = typeBind.getQualifiedName();
+// String name = node.getName().toString();
+// debug(name, type);
+// ChildPropertyDescriptor initializer = node.getInitializerProperty();
 
-// 		if (initializer != null){
-// 			System.out.println(initializer.toString());
+// if (initializer != null){
+// System.out.println(initializer.toString());
 // }
-// 		return true;
-// 	}
+// return true;
+// }
 
+/**
+ * Assignment expression nodes. Status: WIP TODO: Check if this is only
+ * reference
+ */
+// public boolean visit(ExpressionStatement node){
+// ITypeBinding typeBind = node.resolveTypeBinding();
+// if (typeBind == null){
+// debug("fuck me", "");
+// } else {
+// String type = typeBind.getQualifiedName();
+// debug("", type);
+// addTypeToList(type);
 
-	/**
-		Assignment expression nodes.
-		Status: WIP
-		TODO: Check if this is only reference
-	 */
-	// public boolean visit(ExpressionStatement node){
-	// 	ITypeBinding typeBind = node.resolveTypeBinding();
-	// 	if (typeBind == null){
-	// 		debug("fuck me", "");
-	// 	} else {
-	// 		String type = typeBind.getQualifiedName();
-	// 		debug("", type);
-	// 		addTypeToList(type);
+// }
 
-	// 	}
+// return true;
+// }
 
+// public boolean visit(MethodInvocation node){
+// IMethodBinding methBind = node.resolveMethodBinding();
 
-	// 	return true;
-	// }
-
-		// public boolean visit(MethodInvocation node){
-	// 	IMethodBinding methBind = node.resolveMethodBinding();
-
-	// 	if (methBind != null){
-	// 	ITypeBinding typeBind = methBind.getDeclaringClass();
-	// 	String type = typeBind.getQualifiedName();
-	// 	System.out.println("u fucked");
-	// 	System.out.println(type);
-	// 	// System.out.println(methBind.getKey());
- 	// 	} else {
-	// 		 System.out.println("null");
-	// 	 }
-	// 	return true;
-	// }
+// if (methBind != null){
+// ITypeBinding typeBind = methBind.getDeclaringClass();
+// String type = typeBind.getQualifiedName();
+// System.out.println("u fucked");
+// System.out.println(type);
+// // System.out.println(methBind.getKey());
+// } else {
+// System.out.println("null");
+// }
+// return true;
+// }

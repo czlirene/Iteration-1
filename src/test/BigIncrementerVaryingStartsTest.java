@@ -10,15 +10,15 @@ import main.BigIncrementer;
  * JUnit 4 Test for BigIncrementer class with varying starting values
  *
  * @author Evan Quan
- * @since March 9, 2018
+ * @since 12 March 2018
  *
  */
 public class BigIncrementerVaryingStartsTest {
 
 	private static BigIncrementer in;
-	private static String MAX_INT = Integer.toString(Integer.MAX_VALUE);
-	private static String MAX_LONG = Long.toString(Long.MAX_VALUE);
-	private static String DECILLION = "1000000000000000000000000000000000";
+	private static final String MAX_INT = Integer.toString(Integer.MAX_VALUE);
+	private static final String MAX_LONG = Long.toString(Long.MAX_VALUE);
+	private static final String DECILLION = "1000000000000000000000000000000000";
 
 	/**
 	 * Check that incrementer works for 1000000000 increments
@@ -35,7 +35,8 @@ public class BigIncrementerVaryingStartsTest {
 	}
 
 	/**
-	 * Check that incrementer works for 1 increment starting at Integer.MAX_VALUE
+	 * Check that incrementer works for 1 increment starting at Integer.MAX_VALUE.
+	 * This is testing for integer overflow.
 	 */
 	@Test
 	public void test_StartAt_MAX_INT_Increment_ONE() {
@@ -46,7 +47,8 @@ public class BigIncrementerVaryingStartsTest {
 	}
 
 	/**
-	 * Check that incrementer works for 1 increment starting at Long.MAX_VALUE
+	 * Check that incrementer works for 1 increment starting at Long.MAX_VALUE. This
+	 * is testing for long overflow.
 	 */
 	@Test
 	public void test_StartAt_MAX_LONG_Increment_ONE() {

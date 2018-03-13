@@ -15,7 +15,7 @@ import main.TypeFinder;
  * JUnit 4 Tests for {@link TypeFinder} class
  *
  * @author Evan Quan
- * @since March 8, 2018
+ * @since 12 March 2018
  *
  */
 public class TypeFinderTest {
