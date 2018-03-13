@@ -29,8 +29,8 @@ import org.eclipse.jdt.core.dom.VariableDeclarationStatement;
  * the java types present.
  *
  * @author Sze Lok Irene Chan
- * @version 2.9
- * 			+ AnnotationTypeDeclaration, NormalAnnotation should work normally.
+ * @version 2.9 + AnnotationTypeDeclaration, NormalAnnotation should work
+ *          normally.
  * 
  * @since 13 March 2018
  */
@@ -53,7 +53,8 @@ public class TypeVisitor extends ASTVisitor {
 	}
 
 	/*
-	 * ============================== HELPER FUNCTIONS ==============================
+	 * ============================== HELPER FUNCTIONS
+	 * ==============================
 	 */
 
 	/**
@@ -61,7 +62,8 @@ public class TypeVisitor extends ASTVisitor {
 	 * type to list create entry <type, 0> in decCounter create entry <type, 0> in
 	 * refCounter] [true -> do nothing]
 	 *
-	 * @param type: String, java type
+	 * @param type:
+	 *            String, java type
 	 */
 	private static void addTypeToList(String type) {
 		if (!types.contains(type)) {
@@ -125,11 +127,12 @@ public class TypeVisitor extends ASTVisitor {
 	}
 
 	/*
-	 * ============================== ASTVisitor FUNCTIONS ==============================
+	 * ============================== ASTVisitor FUNCTIONS
+	 * ==============================
 	 */
 
 	@Override
-	public boolean visit(AnnotationTypeDeclaration node){
+	public boolean visit(AnnotationTypeDeclaration node) {
 		ITypeBinding typeBind = node.resolveBinding();
 		String type = typeBind.getQualifiedName();
 
@@ -259,7 +262,7 @@ public class TypeVisitor extends ASTVisitor {
 	 *            : MarkerAnnotation
 	 * @return boolean : True to visit the children of this node
 	 *
-	 * TODO: Cannot recognize full qualified names for IMPORTS. Works for
+	 *         TODO: Cannot recognize full qualified names for IMPORTS. Works for
 	 *         java.lang.* e.g. @Test from org.junit.Test appears as
 	 *         <currentPackage>.Test
 	 * @throw THIS MAY THROW NullPointerException
@@ -326,7 +329,7 @@ public class TypeVisitor extends ASTVisitor {
 	 * TODO: NormalAnnotation node type.
 	 */
 	@Override
-	public boolean visit(NormalAnnotation node){
+	public boolean visit(NormalAnnotation node) {
 		IAnnotationBinding annBind = node.resolveAnnotationBinding();
 		ITypeBinding typeBind = annBind.getAnnotationType();
 		String type = typeBind.getQualifiedName();

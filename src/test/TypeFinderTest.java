@@ -15,22 +15,10 @@ import main.TypeFinder;
  * JUnit 4 Tests for {@link TypeFinder} class
  *
  * @author Evan Quan
- * @since 12 March 2018
+ * @since 13 March 2018
  *
  */
 public class TypeFinderTest {
-
-	/**
-	 * Get string of expected TyepFinder output
-	 * 
-	 * @param java_type
-	 * @param decl_count
-	 * @param ref_count
-	 * @return
-	 */
-	private static final String typeFinderResults(int java_type, int decl_count, int ref_count) {
-		return java_type + ". Declarations found: " + decl_count + "; references found: " + ref_count + ".\n";
-	}
 
 	/**
 	 * Contents of standard output
@@ -38,6 +26,9 @@ public class TypeFinderTest {
 	private static ByteArrayOutputStream outContent;
 	private static ByteArrayOutputStream errContent;
 
+	/**
+	 * Restore standard output and error to original streams
+	 */
 	@After
 	public void restoreStream() {
 		System.setOut(System.out);

@@ -80,7 +80,7 @@ public class TypeVisitorFooTest {
 	 * Check if an @link annotation in Javadoc counts as a reference
 	 */
 	@Test
-	public void testTypeAnnotation_Dec_0_Ref_1() {
+	public void testLinkAnnotation_Dec_0_Ref_1() {
 		configureParser("/**" + ls + " * {@link Foo}" + ls + " */" + ls + "public class Other{}", 0, 1);
 	}
 
@@ -131,6 +131,15 @@ public class TypeVisitorFooTest {
 	@Test
 	public void testAnnotationReference_Dec_0_Ref_1() {
 		configureParser("public class Other{@Foo public void method() {}}", 0, 1);
+	}
+
+	/**
+	 * Check if an annotation that references Foo as a parameter is counted as a
+	 * reference
+	 */
+	@Test
+	public void testAnnotationParameterReference_Dec_0_Ref_1() {
+		configureParser("public class Other{@Test(expected = Foo.class) public void test() {}}", 0, 1);
 	}
 
 	/**
@@ -187,8 +196,8 @@ public class TypeVisitorFooTest {
 	}
 
 	/**
-	 * TODO bar not defined elsewhere, ASTParser doesn't know Bar can accept 1
-	 * generic parameter
+	 * Check that declaring an variable of another class that references Foo as a
+	 * generic parameter and instantiates it counts as 2 references
 	 */
 	@Test
 	public void test1ParamterizedTypeAndInstantiated_Dec_0_Ref_2() {
@@ -196,8 +205,8 @@ public class TypeVisitorFooTest {
 	}
 
 	/**
-	 * TODO bar not defined elsewhere, ASTParser doesn't know Bar can accept 1
-	 * generic parameter
+	 * Check that declaring an variable of another class that references Foo as a
+	 * generic parameter counts as a reference
 	 */
 	@Test
 	public void test1ParamterizedType_Dec_0_Ref_1() {
@@ -205,22 +214,27 @@ public class TypeVisitorFooTest {
 	}
 
 	/**
-	 * TODO bar not defined elsewhere, ASTParser doesn't know Bar can accept 2
-	 * generic parameters
+	 * Check that declaring an variable of another class that references Foo as a
+	 * generic parameter twice and instantiates it counts as 4 references
 	 */
 	@Test
 	public void test2ParameterizedTypesAndInstantiated_Dec_0_Ref_4() {
 		configureParser("public class Other{ Bar<Foo, Foo> bar = new Bar<Foo, Foo>();}", 0, 4);
 	}
 
+	/**
+	 * Check that declaring an variable of another class that references Foo as a
+	 * generic parameter twice and instantiates it counts as 4 references, with
+	 * another third generic parameter of another class
+	 */
 	@Test
 	public void test3ParameterizedTypesAndInstantiatedMixed_dec_0_Ref_4() {
 		configureParser("public class Other{ Bar<Foo, String, Foo> bar = new Bar<Foo, String, Foo>();}", 0, 4);
 	}
 
 	/**
-	 * TODO bar not defined elsewhere, ASTParser doesn't know Bar can accept 2
-	 * generic parameters
+	 * Check that declaring an variable of another class that references Foo as a
+	 * generic parameter twice counts as 2 references
 	 */
 	@Test
 	public void test2ParameterizedTypes_Dec_0_Ref_2() {
@@ -228,7 +242,9 @@ public class TypeVisitorFooTest {
 	}
 
 	/**
-	 * Check that
+	 * Check that declaring an variable of another class that references Foo as a
+	 * generic parameter twice counts as 2 references with another third generic
+	 * parameter of another class
 	 */
 	@Test
 	public void test3ParameterizedTypesMixed_Dec_0_Ref_2() {
@@ -276,5 +292,10 @@ public class TypeVisitorFooTest {
 	@Test
 	public void testInstantiateOtherInsideConstructor_Dec_0_Ref_2() {
 		configureParser("public class Other{ Foo foo = new Foo(new Other2());}", 0, 2);
+	}
+
+	@Test
+	public void testIllegalSyntax_Dec_0_Ref_0() {
+		configureParser("This is invalid Java syntax; Foo foo; Foo foo2 = new Foo();", 0, 0);
 	}
 }
