@@ -18,7 +18,7 @@ import org.junit.runners.Suite;
  * Runs all test classes
  *
  * @author Evan Quan
- * @since 12 March 2018
+ * @since 13 March 2018
  *
  */
 public class TestSuite {
@@ -33,7 +33,7 @@ public class TestSuite {
 	 * test.testPackage package directory is contained in test package directory
 	 */
 	public static final String JAVA_FILE_READER_TEST_DIR = TEST_DIR.concat("javaFileReaderTestPackage/");
-	public static final String TYPE_VISITOR_TEST_DIR = TEST_DIR.concat("typeVisitorTestPackage/");
+	public static final String TYPE_FINDER_TEST_DIR = TEST_DIR.concat("typeFinderTestPackage/");
 	/**
 	 * Line separator changes depending on operating system. JUnitTests dealing with
 	 * file contents should consider this.

@@ -39,7 +39,7 @@ public class TypeVisitor extends ASTVisitor {
 	/**
 	 * Debug methods TODO: Remove these before submission
 	 */
-	private boolean DEBUG = true;
+	private boolean DEBUG = false;
 
 	private void debug(String msg) {
 		if (DEBUG) {
@@ -142,7 +142,8 @@ public class TypeVisitor extends ASTVisitor {
 	}
 
 	/*
-	 * ============================== ASTVisitor FUNCTIONS ==============================
+	 * ============================== ASTVisitor FUNCTIONS
+	 * ==============================
 	 */
 
 	@Override
@@ -162,10 +163,11 @@ public class TypeVisitor extends ASTVisitor {
 	 * Visits a Class instance creation expression AST node type. Determine the type
 	 * of the Class instance being created, add it to types, and increment its
 	 * type's counter value in refCounter.
-	 * 
+	 *
 	 * CounterType: REFERENCE
-	 * 
-	 * @param node : ClassInstanceCreation
+	 *
+	 * @param node
+	 *            : ClassInstanceCreation
 	 * @return boolean : True to visit the children of this node
 	 */
 	@Override
@@ -322,9 +324,9 @@ public class TypeVisitor extends ASTVisitor {
 	 * type of method add type to types increment reference count return true]
 	 *
 	 * CounterType: REFERENCE
-	 * 
+	 *
 	 * TODO: Get parameters
-	 * 
+	 *
 	 * @param node
 	 *            : MethodDeclaration
 	 * @return boolean : True to visit the children of this node
@@ -363,7 +365,7 @@ public class TypeVisitor extends ASTVisitor {
 
 		addTypeToList(type);
 		incRefCount(type);
-		
+
 		return true;
 	}
 
@@ -377,7 +379,8 @@ public class TypeVisitor extends ASTVisitor {
 	 *
 	 * CounterType: REFERENCE
 	 *
-	 * @param node: SingleVariableDeclaration
+	 * @param node:
+	 *            SingleVariableDeclaration
 	 * @return boolean : True to visit the children of this node
 	 */
 	@Override
