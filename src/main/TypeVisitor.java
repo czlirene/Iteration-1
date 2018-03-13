@@ -27,11 +27,15 @@ import org.eclipse.jdt.core.dom.VariableDeclarationStatement;
  * the java types present.
  *
  * @author Sze Lok Irene Chan
- * @version 2.7 +Fixed VariableDeclarationStatement; They are all considered
- *          references now
+ * @version 2.8
+ * 			+Fixed VariableDeclarationStatement; They are all considered references now
+ * 			+ ParameterizedType fixed: all TypeArguments will be resolved, EXCEPT in the case where
+ * 				ClassX is never declared in any files in ClassX<Type, Type>.
  * 
  * @TODO: Parametized Type: Increment references
  * @since 12 March 2018
+ * 
+ * 
  */
 public class TypeVisitor extends ASTVisitor {
 
@@ -145,6 +149,12 @@ public class TypeVisitor extends ASTVisitor {
 	/*
 	 * ============================== ASTVisitor FUNCTIONS ==============================
 	 */
+
+//	@Override
+//	public boolean visit(AnnotationTypeDeclaration node){
+//		return true;
+//	}
+
 	/**
 	 * Visits a Class instance creation expression AST node type. Determine the type
 	 * of the Class instance being created, add it to types, and increment its
@@ -152,8 +162,7 @@ public class TypeVisitor extends ASTVisitor {
 	 * 
 	 * CounterType: REFERENCE
 	 * 
-	 * @param node
-	 *            : ClassInstanceCreation
+	 * @param node : ClassInstanceCreation
 	 * @return boolean : True to visit the children of this node
 	 */
 	@Override
