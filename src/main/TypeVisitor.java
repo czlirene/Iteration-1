@@ -7,18 +7,10 @@
  * number of declarations of references for each of the java types present.
  *
  * @author Sze Lok Irene Chan
-<<<<<<< HEAD
  * @version 2.7
  *	 +Fixed VariableDeclarationStatement; They are all considered references now
  * 
  * @TODO: Parametized Type: Increment references
-=======
- * @version 2.6
- * 	> Epiphany on the difference between Declaration and Reference.
- * 		- now adhering to the following definition:
- * 			DECLARATION: When X is being defined
- * 			REFERENCE  : When you're referring to something that's already predefined.
->>>>>>> dedbbeb16761b40e1a32a2aa7f42147e34664898
  * @since 12 March 2018
  */
 package main;
@@ -149,7 +141,6 @@ public class TypeVisitor extends ASTVisitor {
 	public ArrayList<String> getList() {
 		return types;
 	}
-<<<<<<< HEAD
 	
 /* ============================== ASTVisitor FUNCTIONS ============================== */
 	/**
@@ -160,23 +151,6 @@ public class TypeVisitor extends ASTVisitor {
 	 * CounterType: REFERENCE
 	 * 
 	 * @param node : ClassInstanceCreation
-=======
-
-	/*
-	 * ============================== ASTVisitor FUNCTIONS
-	 * ==============================
-	 */
-
-	/**
-	 * Visits a Class instance creation expression AST node type. Determine the type
-	 * of the Class instance being created, add it to types, and increment its
-	 * type's counter value in decCounter.
-	 *
-	 * CounterType: DECLARATION
-	 *
-	 * @param node
-	 *            : ClassInstanceCreation
->>>>>>> dedbbeb16761b40e1a32a2aa7f42147e34664898
 	 * @return boolean : True to visit the children of this node
 	 */
 	@Override
@@ -185,11 +159,7 @@ public class TypeVisitor extends ASTVisitor {
 		String type = typeBind.getQualifiedName();
 
 		/* Debug ONLY: Get the parent variable name if it exists */
-<<<<<<< HEAD
 		debug("ClassInstanceCreation",type);
-=======
-		debug("ClassInstanceCreation", type);
->>>>>>> dedbbeb16761b40e1a32a2aa7f42147e34664898
 
 		addTypeToList(type);
 		incRefCount(type);
@@ -236,30 +206,15 @@ public class TypeVisitor extends ASTVisitor {
 	 * @return boolean : True to visit the children of this node
 	 */
 	@Override
-<<<<<<< HEAD
 	public boolean visit(FieldDeclaration node){
 		boolean isParameterized = node.getType().isParameterizedType();
-=======
-	public boolean visit(FieldDeclaration node) {
-		ITypeBinding typeBind = node.getType().resolveBinding();
-		String type = typeBind.getQualifiedName();
->>>>>>> dedbbeb16761b40e1a32a2aa7f42147e34664898
 
 		if (isParameterized){
 			ITypeBinding typeBind = node.getType().resolveBinding().getTypeDeclaration();
 			String type = typeBind.getQualifiedName();
 
-<<<<<<< HEAD
 			addTypeToList(type);
 			incRefCount(type);
-=======
-		// iterate through all the fragments, and increment the type counter
-		for (Object fragment : node.fragments()) {
-			if (fragment instanceof VariableDeclarationFragment) {
-				// debug only: get the name of the variable
-				String name = ((VariableDeclarationFragment) fragment).getName().toString();
-				debug(name, type);
->>>>>>> dedbbeb16761b40e1a32a2aa7f42147e34664898
 
 			for (Object fragment : node.fragments()){
 				if (fragment instanceof VariableDeclarationFragment){
@@ -334,15 +289,9 @@ public class TypeVisitor extends ASTVisitor {
 	 * type of method add type to types increment reference count return true]
 	 *
 	 * CounterType: REFERENCE
-<<<<<<< HEAD
 	 * 
 	 * @TODO: Get parameters
 	 * @param node : MethodDeclaration
-=======
-	 *
-	 * @param node
-	 *            : MethodDeclaration
->>>>>>> dedbbeb16761b40e1a32a2aa7f42147e34664898
 	 * @return boolean : True to visit the children of this node
 	 */
 	@Override
@@ -381,15 +330,8 @@ public class TypeVisitor extends ASTVisitor {
 	 * @return boolean : True to visit the children of this node
 	 */
 	@Override
-<<<<<<< HEAD
 	public boolean visit(SingleVariableDeclaration node){
 		boolean isParameterized = node.getType().isParameterizedType();
-=======
-	public boolean visit(SingleVariableDeclaration node) {
-		IVariableBinding varBind = node.resolveBinding();
-		ITypeBinding typeBind = varBind.getType();
-		String type = typeBind.getQualifiedName();
->>>>>>> dedbbeb16761b40e1a32a2aa7f42147e34664898
 
 		// get parameterized variables
 		if (isParameterized){
@@ -484,7 +426,6 @@ public class TypeVisitor extends ASTVisitor {
 	 *            : VariableDeclarationStatement
 	 * @return boolean : True to visit the children of this node
 	 */
-<<<<<<< HEAD
 	public boolean visit(VariableDeclarationStatement node){
 		boolean isParameterized = node.getType().isParameterizedType();
 		
@@ -492,16 +433,6 @@ public class TypeVisitor extends ASTVisitor {
 		if (isParameterized){
 			ITypeBinding typeBind = node.getType().resolveBinding().getTypeDeclaration();
 			String type = typeBind.getQualifiedName();
-=======
-	@Override
-	public boolean visit(VariableDeclarationStatement node) {
-		// iterate through all the fragments, and increment the type counter
-		for (Object fragment : node.fragments()) {
-			if (fragment instanceof VariableDeclarationFragment) {
-				// debug only: get the name of the variable
-				String name = ((VariableDeclarationFragment) fragment).getName().toString();
-				ITypeBinding typeBind = ((VariableDeclarationFragment) fragment).resolveBinding().getType();
->>>>>>> dedbbeb16761b40e1a32a2aa7f42147e34664898
 
 			addTypeToList(type);
 			incRefCount(type);
