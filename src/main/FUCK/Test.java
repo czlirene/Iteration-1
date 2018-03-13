@@ -1,4 +1,5 @@
 package main.FUCK;
+import java.util.*;
 import java.nio.file.NotDirectoryException;
 
 import org.eclipse.jdt.core.dom.AST;
@@ -26,6 +27,8 @@ public class Test {
             + "}";
 
 	public class Foo2{};
+	public List<String> a;
+	public List<Integer> b;
     public void main(String[] args) {
 
         ASTParser parser = ASTParser.newParser(AST.JLS4);
@@ -71,5 +74,7 @@ public class Test {
                 return true;
             }
         });
+    	String s;
+
     }
     }
