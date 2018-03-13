@@ -335,17 +335,30 @@ public class TypeVisitor extends ASTVisitor {
 		boolean isConstructor = node.isConstructor();
 
 		if (!isConstructor) {
-			ITypeBinding typeBind = node.getReturnType2().resolveBinding();
-			String type = typeBind.getQualifiedName();
+			boolean isParameterized = node.getReturnType2().isParameterizedType();
+			if (isParameterized){
+				ITypeBinding typeBind = node.getReturnType2().resolveBinding().getTypeDeclaration();
+				String type = typeBind.getQualifiedName(); 
 
-			// ignore all void methods
-			if (!type.equals("void")) {
-				// debug only: print the method name, and its type
-				debug(node.getName().toString(), type);
+				(for ITypeBinding paramBind : node.getType().resolveBinding().getTypeArguments()){
+					String paramType = paramBind.getQualifiedName();
+					debug("param", type);
+					addTypeToList(type);
+					incRefCount(type);
+				}
+			} else {
+				type = typeBind.getQualifiedName();
 
-				addTypeToList(type);
-				incRefCount(type);
+				// ignore all void methods
+				if (!type.equals("void")) {
+					// debug only: print the method name, and its type
+					debug(node.getName().toString(), type);
+
+					addTypeToList(type);
+					incRefCount(type);
+				}
 			}
+
 		}
 
 		return true;
