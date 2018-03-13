@@ -13,6 +13,8 @@ import org.eclipse.jdt.core.dom.CompilationUnit;
 import test.TestSuite;
 
 /**
+ * CLEAN VERSION WITHOUT DEBUG
+ * 
  * Takes a pathname to indicate a directory of interest and a String to indicate
  * a fully qualified name of a Java type. Counts the number of declarations of a
  * Java type and references of each occurrence of that type within that
@@ -24,17 +26,6 @@ import test.TestSuite;
  *
  */
 public class TypeFinder {
-
-	// Special salt gauge version (for Irene)
-	// Disable commandline, and prints all types and counts
-	// TODO: Remove this later
-	public static final boolean IDEBUG = true;
-
-	private static void debug(String msg) {
-		if (IDEBUG) {
-			System.out.println("DEBUG >> " + msg);
-		}
-	}
 
 	/* GLOBAL VARIABLES */
 	/**
@@ -94,22 +85,14 @@ public class TypeFinder {
 	 */
 	private static boolean initFinder(String[] args) {
 
-		if (!IDEBUG) {
-			// Check if user has inputed a valid number arguments.
-			if (args.length != VALID_ARGUMENT_COUNT) {
-				System.err.println(INVALID_ARGUMENT_ERROR_MESSAGE);
-				return false;
-			}
+        // Check if user has inputed a valid number arguments.
+        if (args.length != VALID_ARGUMENT_COUNT) {
+            System.err.println(INVALID_ARGUMENT_ERROR_MESSAGE);
+            return false;
+        }
 
-		}
-
-		if (IDEBUG) {
-			directory = TestSuite.SOURCE_DIR.concat("main/FUCK/");
-			java_type = "no";
-		} else {
-			directory = args[DIRECTORY_PATH];
-			java_type = args[JAVA_TYPE];
-		}
+        directory = args[DIRECTORY_PATH];
+        java_type = args[JAVA_TYPE];
 
 		try {
 			// retrieve all java files (read to string) in directory, and store in ArrayList
@@ -143,8 +126,6 @@ public class TypeFinder {
 		/* Create AST */
 
 		for (String file : java_files_as_string) {
-			debug(file);
-
 			ASTParser parser = getConfiguredASTParser();
 			parser.setSource(file.toCharArray());
 			final CompilationUnit cu = (CompilationUnit) parser.createAST(null);
@@ -152,34 +133,18 @@ public class TypeFinder {
 			TypeVisitor visitor = new TypeVisitor();
 			cu.accept(visitor);
 
-			if (IDEBUG) {
-				System.out.println("========== DEBUG COUNT ==========");
+            List<String> types = visitor.getList();
+            Map<String, Integer> decCounter = visitor.getDecCount();
+            Map<String, Integer> refCounter = visitor.getRefCount();
 
-				List<String> keys = visitor.getList();
-				Map<String, Integer> decCounter = visitor.getDecCount();
-				Map<String, Integer> refCounter = visitor.getRefCount();
-
-				for (String key : keys) {
-					System.out.println(key + ". Declarations found: " + decCounter.get(key) + "; references found: "
-							+ refCounter.get(key) + ".");
-				}
-			} else {
-				List<String> types = visitor.getList();
-				Map<String, Integer> decCounter = visitor.getDecCount();
-				Map<String, Integer> refCounter = visitor.getRefCount();
-
-				// increment the total counter
-				if (types.contains(java_type)) {
-					decl_count += decCounter.get(java_type);
-					ref_count += refCounter.get(java_type);
-				}
-			}
+            // increment the total counter
+            if (types.contains(java_type)) {
+                decl_count += decCounter.get(java_type);
+                ref_count += refCounter.get(java_type);
+            }
 
 		}
-		if (!IDEBUG) {
-			System.out.println(
-					java_type + ". Declarations found: " + decl_count + "; references found: " + ref_count + ".");
-		}
+        System.out.println(java_type + ". Declarations found: " + decl_count + "; references found: " + ref_count + ".");
 	}
 
 	/**
@@ -191,10 +156,6 @@ public class TypeFinder {
 		parser.setKind(ASTParser.K_COMPILATION_UNIT);
 		parser.setResolveBindings(true);
 		parser.setBindingsRecovery(true);
-		// TODO: Find out if this makes a difference
-		// String[] srcPath = {"/home/slchan/eclipse-workspace/SENG300G1/src/"};
-		// String[] classPath = {"/home/slchan/eclipse-workspace/SENG300G1/bin/"};
-		// parser.setEnvironment(classPath, srcPath, null, true);
 
 		// Given source is char[], these are required to resolve binding
 		parser.setEnvironment(null, null, null, true);

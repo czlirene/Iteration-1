@@ -5,12 +5,13 @@ import org.junit.Test;
 
 public class Test2 {
 	
-	private class Foo{
+	private class Foo<K, V>{
 		
 	}
 //	@Test(expected=NullPointerException.class)
-	public Foo testHashMap_Dec_0_Ref_1(Foo sups) {
-		return new Foo();
+	public Foo<String, Integer> testHashMap_Dec_0_Ref_1(Foo sups) {
+//		Who<String, Age> amI = new Fuck<This, Shit>();
+//		return new Foo<String, Integer>();
 	}
 
 

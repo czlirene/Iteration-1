@@ -39,7 +39,7 @@ public class TypeVisitor extends ASTVisitor {
 	/**
 	 * Debug methods TODO: Remove these before submission
 	 */
-	private boolean DEBUG = false;
+	private boolean DEBUG = true;
 
 	private void debug(String msg) {
 		if (DEBUG) {
@@ -142,8 +142,7 @@ public class TypeVisitor extends ASTVisitor {
 	}
 
 	/*
-	 * ============================== ASTVisitor FUNCTIONS
-	 * ==============================
+	 * ============================== ASTVisitor FUNCTIONS ==============================
 	 */
 
 	@Override
@@ -325,10 +324,10 @@ public class TypeVisitor extends ASTVisitor {
 	 *
 	 * CounterType: REFERENCE
 	 *
-	 * TODO: Get parameters
+	 * TODO: Get return type parameters
+	 * TODO: check if constructors are references
 	 *
-	 * @param node
-	 *            : MethodDeclaration
+	 * @param node : MethodDeclaration
 	 * @return boolean : True to visit the children of this node
 	 */
 	@Override
