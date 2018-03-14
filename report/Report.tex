@@ -98,6 +98,13 @@
 \onehalfspacing
 \section{Explanation}
 
+\subsection{Usage}
+Run the Java \code{TypeFinder.class} file through command line:
+
+\code{java TypeFinder <directory> <Java type>}
+
+\code{directory} is the path of the directory (either absolute or relative).
+
 \subsection{Struture}
 The UML diagram was kept as simple as possible and only represent main components of the software. All the methods in the Type Finder Class were included since they drive the software during execution. The JavaFileReader class is reads the all files in the directory and allows for parsing via AST. We Did not include all the methods for the TypeVisitor. The abstracted details were only supporting features that did not aid in the understanding of the functionality. As for visit(node : ) : boolean, the formating was done this way due to the multiple overriden methods with different parameter types, such as SingleVariableDecleration, TypeDecleration...etc.
 like the rest only the key components of  the ASTParser, AST, ASTVistor, ASTNode were maintained in the uml Diagram. Everything that did not aid or was none essential in understanding the relationships between the TypeFinder and the AST parser was left out.
