@@ -129,17 +129,22 @@ public class TypeVisitorFooTest {
 	 * Check if an annotation reference is counted as a reference
 	 */
 	@Test
-	public void testAnnotationReference_Dec_0_Ref_1() {
+	public void testMarkerAnnotationReference_Dec_0_Ref_1() {
 		configureParser("public class Other{@Foo public void method() {}}", 0, 1);
 	}
 
 	/**
-	 * Check if an annotation that references Foo as a parameter is counted as a
-	 * reference
+	 * Check if a marker annotation that references Foo as a parameter is counted as
+	 * a reference
 	 */
 	@Test
-	public void testAnnotationParameterReference_Dec_0_Ref_1() {
+	public void testNormalAnnotationParameterReference_Dec_0_Ref_1() {
 		configureParser("public class Other{@Test(expected = Foo.class) public void test() {}}", 0, 1);
+	}
+
+	@Test
+	public void testTypeLiteral_Dec_0_Ref_1() {
+
 	}
 
 	/**

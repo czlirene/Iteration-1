@@ -39,7 +39,7 @@ public class TypeVisitor extends ASTVisitor {
 	/**
 	 * Debug methods TODO: Remove these before submission
 	 */
-	private boolean DEBUG = true;
+	private boolean DEBUG = false;
 
 	private void debug(String msg) {
 		if (DEBUG) {
@@ -327,10 +327,10 @@ public class TypeVisitor extends ASTVisitor {
 	 *
 	 * CounterType: REFERENCE
 	 *
-	 * TODO: Get return type parameters
-	 * TODO: check if constructors are references
+	 * TODO: Get return type parameters TODO: check if constructors are references
 	 *
-	 * @param node : MethodDeclaration
+	 * @param node
+	 *            : MethodDeclaration
 	 * @return boolean : True to visit the children of this node
 	 */
 	@Override
@@ -339,15 +339,15 @@ public class TypeVisitor extends ASTVisitor {
 
 		if (!isConstructor) {
 			boolean isParameterized = node.getReturnType2().isParameterizedType();
-			if (isParameterized){
+			if (isParameterized) {
 				ITypeBinding typeBind = node.getReturnType2().resolveBinding().getTypeDeclaration();
-				String type = typeBind.getQualifiedName(); 
+				String type = typeBind.getQualifiedName();
 
 				addTypeToList(type);
 				incRefCount(type);
 
 				debug(node.getName().toString(), type);
-				for (ITypeBinding paramBind : node.getReturnType2().resolveBinding().getTypeArguments()){
+				for (ITypeBinding paramBind : node.getReturnType2().resolveBinding().getTypeArguments()) {
 					String paramType = paramBind.getQualifiedName();
 					debug("param", paramType);
 					addTypeToList(paramType);
@@ -450,8 +450,7 @@ public class TypeVisitor extends ASTVisitor {
 	 * CounterType: DECLARATION
 	 *
 	 * @param node
-	 *            : TypeDeclaration
-	 * TODO: Get parameters arguments on all generics
+	 *            : TypeDeclaration TODO: Get parameters arguments on all generics
 	 * @return boolean : True to visit the children of this node
 	 */
 	@Override

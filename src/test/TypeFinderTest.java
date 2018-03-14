@@ -119,10 +119,15 @@ public class TypeFinderTest {
 	 * Check that standard output and standard error results are as expected
 	 * 
 	 * @param args
+	 *            command line arguments
 	 * @param expectedOut
+	 *            expected standard output
 	 * @param expectedErr
+	 *            expected standard error
 	 * @param expectedDec
+	 *            expected declaration count
 	 * @param expectedRef
+	 *            expected reference count
 	 */
 	private static void testOutput(String[] args, String expectedOut, String expectedErr, int expectedDec,
 			int expectedRef) {

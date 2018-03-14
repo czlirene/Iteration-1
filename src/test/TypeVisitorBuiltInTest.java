@@ -224,5 +224,4 @@ public class TypeVisitorBuiltInTest {
 		configureParser("import java.util.List; class Other { List<String> list = new List<String>();}",
 				"java.lang.String", 0, 2);
 	}
-
 }

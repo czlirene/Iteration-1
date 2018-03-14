@@ -10,6 +10,8 @@ import java.util.HashMap;
  */
 public class MainTest {
 	public static void main(String[] args) throws IllegalArgumentException {
+
+		String ls = TestSuite.lineSeparator;
 		// Get name with package
 		System.out.println(new MainTest().getClass().getName());
 		// Get just class name
@@ -20,7 +22,7 @@ public class MainTest {
 		boolean result = map1.getClass().equals(map2.getClass());
 		System.out.println(result);
 
-		throw new IllegalArgumentException("Here is a message");
+		System.out.println("/**" + ls + " * Here's a Javadoc comment" + ls + " */" + ls);
 	}
 
 }
