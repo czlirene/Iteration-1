@@ -186,7 +186,7 @@ public class TypeFinder {
 	 * 
 	 * @return ASTParser configured to parse CompilationUnits for JLS8
 	 */
-	public static ASTParser getConfiguredASTParser() {
+	private static ASTParser getConfiguredASTParser() {
 		ASTParser parser = ASTParser.newParser(AST.JLS8);
 		parser.setKind(ASTParser.K_COMPILATION_UNIT);
 		parser.setResolveBindings(true);
