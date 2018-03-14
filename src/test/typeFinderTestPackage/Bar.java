@@ -7,12 +7,12 @@ public class Bar {
 	 */
 	public static final Foo foo = new Foo();
 
-	public Foo getFoo() {
-		return new Foo();
-	}
-
-	// @Foo
+	@Foo
 	public void bar() {
 
+	}
+
+	public Foo getFoo() {
+		return new Foo();
 	}
 }

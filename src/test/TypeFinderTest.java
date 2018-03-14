@@ -27,6 +27,29 @@ public class TypeFinderTest {
 	private static ByteArrayOutputStream errContent;
 
 	/**
+	 * Check that standard output and standard error results are as expected
+	 *
+	 * @param args
+	 *            command line arguments
+	 * @param expectedOut
+	 *            expected standard output
+	 * @param expectedErr
+	 *            expected standard error
+	 * @param expectedDec
+	 *            expected declaration count
+	 * @param expectedRef
+	 *            expected reference count
+	 */
+	private static void testOutput(String[] args, String expectedOut, String expectedErr, int expectedDec,
+			int expectedRef) {
+		TypeFinder.main(args);
+		String outResults = outContent.toString();
+		String errResults = errContent.toString();
+		assertEquals(expectedErr, errResults);
+		assertEquals(expectedOut, outResults);
+	}
+
+	/**
 	 * Restore standard output and error to original streams
 	 */
 	@After
@@ -75,19 +98,6 @@ public class TypeFinderTest {
 	}
 
 	/**
-	 * Check that inputting 3 arguments (more arguments than what is needed) returns
-	 * a prompt to the user explaining how to use the program
-	 */
-	@Test
-	public void testThreeArguments() {
-		String[] args = { "", "", "" };
-		TypeFinder.main(args);
-		String expected = TypeFinder.INVALID_ARGUMENT_ERROR_MESSAGE + TestSuite.lineSeparator;
-		String results = errContent.toString();
-		assertEquals(expected, results);
-	}
-
-	/**
 	 * Check that inputting 1 command line argument returns a prompt to the user
 	 * explaining how to use the program
 	 */
@@ -102,40 +112,30 @@ public class TypeFinderTest {
 
 	/**
 	 * Check that the correct number of declarations and references can be found
-	 * from the test.testPackage directory TODO not working?
+	 * from the test.testPackage directory.
 	 */
 	@Test
 	public void testTestPackageDirectory() {
 		String[] args = { TestSuite.TYPE_FINDER_TEST_DIR, "test.typeFinderTestPackage.Foo" };
 		int expectedDec = 1;
-		int expectedRef = 11;
+		int expectedRef = 12;
 		String expectedOut = "test.typeFinderTestPackage.Foo. Declarations found: " + expectedDec
-				+ "; references found: " + expectedRef + ".\n";
+				+ "; references found: " + expectedRef + "." + TestSuite.lineSeparator;
 		String expectedErr = "";
 		testOutput(args, expectedOut, expectedErr, expectedDec, expectedRef);
 	}
 
 	/**
-	 * Check that standard output and standard error results are as expected
-	 * 
-	 * @param args
-	 *            command line arguments
-	 * @param expectedOut
-	 *            expected standard output
-	 * @param expectedErr
-	 *            expected standard error
-	 * @param expectedDec
-	 *            expected declaration count
-	 * @param expectedRef
-	 *            expected reference count
+	 * Check that inputting 3 arguments (more arguments than what is needed) returns
+	 * a prompt to the user explaining how to use the program
 	 */
-	private static void testOutput(String[] args, String expectedOut, String expectedErr, int expectedDec,
-			int expectedRef) {
+	@Test
+	public void testThreeArguments() {
+		String[] args = { "", "", "" };
 		TypeFinder.main(args);
-		String outResults = outContent.toString();
-		String errResults = errContent.toString();
-		assertEquals(expectedErr, errResults);
-		assertEquals(expectedOut, outResults);
+		String expected = TypeFinder.INVALID_ARGUMENT_ERROR_MESSAGE + TestSuite.lineSeparator;
+		String results = errContent.toString();
+		assertEquals(expected, results);
 	}
 
 }

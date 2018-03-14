@@ -97,7 +97,7 @@ public class TypeVisitor extends ASTVisitor {
 	/**
 	 * Debug methods TODO: Remove these before submission
 	 */
-	private boolean DEBUG = true;
+	private boolean DEBUG = false;
 
 	/*
 	 * ============================== HELPER FUNCTIONS
@@ -257,8 +257,7 @@ public class TypeVisitor extends ASTVisitor {
 			ITypeBinding typeBind = node.getType().resolveBinding();
 			String type = typeBind.getQualifiedName();
 
-			// TODO does this work?
-			// Evan Quan
+			// Add package name if does not contain package name and not in default package
 			if (!type.contains(".") && currentPackageName.length() > 0) {
 				debug("NO PACKAGE", type);
 				type = currentPackageName + "." + type;
