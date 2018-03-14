@@ -78,33 +78,85 @@ public class TypeVisitorPackageFooTest {
 
 	}
 
+	/**
+	 * Check that declaring the Foo class in the default package (so not bar), does
+	 * not count as a declaration
+	 */
 	@Test
 	public void testDefaultPackageDeclaration_Dec_0_Ref_0() {
 		configureParser("class Foo {}", 0, 0);
 	}
 
+	/**
+	 * Check that declaring an instance of Foo in the default package does not count
+	 * as a reference
+	 */
 	@Test
 	public void testDefaultPackageReference_Dec_0_Ref_0() {
 		configureParser("class Other { Foo f; }", 0, 0);
 	}
 
+	/**
+	 * Check that declaring the Foo class in the other package (so not bar), does
+	 * not count as a declaration
+	 */
 	@Test
 	public void testOtherPackageDeclaration_Dec_0_Ref_0() {
 		configureParser("package other; class Foo {}", 0, 0);
 	}
 
+	/**
+	 * Check that declaring an instance of Foo in the other package does not count
+	 * as a reference
+	 */
 	@Test
 	public void testOtherPackageReference_Dec_0_Ref_0() {
 		configureParser("package other; class Other { Foo f; }", 0, 0);
 	}
 
+	/**
+	 * Check that declaring the Foo class in the bar package (correct package)
+	 * counts as a declaration
+	 */
 	@Test
 	public void testBarPackageDeclaration_Dec_1_Ref_0() {
 		configureParser("package bar; class Foo {}", 1, 0);
 	}
 
+	/**
+	 * Check that declaring an instance of Foo in the bar package does count as a
+	 * reference
+	 */
 	@Test
 	public void testBarPackageReference_Dec_0_Ref_1() {
 		configureParser("package bar; class Other { Foo f; }", 0, 1);
 	}
+
+	/**
+	 * Check that calling the Foo constructor in the bar package does count as a
+	 * reference
+	 */
+	@Test
+	public void testBarPackageFooConstructor_Dec_0_Ref_1() {
+		configureParser("package bar; class Other { Bar bar = new Foo();}", 0, 1);
+	}
+
+	/**
+	 * Check that calling the Foo constructor in a return statement in the bar
+	 * package does count as a reference
+	 */
+	@Test
+	public void testBarPackageFooConstructorReturnType_Dec_0_Ref_1() {
+		configureParser("package bar; class Other { public Bar method() {return new Foo();}", 0, 1);
+	}
+
+	/**
+	 * Check that calling the Foo constructor separately from the returned instance
+	 * in the bar package does count as a reference
+	 */
+	@Test
+	public void testBarPackageFooReturnType_Dec_0_Ref_1() {
+		configureParser("package bar; class Other { public Bar method() { Bar foo = new Foo(); return foo;}", 0, 1);
+	}
+
 }

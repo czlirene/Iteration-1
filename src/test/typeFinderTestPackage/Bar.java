@@ -7,12 +7,11 @@ public class Bar {
 	 */
 	public static final Foo foo = new Foo();
 
-	@Foo
 	public Foo getFoo() {
 		return new Foo();
 	}
 
-	@Foo
+	// @Foo
 	public void bar() {
 
 	}

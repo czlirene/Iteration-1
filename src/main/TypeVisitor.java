@@ -17,6 +17,7 @@ import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.NormalAnnotation;
 import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
+import org.eclipse.jdt.core.dom.TypeLiteral;
 import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
 import org.eclipse.jdt.core.dom.VariableDeclarationStatement;
 
@@ -168,10 +169,12 @@ public class TypeVisitor extends ASTVisitor {
 	 *
 	 * CounterType: REFERENCE
 	 * 
-	 * LIMITATION: Given public class Other { Fuck x = new Bar<Foo, String, Foo>(); }
-	 * if Bar is not declared before, then the parameter arguments Foo, String, Foo will not be recognized 
+	 * LIMITATION: Given public class Other { Fuck x = new Bar<Foo, String, Foo>();
+	 * } if Bar is not declared before, then the parameter arguments Foo, String,
+	 * Foo will not be recognized
 	 *
-	 * @param node : ClassInstanceCreation
+	 * @param node
+	 *            : ClassInstanceCreation
 	 * @return boolean : True to visit the children of this node
 	 */
 	@Override
@@ -185,7 +188,7 @@ public class TypeVisitor extends ASTVisitor {
 			incRefCount(type);
 			debug("ClassInstanceCreation", type);
 
-				debug("fuck ", node.getType().resolveBinding().toString());
+			debug("fuck ", node.getType().resolveBinding().toString());
 			// inc count for all the arguments
 			for (ITypeBinding paramBind : node.getType().resolveBinding().getTypeArguments()) {
 				String paramType = paramBind.getQualifiedName();
@@ -289,7 +292,7 @@ public class TypeVisitor extends ASTVisitor {
 		return true;
 	}
 
-	// TODO: get after @link Class. 
+	// TODO: get after @link Class.
 	// public boolean visit(Javadoc node){
 
 	// }
@@ -334,12 +337,7 @@ public class TypeVisitor extends ASTVisitor {
 	 *
 	 * CounterType: REFERENCE
 	 *
-<<<<<<< HEAD
-	 * TODO: Get return type parameters TODO: check if constructors are references
-=======
-	 * TODO: Get return type parameters
-	 * TODO: CONSTRUCTORS ARE INC REFERENCES
->>>>>>> 729f802c35286e06fff7ed0ce618f693ece25220
+	 * TODO: Get return type parameters TODO: CONSTRUCTORS ARE INC REFERENCES
 	 *
 	 * @param node
 	 *            : MethodDeclaration
@@ -385,8 +383,7 @@ public class TypeVisitor extends ASTVisitor {
 	}
 
 	/**
-	 * @interface()
-	 * TODO: get into value pair and find any 
+	 * @interface() TODO: get into value pair and find any
 	 */
 	@Override
 	public boolean visit(NormalAnnotation node) {
@@ -479,8 +476,10 @@ public class TypeVisitor extends ASTVisitor {
 		return true;
 	}
 
-	public boolean visit(TypeLiteral node){
-
+	// TODO
+	@Override
+	public boolean visit(TypeLiteral node) {
+		return true;
 	}
 
 	/**
