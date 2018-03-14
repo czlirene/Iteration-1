@@ -14,6 +14,7 @@ import org.eclipse.jdt.core.dom.EnumDeclaration;
 import org.eclipse.jdt.core.dom.FieldDeclaration;
 import org.eclipse.jdt.core.dom.ForStatement;
 import org.eclipse.jdt.core.dom.IAnnotationBinding;
+import org.eclipse.jdt.core.dom.IPackageBinding;
 import org.eclipse.jdt.core.dom.ITypeBinding;
 import org.eclipse.jdt.core.dom.IVariableBinding;
 import org.eclipse.jdt.core.dom.ImportDeclaration;
@@ -50,8 +51,6 @@ public class TypeVisitor extends ASTVisitor {
 	private static HashMap<String, Integer> decCounter;
 
 	private static HashMap<String, Integer> refCounter;
-
-	private static String currentPackageName;
 
 	/**
 	 * Checks if the passed type already exists within the types list. [false -> add
@@ -114,7 +113,6 @@ public class TypeVisitor extends ASTVisitor {
 		types = new ArrayList<String>();
 		decCounter = new HashMap<String, Integer>();
 		refCounter = new HashMap<String, Integer>();
-		currentPackageName = "";
 	}
 
 	private void debug(String msg) {
@@ -257,11 +255,13 @@ public class TypeVisitor extends ASTVisitor {
 			 */
 			ITypeBinding typeBind = node.getType().resolveBinding();
 			String type = typeBind.getQualifiedName();
+			IPackageBinding packBind = typeBind.getPackage();
+			String packName = packBind.getName();
 
 			// Add package name if does not contain package name and not in default package
-			if (!type.contains(".") && currentPackageName.length() > 0) {
+			if (!type.contains(".") && packName != "") {
 				debug("NO PACKAGE", type);
-				type = currentPackageName + "." + type;
+				type = packName + "." + type;
 				debug("AFTER", type);
 			}
 
@@ -428,12 +428,13 @@ public class TypeVisitor extends ASTVisitor {
 	 * ToDO: javadocs for this
 	 */
 	@Override
-	public boolean visit(ImportDeclaration node) {
-		ITypeBinding typeBind = node.getName().resolveTypeBinding();
-		if (typeBind.getQualifiedName() != null) {
-			String type = typeBind.getQualifiedName();
+	public boolean visit(ImportDeclaration node){
+		if (node.getName().resolveTypeBinding() != null){
+			String type = node.getName().resolveTypeBinding().getQualifiedName();
 			debug("Import", type);
-		}
+			addTypeToList(type);
+			incRefCount(type);
+		 }
 
 		return true;
 	}
@@ -578,12 +579,12 @@ public class TypeVisitor extends ASTVisitor {
 	/**
 	 * TODO javadoc
 	 */
-	@Override
-	public boolean visit(PackageDeclaration node) {
-		currentPackageName = node.getName().getFullyQualifiedName();
-		debug("PackageDeclaration", currentPackageName);
-		return true;
-	}
+	// @Override
+	// public boolean visit(PackageDeclaration node) {
+	// 	currentPackageName = node.getName().getFullyQualifiedName();
+	// 	debug("PackageDeclaration", currentPackageName);
+	// 	return true;
+	// }
 
 	/**
 	 * Visits a single variable declaration node type. These are used only in formal
@@ -728,7 +729,7 @@ public class TypeVisitor extends ASTVisitor {
 
 					if (arrTypeBind != null) {
 						type = arrTypeBind.getQualifiedName();
-						debug(name + "is ArrayType", type);
+						debug(name + " is ArrayType", type);
 					}
 					// boolean isDeclaration = ((VariableDeclarationFragment)
 					// fragment).getName().isDeclaration();

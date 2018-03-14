@@ -1,17 +1,17 @@
 package main.FUCK;
 import java.util.*;
-import java.nio.file.NotDirectoryException;
 import org.junit.Test;
+import java.nio.file.NotDirectoryException;
 
 public class Test2 {
 //	@interface Foo {}
 //	public class Foo{}
 //	public Test2(){}
-	Bar<Foo, Foo> bar = new Bar<Foo, Foo>();
+	
 //	@Foo
-//	public Foo other() {
-//		return new Foo();
-//	}
+	public Foo other() {
+		return new Foo();
+	}
 //	public static String bye = "bye";
 //	@Test(expected = NullPointerException.class)
 //	public void x() {
