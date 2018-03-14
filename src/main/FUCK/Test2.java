@@ -16,14 +16,12 @@ public class Test2 {
 //	}
 //	public static String bye = "bye";
 	public static void main() {
-//		String[] fuck = {};
-		Foo[] foo; // Ref 1
-
-		Foo[] foo3 = new Foo[32]; // Ref 2
-
-		Bar[] bar = new Foo[1]; // Ref 1
-
-		Foo[] foo2 = new Bar[10]; // Ref 1
+//		int j;
+		for (Integer k = 1; i < (j = 3); i++) {
+//			String x = "s";
+		}
+//		for (Foo foo;;) {}
+		
 //		String k = Foo.shit();
 //		String j = merde();
 //		String x;
