@@ -4,14 +4,29 @@ import java.nio.file.NotDirectoryException;
 import org.junit.Test;
 
 public class Test2 {
+//	@interface Foo {}
+//	public class Foo{}
 	
 //	public class Bar<K,V,T>{}
 //	@Test(expected = NullPointerException.class)
-	public Test2(){}
-	
-//	public class Other {
-//		Fuck x = new Bar<Foo, String, Foo>();
+//	public Test2(){}
+//	@Foo
+//	public Foo other() {
+//		return new Foo();
 //	}
+//	public static String bye = "bye";
+//	public static void main() {
+//		String k = Foo.shit();
+//		String j = merde();
+//		String x;
+//		x = Foo.hey;
+//		String y = Foo.hey;
+//		String z = bye;
+//	}
+//	
+	public static List<String> merde() {
+		return null;
+	}
 
 
 //	public static int a, b, c;

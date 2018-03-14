@@ -10,6 +10,7 @@ import org.eclipse.jdt.core.dom.ClassInstanceCreation;
 import org.eclipse.jdt.core.dom.EnumDeclaration;
 import org.eclipse.jdt.core.dom.FieldDeclaration;
 import org.eclipse.jdt.core.dom.IAnnotationBinding;
+import org.eclipse.jdt.core.dom.IMethodBinding;
 import org.eclipse.jdt.core.dom.ITypeBinding;
 import org.eclipse.jdt.core.dom.IVariableBinding;
 import org.eclipse.jdt.core.dom.MarkerAnnotation;
@@ -31,6 +32,7 @@ import org.eclipse.jdt.core.dom.VariableDeclarationStatement;
  * @author Sze Lok Irene Chan
  * @version 2.9
  * 			+ AnnotationTypeDeclaration, NormalAnnotation should work normally.
+ * 
  * 
  * @since 13 March 2018
  */
@@ -91,8 +93,7 @@ public class TypeVisitor extends ASTVisitor {
 	/**
 	 * Increment the counter value for a given type in decCounter.
 	 *
-	 * @param type:
-	 *            String, java type
+	 * @param type String, java type
 	 */
 	private static void incDecCount(String type) {
 		// Check if the type exists, then increment their associated value by 1
@@ -104,8 +105,7 @@ public class TypeVisitor extends ASTVisitor {
 	/**
 	 * Increment the counter value for a given type in refCounter.
 	 *
-	 * @param type
-	 *            : String, java type
+	 * @param type String, java type
 	 */
 	private static void incRefCount(String type) {
 		// Check if the type exists, then increment their associated value by 1
@@ -145,6 +145,9 @@ public class TypeVisitor extends ASTVisitor {
 	 * ============================== ASTVisitor FUNCTIONS ==============================
 	 */
 
+	/**
+	 * TODO: Javadoc for this method
+	 */
 	@Override
 	public boolean visit(AnnotationTypeDeclaration node){
 		ITypeBinding typeBind = node.resolveBinding();
@@ -182,7 +185,6 @@ public class TypeVisitor extends ASTVisitor {
 			incRefCount(type);
 			debug("ClassInstanceCreation", type);
 
-				debug("fuck ", node.getType().resolveBinding().toString());
 			// inc count for all the arguments
 			for (ITypeBinding paramBind : node.getType().resolveBinding().getTypeArguments()) {
 				String paramType = paramBind.getQualifiedName();
@@ -191,14 +193,21 @@ public class TypeVisitor extends ASTVisitor {
 				incRefCount(paramType);
 			}
 		} else {
-			ITypeBinding typeBind = node.getType().resolveBinding();
-			String type = typeBind.getQualifiedName();
-
+			// ITypeBinding typeBind = node.getType().resolveBinding().getDeclaredMethods()[0].getDeclaringClass();
+			// // IMethodBinding[] methBinds = node.getType().resolveBinding().getDeclaredMethods();
+			// IMethodBinding methBinds = node.resolveConstructorBinding();
+			// // ITypeBinding typeBind = methBinds[methBinds.length-1].getDeclaringClass();
+			// ITypeBinding typeBind = methBinds.getDeclaringClass();
+			// String type = typeBind.getQualifiedName();
+			// String type = typeBind.getPackage().getName();
+			int x = node.getType().resolveBinding().getDeclaredMethods().length;
+			
+			debug("SHIT DOESN'T WORK RN, YELL AT ME TO GET THIS FIXED" + x);
 			/* Debug ONLY: Get the parent variable name if it exists */
-			debug("PClassInstanceCreation", type);
+			// debug("PClassInstanceCreation", type);
 
-			addTypeToList(type);
-			incRefCount(type);
+			// addTypeToList(type);
+			// incRefCount(type);
 		}
 
 		return true;
@@ -300,8 +309,7 @@ public class TypeVisitor extends ASTVisitor {
 	 *
 	 * CounterType: REFERENCE
 	 *
-	 * @param node
-	 *            : MarkerAnnotation
+	 * @param node MarkerAnnotation
 	 * @return boolean : True to visit the children of this node
 	 *
 	 * TODO: Cannot recognize full qualified names for IMPORTS. Works for
@@ -331,7 +339,7 @@ public class TypeVisitor extends ASTVisitor {
 	 *
 	 * CounterType: REFERENCE
 	 *
-	 * TODO: Get return type parameters
+	 * TODO: Get return type parameters -- should be done, please double check
 	 * TODO: CONSTRUCTORS ARE INC REFERENCES
 	 *
 	 * @param node : MethodDeclaration
@@ -358,6 +366,7 @@ public class TypeVisitor extends ASTVisitor {
 					incRefCount(paramType);
 				}
 			} else {
+				// their type = return type
 				ITypeBinding typeBind = node.getReturnType2().resolveBinding();
 				String type = typeBind.getQualifiedName();
 
@@ -370,11 +379,25 @@ public class TypeVisitor extends ASTVisitor {
 					incRefCount(type);
 				}
 			}
-
+		} else {
+			// These are constructors, their type = declaring class
+			ITypeBinding typeBind = node.resolveBinding().getDeclaringClass();
+			String type = typeBind.getQualifiedName();
+			
+			debug("Constructor", type);
+			addTypeToList(type);
+			incRefCount(type);
 		}
 
 		return true;
 	}
+	
+	/**
+	 * TODO:
+	 */
+	// public boolean visit(MethodInvocation node){
+
+	// }
 
 	/**
 	 * @interface()
@@ -472,9 +495,10 @@ public class TypeVisitor extends ASTVisitor {
 		return true;
 	}
 
-	public boolean visit(TypeLiteral node){
-
-	}
+//	TODO:
+//	public boolean visit(TypeLiteral node){
+//
+//	}
 
 	/**
 	 * Visits a local variable declaration statement node type. This type of node
