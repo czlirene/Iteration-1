@@ -7,11 +7,7 @@ public class Test2 {
 //	@interface Foo {}
 //	public class Foo{}
 //	public Test2(){}
-public class Other{
-	String x;
-	Class<Foo> foo = Foo.class;
-			List<Foo> t = x;
-			}
+	Bar<Foo, Foo> bar = new Bar<Foo, Foo>();
 //	@Foo
 //	public Foo other() {
 //		return new Foo();

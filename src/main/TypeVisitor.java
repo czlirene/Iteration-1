@@ -16,6 +16,7 @@ import org.eclipse.jdt.core.dom.ForStatement;
 import org.eclipse.jdt.core.dom.IAnnotationBinding;
 import org.eclipse.jdt.core.dom.ITypeBinding;
 import org.eclipse.jdt.core.dom.IVariableBinding;
+import org.eclipse.jdt.core.dom.ImportDeclaration;
 import org.eclipse.jdt.core.dom.MarkerAnnotation;
 import org.eclipse.jdt.core.dom.MemberValuePair;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
@@ -421,6 +422,20 @@ public class TypeVisitor extends ASTVisitor {
 		// expression
 
 		// updater
+	}
+
+	/**
+	 * ToDO: javadocs for this
+	 */
+	@Override
+	public boolean visit(ImportDeclaration node){
+		ITypeBinding typeBind = node.getName().resolveTypeBinding();
+		if (typeBind.getQualifiedName() != null){
+			String type = typeBind.getQualifiedName();
+			debug("Import", type);
+		}
+
+		return true;
 	}
 
 	// TODO: get after @link Class.
