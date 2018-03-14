@@ -6,6 +6,11 @@ public class Foo {
 	public Foo() {
 		
 	}
+
+	public static Bar staticMethod() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
 //	public static String shit() {
 //		return "no";

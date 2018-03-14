@@ -219,8 +219,8 @@ public class TypeVisitorBuiltInTest {
 	 * java.util.HashMap import
 	 */
 	@Test
-	public void testJavaUtilHashMapImported_Dec_0_Ref_1() {
-		configureParser("import java.util.HashMap; class Foo { HashMap map;}", "java.util.HashMap", 0, 1);
+	public void testJavaUtilHashMapImported_Dec_0_Ref_2() {
+		configureParser("import java.util.HashMap; class Foo { HashMap map;}", "java.util.HashMap", 0, 2);
 	}
 
 	/**
@@ -228,9 +228,9 @@ public class TypeVisitorBuiltInTest {
 	 * java.util.HashMap with java.util.HashMap import
 	 */
 	@Test
-	public void testJavaUtilHashMapImportedParameterized_Dec_0_Ref_1() {
+	public void testJavaUtilHashMapImportedParameterized_Dec_0_Ref_2() {
 		configureParser("import java.util.HashMap; class Foo { HashMap<String, Integer> map;}", "java.util.HashMap", 0,
-				1);
+				2);
 	}
 
 	/**

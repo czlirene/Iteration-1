@@ -377,6 +377,14 @@ public class TypeVisitor extends ASTVisitor {
 						String name = ((VariableDeclarationFragment) fragment).getName().toString();
 						debug(name, type);
 						incRefCount(type);
+
+						// if (((VariableDeclarationFragment) fragment).getInitializer() != null){
+						// 	ITypeBinding initBind = ((VariableDeclarationFragment) fragment).getInitializer().resolveTypeBinding();
+						// 	String initType = initBind.toString();
+						// 	debug("FD_NP_Initializer", initType);
+						// 	addTypeToList(initType);
+						// 	incRefCount(initType);
+						// }
 					}
 				}
 			}
