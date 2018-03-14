@@ -2,6 +2,7 @@ package main;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.eclipse.jdt.core.dom.ASTVisitor;
@@ -9,7 +10,9 @@ import org.eclipse.jdt.core.dom.AnnotationTypeDeclaration;
 import org.eclipse.jdt.core.dom.ArrayCreation;
 import org.eclipse.jdt.core.dom.ClassInstanceCreation;
 import org.eclipse.jdt.core.dom.EnumDeclaration;
+import org.eclipse.jdt.core.dom.Expression;
 import org.eclipse.jdt.core.dom.FieldDeclaration;
+import org.eclipse.jdt.core.dom.ForStatement;
 import org.eclipse.jdt.core.dom.IAnnotationBinding;
 import org.eclipse.jdt.core.dom.IMethodBinding;
 import org.eclipse.jdt.core.dom.ITypeBinding;
@@ -20,6 +23,7 @@ import org.eclipse.jdt.core.dom.NormalAnnotation;
 import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.eclipse.jdt.core.dom.TypeLiteral;
+import org.eclipse.jdt.core.dom.VariableDeclarationExpression;
 import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
 import org.eclipse.jdt.core.dom.VariableDeclarationStatement;
 
@@ -310,6 +314,33 @@ public class TypeVisitor extends ASTVisitor {
 			}
 		}
 		return true;
+	}
+
+	/**
+	 * TODO: javadoc for thiss
+	 */
+	@Override
+	public boolean visit(ForStatement node){
+		List<VariableDeclarationExpression> varExprs = node.initializers();
+
+		for(VariableDeclarationExpression varExpr : varExprs){
+			String type = varExpr.getType().resolveBinding().getQualifiedName();
+			addTypeToList(type);
+			
+			for (Object fragment : varExpr.fragments()) {
+				if (fragment instanceof VariableDeclarationFragment) {
+					// debug only: get the name of the variable
+					String name = ((VariableDeclarationFragment) fragment).getName().toString();
+					debug(name, type);
+					incRefCount(type);
+				}
+			}
+		}
+
+		return true;
+		// expression
+
+		// updater
 	}
 
 	// TODO: get after @link Class.
