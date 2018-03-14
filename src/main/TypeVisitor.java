@@ -96,7 +96,7 @@ public class TypeVisitor extends ASTVisitor {
 	/**
 	 * Debug methods TODO: Remove these before submission
 	 */
-	private boolean DEBUG = true;
+	private boolean DEBUG = false;
 
 	/*
 	 * ============================== HELPER FUNCTIONS

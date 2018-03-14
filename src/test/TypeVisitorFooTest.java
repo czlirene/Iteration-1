@@ -377,4 +377,14 @@ public class TypeVisitorFooTest {
 		configureParser("public class Other { Foo foo = anotherFoo;}", 0, 1);
 	}
 
+	/**
+	 * ' Check if a variable declaration within a switch statement counts as a
+	 * reference
+	 */
+	@Test
+	public void testSwitchStatementVariableDeclaration_Dec_0_Ref_1() {
+		configureParser("public calss Other{ public void method() { int x = 1; switch(x){" + "case 1:" + "Foo foo;"
+				+ "break;" + "case 2:" + "break;" + "default:" + "} }}", 0, 1);
+	}
+
 }
