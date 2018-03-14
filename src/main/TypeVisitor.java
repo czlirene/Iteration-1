@@ -20,6 +20,7 @@ import org.eclipse.jdt.core.dom.MarkerAnnotation;
 import org.eclipse.jdt.core.dom.MemberValuePair;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.NormalAnnotation;
+import org.eclipse.jdt.core.dom.PackageDeclaration;
 import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.eclipse.jdt.core.dom.TypeLiteral;
@@ -42,42 +43,14 @@ import org.eclipse.jdt.core.dom.VariableDeclarationStatement;
  */
 public class TypeVisitor extends ASTVisitor {
 
-	/**
-	 * Debug methods TODO: Remove these before submission
-	 */
-	private boolean DEBUG = true;
-
-	private void debug(String msg) {
-		if (DEBUG) {
-			System.out.println("DEBUG >> " + msg);
-		}
-	}
-
-	private void debug(String var, String type) {
-		if (DEBUG) {
-			System.out.println("DEBUG >> " + var + " : " + type);
-		}
-	}
-
 	// Global variables
 	private static ArrayList<String> types;
+
 	private static HashMap<String, Integer> decCounter;
+
 	private static HashMap<String, Integer> refCounter;
 
-	/**
-	 * constructor Intialize the list of types, and the HashMaps for the counters to
-	 * null.
-	 */
-	public TypeVisitor() {
-		// initialize list and counters to null
-		types = new ArrayList<String>();
-		decCounter = new HashMap<String, Integer>();
-		refCounter = new HashMap<String, Integer>();
-	}
-
-	/*
-	 * ============================== HELPER FUNCTIONS ==============================
-	 */
+	private static String currentPackageName;
 
 	/**
 	 * Checks if the passed type already exists within the types list. [false -> add
@@ -122,21 +95,46 @@ public class TypeVisitor extends ASTVisitor {
 	}
 
 	/**
+	 * Debug methods TODO: Remove these before submission
+	 */
+	private boolean DEBUG = true;
+
+	/*
+	 * ============================== HELPER FUNCTIONS
+	 * ==============================
+	 */
+
+	/**
+	 * constructor Intialize the list of types, and the HashMaps for the counters to
+	 * null.
+	 */
+	public TypeVisitor() {
+		// initialize list and counters to null
+		types = new ArrayList<String>();
+		decCounter = new HashMap<String, Integer>();
+		refCounter = new HashMap<String, Integer>();
+		currentPackageName = "";
+	}
+
+	private void debug(String msg) {
+		if (DEBUG) {
+			System.out.println("DEBUG >> " + msg);
+		}
+	}
+
+	private void debug(String var, String type) {
+		if (DEBUG) {
+			System.out.println("DEBUG >> " + var + " : " + type);
+		}
+	}
+
+	/**
 	 * Accessor method. Fetches the map of declaration counter.
 	 *
 	 * @return HashMap : decCounter
 	 */
 	public Map<String, Integer> getDecCount() {
 		return decCounter;
-	}
-
-	/**
-	 * Accessor method. Fetches the map of reference counter.
-	 *
-	 * @return HashMap : refCounter
-	 */
-	public Map<String, Integer> getRefCount() {
-		return refCounter;
 	}
 
 	/**
@@ -148,20 +146,32 @@ public class TypeVisitor extends ASTVisitor {
 		return types;
 	}
 
+	/**
+	 * Accessor method. Fetches the map of reference counter.
+	 *
+	 * @return HashMap : refCounter
+	 */
+	public Map<String, Integer> getRefCount() {
+		return refCounter;
+	}
+
 	/*
-	 * ============================== ASTVisitor FUNCTIONS ==============================
+	 * ============================== ASTVisitor FUNCTIONS
+	 * ==============================
 	 */
 
 	/**
 	 * Visits an annotation type declaration AST node type. Looks for
+	 *
 	 * @interface <identifier> { }
-	 * 
-	 * Determine the type of the annotation, add it to types, and 
-	 * increment its type's counter in decCounter.
-	 * 
-	 * CounterType: DECLARATION
-	 * 
-	 * @param node AnnotationTypeDeclaration
+	 *
+	 *            Determine the type of the annotation, add it to types, and
+	 *            increment its type's counter in decCounter.
+	 *
+	 *            CounterType: DECLARATION
+	 *
+	 * @param node
+	 *            AnnotationTypeDeclaration
 	 * @return boolean true to visit the children of this node
 	 */
 	@Override
@@ -178,24 +188,23 @@ public class TypeVisitor extends ASTVisitor {
 	}
 
 	/**
-	 * Visits an array creation AST node type. Looks for
-	 *	new PrimitiveType [ Expression ] { [ Expression ] } { [ ] }
-	 * 	new TypeName [ < Type { , Type } > ]
-	 * 	[ Expression ] { [ Expression ] } { [ ] }
-	 * 	new PrimitiveType [ ] { [ ] } ArrayInitializer
-	 * 	new TypeName [ < Type { , Type } > ]
-	 * 	[ ] { [ ] } ArrayInitializer
-	 * 
+	 * Visits an array creation AST node type. Looks for new PrimitiveType [
+	 * Expression ] { [ Expression ] } { [ ] } new TypeName [ < Type { , Type } > ]
+	 * [ Expression ] { [ Expression ] } { [ ] } new PrimitiveType [ ] { [ ] }
+	 * ArrayInitializer new TypeName [ < Type { , Type } > ] [ ] { [ ] }
+	 * ArrayInitializer
+	 *
 	 * Determine the elements' type (String[] = String), add it to types, and
 	 * increment its type's counter in refCounter.
-	 * 
+	 *
 	 * CounterType: REFERENCE
-	 * 
-	 * @param node ArrayCreation
+	 *
+	 * @param node
+	 *            ArrayCreation
 	 * @return boolean true to visit the children of this node
 	 */
 	@Override
-	public boolean visit(ArrayCreation node){
+	public boolean visit(ArrayCreation node) {
 		ITypeBinding typeBind = node.getType().getElementType().resolveBinding();
 		String type = typeBind.getQualifiedName();
 
@@ -339,17 +348,17 @@ public class TypeVisitor extends ASTVisitor {
 	}
 
 	/**
-	 * Visits for statements AST node type. 
-	 * for (forInit; expression; forUpdate)
-	 * 
+	 * Visits for statements AST node type. for (forInit; expression; forUpdate)
+	 *
 	 * forInit & forUpdate are of type Expression
-	 * 
-	 * Determine the type of the expression in forInit, add it to types,
-	 * and increment its type's counter in refCounter.
-	 * 
+	 *
+	 * Determine the type of the expression in forInit, add it to types, and
+	 * increment its type's counter in refCounter.
+	 *
 	 * CounterType: REFERENCE
-	 * 
-	 * @param node ForStatement
+	 *
+	 * @param node
+	 *            ForStatement
 	 * @return boolean true to visit its children nodes
 	 */
 	@Override
@@ -464,8 +473,14 @@ public class TypeVisitor extends ASTVisitor {
 			}
 		} else {
 			// These are constructors, their type = declaring class
+
 			ITypeBinding typeBind = node.resolveBinding().getDeclaringClass();
 			String type = typeBind.getQualifiedName();
+
+			// TODO does this work?
+			if (!type.contains(".")) {
+				type = currentPackageName + type;
+			}
 
 			debug("Constructor", type);
 			addTypeToList(type);
@@ -474,13 +489,6 @@ public class TypeVisitor extends ASTVisitor {
 
 		return true;
 	}
-
-	/**
-	 * TODO:
-	 */
-	// public boolean visit(MethodInvocation node){
-
-	// }
 
 	/**
 	 * @interface() TODO: get into value pair and find any
@@ -498,19 +506,37 @@ public class TypeVisitor extends ASTVisitor {
 
 		List<MemberValuePair> valuePairs = node.values();
 
-		for (MemberValuePair valuePair : valuePairs){
-			if (valuePair.getValue() instanceof TypeLiteral){
-				String valType = ((TypeLiteral)valuePair.getValue()).getType().resolveBinding().getQualifiedName();
+		for (MemberValuePair valuePair : valuePairs) {
+			if (valuePair.getValue() instanceof TypeLiteral) {
+				String valType = ((TypeLiteral) valuePair.getValue()).getType().resolveBinding().getQualifiedName();
 				debug("ValuePair", valType);
 				addTypeToList(valType);
 				incRefCount(valType);
 			}
-			// String valType = valuePair.getValue().resolveTypeBinding().getTypeDeclaration().getQualifiedName();
+			// String valType =
+			// valuePair.getValue().resolveTypeBinding().getTypeDeclaration().getQualifiedName();
 			// debug("ValuePair", valType);
 			// addTypeToList(valType);
 			// incRefCount(valType);
 		}
 
+		return true;
+	}
+
+	/**
+	 * TODO:
+	 */
+	// public boolean visit(MethodInvocation node){
+
+	// }
+
+	/**
+	 * TODO javadoc
+	 */
+	@Override
+	public boolean visit(PackageDeclaration node) {
+		currentPackageName = node.getName().getFullyQualifiedName();
+		debug("PackageDeclaration", currentPackageName);
 		return true;
 	}
 
@@ -650,15 +676,17 @@ public class TypeVisitor extends ASTVisitor {
 					// debug only: get the name of the variable
 					String name = ((VariableDeclarationFragment) fragment).getName().toString();
 
-					ITypeBinding arrTypeBind = ((VariableDeclarationFragment) fragment).resolveBinding().getType().getElementType();
+					ITypeBinding arrTypeBind = ((VariableDeclarationFragment) fragment).resolveBinding().getType()
+							.getElementType();
 					ITypeBinding typeBind = ((VariableDeclarationFragment) fragment).resolveBinding().getType();
 					String type = typeBind.getQualifiedName();
 
-					if (arrTypeBind != null){
+					if (arrTypeBind != null) {
 						type = arrTypeBind.getQualifiedName();
 						debug(name + "is ArrayType", type);
 					}
-					// boolean isDeclaration = ((VariableDeclarationFragment) fragment).getName().isDeclaration();
+					// boolean isDeclaration = ((VariableDeclarationFragment)
+					// fragment).getName().isDeclaration();
 
 					addTypeToList(type);
 					debug(name, type);
