@@ -428,9 +428,9 @@ public class TypeVisitor extends ASTVisitor {
 	 * ToDO: javadocs for this
 	 */
 	@Override
-	public boolean visit(ImportDeclaration node){
+	public boolean visit(ImportDeclaration node) {
 		ITypeBinding typeBind = node.getName().resolveTypeBinding();
-		if (typeBind.getQualifiedName() != null){
+		if (typeBind.getQualifiedName() != null) {
 			String type = typeBind.getQualifiedName();
 			debug("Import", type);
 		}
@@ -525,7 +525,6 @@ public class TypeVisitor extends ASTVisitor {
 			}
 		} else {
 			// These are constructors, their type = declaring class
-
 			ITypeBinding typeBind = node.resolveBinding().getDeclaringClass();
 			String type = typeBind.getQualifiedName();
 
@@ -533,7 +532,6 @@ public class TypeVisitor extends ASTVisitor {
 			addTypeToList(type);
 			incRefCount(type);
 		}
-
 		return true;
 	}
 
@@ -618,7 +616,7 @@ public class TypeVisitor extends ASTVisitor {
 			// inc count for all the arguments
 			for (ITypeBinding paramBind : node.getType().resolveBinding().getTypeArguments()) {
 				String paramType = paramBind.getQualifiedName();
-				debug("param", paramType);
+				debug("generic param", paramType);
 				addTypeToList(paramType);
 				incRefCount(paramType);
 			}
