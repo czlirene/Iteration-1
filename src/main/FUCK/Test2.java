@@ -15,10 +15,11 @@ public class Test2 {
 //		return new Foo();
 //	}
 //	public static String bye = "bye";
-	public static void main() {
+	@Test(expected = NullPointerException.class)
+	public void x() {
 //		int j;
-		String[] bitch ;
-		String hoes;
+//		String[] bitch ;
+//		String hoes;
 //		for (Integer k = 1; i < (j = 3); i++) {
 //			String x = "s";
 //		}

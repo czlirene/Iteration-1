@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+// TODO: replace these fuckers with *
 import org.eclipse.jdt.core.dom.ASTVisitor;
 import org.eclipse.jdt.core.dom.AnnotationTypeDeclaration;
 import org.eclipse.jdt.core.dom.ArrayCreation;
@@ -16,10 +17,12 @@ import org.eclipse.jdt.core.dom.IAnnotationBinding;
 import org.eclipse.jdt.core.dom.ITypeBinding;
 import org.eclipse.jdt.core.dom.IVariableBinding;
 import org.eclipse.jdt.core.dom.MarkerAnnotation;
+import org.eclipse.jdt.core.dom.MemberValuePair;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.NormalAnnotation;
 import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
+import org.eclipse.jdt.core.dom.TypeLiteral;
 import org.eclipse.jdt.core.dom.VariableDeclarationExpression;
 import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
 import org.eclipse.jdt.core.dom.VariableDeclarationStatement;
@@ -33,8 +36,7 @@ import org.eclipse.jdt.core.dom.VariableDeclarationStatement;
  * the java types present.
  *
  * @author Sze Lok Irene Chan
- * @version 2.9 + AnnotationTypeDeclaration, NormalAnnotation should work
- *          normally.
+ * @version 3.9 Fix up Javadocs
  *
  * @since 13 March 2018
  */
@@ -74,8 +76,7 @@ public class TypeVisitor extends ASTVisitor {
 	}
 
 	/*
-	 * ============================== HELPER FUNCTIONS
-	 * ==============================
+	 * ============================== HELPER FUNCTIONS ==============================
 	 */
 
 	/**
@@ -148,12 +149,20 @@ public class TypeVisitor extends ASTVisitor {
 	}
 
 	/*
-	 * ============================== ASTVisitor FUNCTIONS
-	 * ==============================
+	 * ============================== ASTVisitor FUNCTIONS ==============================
 	 */
 
 	/**
-	 * TODO: Javadoc for this method
+	 * Visits an annotation type declaration AST node type. Looks for
+	 * @interface <identifier> { }
+	 * 
+	 * Determine the type of the annotation, add it to types, and 
+	 * increment its type's counter in decCounter.
+	 * 
+	 * CounterType: DECLARATION
+	 * 
+	 * @param node AnnotationTypeDeclaration
+	 * @return boolean true to visit the children of this node
 	 */
 	@Override
 	public boolean visit(AnnotationTypeDeclaration node) {
@@ -169,7 +178,21 @@ public class TypeVisitor extends ASTVisitor {
 	}
 
 	/**
-	 * TODO: Javadoc for this method
+	 * Visits an array creation AST node type. Looks for
+	 *	new PrimitiveType [ Expression ] { [ Expression ] } { [ ] }
+	 * 	new TypeName [ < Type { , Type } > ]
+	 * 	[ Expression ] { [ Expression ] } { [ ] }
+	 * 	new PrimitiveType [ ] { [ ] } ArrayInitializer
+	 * 	new TypeName [ < Type { , Type } > ]
+	 * 	[ ] { [ ] } ArrayInitializer
+	 * 
+	 * Determine the elements' type (String[] = String), add it to types, and
+	 * increment its type's counter in refCounter.
+	 * 
+	 * CounterType: REFERENCE
+	 * 
+	 * @param node ArrayCreation
+	 * @return boolean true to visit the children of this node
 	 */
 	@Override
 	public boolean visit(ArrayCreation node){
@@ -316,10 +339,22 @@ public class TypeVisitor extends ASTVisitor {
 	}
 
 	/**
-	 * TODO: javadoc for thiss
+	 * Visits for statements AST node type. 
+	 * for (forInit; expression; forUpdate)
+	 * 
+	 * forInit & forUpdate are of type Expression
+	 * 
+	 * Determine the type of the expression in forInit, add it to types,
+	 * and increment its type's counter in refCounter.
+	 * 
+	 * CounterType: REFERENCE
+	 * 
+	 * @param node ForStatement
+	 * @return boolean true to visit its children nodes
 	 */
 	@Override
 	public boolean visit(ForStatement node) {
+		// Initializers
 		List<VariableDeclarationExpression> varExprs = node.initializers();
 
 		for (VariableDeclarationExpression varExpr : varExprs) {
@@ -460,6 +495,21 @@ public class TypeVisitor extends ASTVisitor {
 
 		addTypeToList(type);
 		incRefCount(type);
+
+		List<MemberValuePair> valuePairs = node.values();
+
+		for (MemberValuePair valuePair : valuePairs){
+			if (valuePair.getValue() instanceof TypeLiteral){
+				String valType = ((TypeLiteral)valuePair.getValue()).getType().resolveBinding().getQualifiedName();
+				debug("ValuePair", valType);
+				addTypeToList(valType);
+				incRefCount(valType);
+			}
+			// String valType = valuePair.getValue().resolveTypeBinding().getTypeDeclaration().getQualifiedName();
+			// debug("ValuePair", valType);
+			// addTypeToList(valType);
+			// incRefCount(valType);
+		}
 
 		return true;
 	}
