@@ -15,21 +15,24 @@ public class Test2 {
 //		return new Foo();
 //	}
 //	public static String bye = "bye";
-//	public static void main() {
+	public static void main() {
+//		String[] fuck = {};
+		Foo[] foo; // Ref 1
+
+		Foo[] foo3 = new Foo[32]; // Ref 2
+
+		Bar[] bar = new Foo[1]; // Ref 1
+
+		Foo[] foo2 = new Bar[10]; // Ref 1
 //		String k = Foo.shit();
 //		String j = merde();
 //		String x;
 //		x = Foo.hey;
 //		String y = Foo.hey;
 //		String z = bye;
-//	}
+	}
 	
 	// Constructor inside othe constructor
-
-	public class Other{ 
-		Other2 other = new Bar<String, Integer>();
-		Test2 another = new Shit();
-	}
 //	
 //	public static List<String> merde() {
 //		return null;
