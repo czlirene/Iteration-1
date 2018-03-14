@@ -10,11 +10,9 @@ import org.eclipse.jdt.core.dom.AnnotationTypeDeclaration;
 import org.eclipse.jdt.core.dom.ArrayCreation;
 import org.eclipse.jdt.core.dom.ClassInstanceCreation;
 import org.eclipse.jdt.core.dom.EnumDeclaration;
-import org.eclipse.jdt.core.dom.Expression;
 import org.eclipse.jdt.core.dom.FieldDeclaration;
 import org.eclipse.jdt.core.dom.ForStatement;
 import org.eclipse.jdt.core.dom.IAnnotationBinding;
-import org.eclipse.jdt.core.dom.IMethodBinding;
 import org.eclipse.jdt.core.dom.ITypeBinding;
 import org.eclipse.jdt.core.dom.IVariableBinding;
 import org.eclipse.jdt.core.dom.MarkerAnnotation;
@@ -22,7 +20,6 @@ import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.NormalAnnotation;
 import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
-import org.eclipse.jdt.core.dom.TypeLiteral;
 import org.eclipse.jdt.core.dom.VariableDeclarationExpression;
 import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
 import org.eclipse.jdt.core.dom.VariableDeclarationStatement;
@@ -38,8 +35,7 @@ import org.eclipse.jdt.core.dom.VariableDeclarationStatement;
  * @author Sze Lok Irene Chan
  * @version 2.9 + AnnotationTypeDeclaration, NormalAnnotation should work
  *          normally.
- * 
- * 
+ *
  * @since 13 March 2018
  */
 public class TypeVisitor extends ASTVisitor {
@@ -101,7 +97,8 @@ public class TypeVisitor extends ASTVisitor {
 	/**
 	 * Increment the counter value for a given type in decCounter.
 	 *
-	 * @param type String, java type
+	 * @param type
+	 *            String, java type
 	 */
 	private static void incDecCount(String type) {
 		// Check if the type exists, then increment their associated value by 1
@@ -113,7 +110,8 @@ public class TypeVisitor extends ASTVisitor {
 	/**
 	 * Increment the counter value for a given type in refCounter.
 	 *
-	 * @param type String, java type
+	 * @param type
+	 *            String, java type
 	 */
 	private static void incRefCount(String type) {
 		// Check if the type exists, then increment their associated value by 1
@@ -191,7 +189,7 @@ public class TypeVisitor extends ASTVisitor {
 	 * type's counter value in refCounter.
 	 *
 	 * CounterType: REFERENCE
-	 * 
+	 *
 	 * LIMITATION: Given public class Other { Fuck x = new Bar<Foo, String, Foo>();
 	 * } if Bar is not declared before, then the parameter arguments Foo, String,
 	 * Foo will not be recognized
@@ -220,8 +218,9 @@ public class TypeVisitor extends ASTVisitor {
 			}
 		} else {
 			/**
-			 * Limitation: Unless the type in new <Type>(); is a nested class or a java.lang.whatever shit,
-			 * it will not be able to compute the full qualified name (main.FUCK.foo)
+			 * Limitation: Unless the type in new <Type>(); is a nested class or a
+			 * java.lang.whatever shit, it will not be able to compute the full qualified
+			 * name (main.FUCK.foo)
 			 */
 			ITypeBinding typeBind = node.getType().resolveBinding();
 			String type = typeBind.getQualifiedName();
@@ -320,10 +319,10 @@ public class TypeVisitor extends ASTVisitor {
 	 * TODO: javadoc for thiss
 	 */
 	@Override
-	public boolean visit(ForStatement node){
+	public boolean visit(ForStatement node) {
 		List<VariableDeclarationExpression> varExprs = node.initializers();
 
-		for(VariableDeclarationExpression varExpr : varExprs){
+		for (VariableDeclarationExpression varExpr : varExprs) {
 			String type = varExpr.getType().resolveBinding().getQualifiedName();
 			addTypeToList(type);
 
@@ -357,7 +356,8 @@ public class TypeVisitor extends ASTVisitor {
 	 *
 	 * CounterType: REFERENCE
 	 *
-	 * @param node MarkerAnnotation
+	 * @param node
+	 *            MarkerAnnotation
 	 * @return boolean : True to visit the children of this node
 	 *
 	 *         TODO: Cannot recognize full qualified names for IMPORTS. Works for
@@ -431,7 +431,7 @@ public class TypeVisitor extends ASTVisitor {
 			// These are constructors, their type = declaring class
 			ITypeBinding typeBind = node.resolveBinding().getDeclaringClass();
 			String type = typeBind.getQualifiedName();
-			
+
 			debug("Constructor", type);
 			addTypeToList(type);
 			incRefCount(type);
@@ -439,7 +439,7 @@ public class TypeVisitor extends ASTVisitor {
 
 		return true;
 	}
-	
+
 	/**
 	 * TODO:
 	 */
@@ -541,10 +541,10 @@ public class TypeVisitor extends ASTVisitor {
 		return true;
 	}
 
-//	TODO:
-//	public boolean visit(TypeLiteral node){
-//
-//	}
+	// TODO:
+	// public boolean visit(TypeLiteral node){
+	//
+	// }
 
 	/**
 	 * Visits a local variable declaration statement node type. This type of node

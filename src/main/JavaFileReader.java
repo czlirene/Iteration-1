@@ -104,9 +104,6 @@ public class JavaFileReader {
 			// Only accept Java files
 			if (file.isFile() && isJavaFile(file.getName())) {
 				javaFileNames.add(file.getName());
-				if (TypeFinder.IDEBUG) { // TODO remove
-					System.out.println(file.getName());
-				}
 			}
 		}
 

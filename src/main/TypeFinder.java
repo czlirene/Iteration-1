@@ -28,7 +28,7 @@ public class TypeFinder {
 	// Special salt gauge version (for Irene)
 	// Disable commandline, and prints all types and counts
 	// TODO: Remove this later
-	public static final boolean IDEBUG = true;
+	public static final boolean IDEBUG = false;
 
 	private static void debug(String msg) {
 		if (IDEBUG) {
@@ -186,7 +186,7 @@ public class TypeFinder {
 	 * 
 	 * @return ASTParser configured to parse CompilationUnits for JLS8
 	 */
-	public static ASTParser getConfiguredASTParser() {
+	private static ASTParser getConfiguredASTParser() {
 		ASTParser parser = ASTParser.newParser(AST.JLS8);
 		parser.setKind(ASTParser.K_COMPILATION_UNIT);
 		parser.setResolveBindings(true);

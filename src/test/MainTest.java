@@ -26,5 +26,8 @@ public class MainTest {
 		// System.out.println("hi");
 		// }
 
+		MainTest[] foo;
+		MainTest foo2;
+
 	}
 }
