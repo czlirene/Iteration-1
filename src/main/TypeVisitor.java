@@ -662,11 +662,6 @@ public class TypeVisitor extends ASTVisitor {
 		return true;
 	}
 
-	// TODO:
-	// public boolean visit(TypeLiteral node){
-	//
-	// }
-
 	/**
 	 * Visits a local variable declaration statement node type. This type of node
 	 * contains several variable declaration fragments into a statement. They all
