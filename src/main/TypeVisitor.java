@@ -22,7 +22,6 @@ import org.eclipse.jdt.core.dom.MarkerAnnotation;
 import org.eclipse.jdt.core.dom.MemberValuePair;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.NormalAnnotation;
-import org.eclipse.jdt.core.dom.PackageDeclaration;
 import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.eclipse.jdt.core.dom.TypeLiteral;
@@ -97,7 +96,7 @@ public class TypeVisitor extends ASTVisitor {
 	/**
 	 * Debug methods TODO: Remove these before submission
 	 */
-	private boolean DEBUG = false;
+	private boolean DEBUG = true;
 
 	/*
 	 * ============================== HELPER FUNCTIONS
@@ -259,7 +258,7 @@ public class TypeVisitor extends ASTVisitor {
 			String packName = packBind.getName();
 
 			// Add package name if does not contain package name and not in default package
-			if (!type.contains(".") && packName != "") {
+			if (!type.contains(".") && packName.length() > 0) {
 				debug("NO PACKAGE", type);
 				type = packName + "." + type;
 				debug("AFTER", type);
@@ -428,13 +427,13 @@ public class TypeVisitor extends ASTVisitor {
 	 * ToDO: javadocs for this
 	 */
 	@Override
-	public boolean visit(ImportDeclaration node){
-		if (node.getName().resolveTypeBinding() != null){
+	public boolean visit(ImportDeclaration node) {
+		if (node.getName().resolveTypeBinding() != null) {
 			String type = node.getName().resolveTypeBinding().getQualifiedName();
 			debug("Import", type);
 			addTypeToList(type);
 			incRefCount(type);
-		 }
+		}
 
 		return true;
 	}
@@ -581,9 +580,9 @@ public class TypeVisitor extends ASTVisitor {
 	 */
 	// @Override
 	// public boolean visit(PackageDeclaration node) {
-	// 	currentPackageName = node.getName().getFullyQualifiedName();
-	// 	debug("PackageDeclaration", currentPackageName);
-	// 	return true;
+	// currentPackageName = node.getName().getFullyQualifiedName();
+	// debug("PackageDeclaration", currentPackageName);
+	// return true;
 	// }
 
 	/**

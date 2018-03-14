@@ -202,7 +202,7 @@ public class TypeVisitorBuiltInTest {
 	 */
 	@Test
 	public void testJavaUtilAllImported_Dec_0_Ref_0() {
-		configureParser("import java.util.* class Foo { HashMap map;}", "HashMap", 0, 0);
+		configureParser("import java.util.*; class Foo { HashMap map;}", "HashMap", 0, 0);
 	}
 
 	/**
@@ -211,7 +211,7 @@ public class TypeVisitorBuiltInTest {
 	 */
 	@Test
 	public void testJavaUtilAllImported_Dec_0_Ref_1() {
-		configureParser("import java.util.* class Foo { HashMap map;}", "java.util.HashMap", 0, 1);
+		configureParser("import java.util.*; class Foo { HashMap map;}", "java.util.HashMap", 0, 1);
 	}
 
 	/**
@@ -220,7 +220,7 @@ public class TypeVisitorBuiltInTest {
 	 */
 	@Test
 	public void testJavaUtilHashMapImported_Dec_0_Ref_1() {
-		configureParser("import java.util.HashMap class Foo { HashMap map;}", "java.util.HashMap", 0, 1);
+		configureParser("import java.util.HashMap; class Foo { HashMap map;}", "java.util.HashMap", 0, 1);
 	}
 
 	/**
@@ -249,7 +249,7 @@ public class TypeVisitorBuiltInTest {
 	 */
 	@Test
 	public void testReturnStaticField_Dec_0_Ref_1() {
-		configureParser("class Other { int length = String[].length;}", "java.lang.String", 0, 1);
+		configureParser("class Other { int length = new String[].length;}", "java.lang.String", 0, 1);
 	}
 
 	/**

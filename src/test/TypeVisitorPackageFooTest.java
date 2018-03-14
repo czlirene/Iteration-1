@@ -111,9 +111,7 @@ public class TypeVisitorPackageFooTest {
 	 */
 	@Test
 	public void testBarPackageFooReturnType_Dec_0_Ref_1() {
-		System.out.println("START");
 		configureParser("package bar; class Other { public Bar method() { Bar foo = new Foo(); return foo;}", 0, 1);
-		System.out.println("END");
 	}
 
 	/**
