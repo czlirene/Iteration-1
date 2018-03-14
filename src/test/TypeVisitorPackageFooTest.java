@@ -144,6 +144,14 @@ public class TypeVisitorPackageFooTest {
 	}
 
 	/**
+	 *
+	 */
+	@Test
+	public void testImportStatement_Dec_0_Ref_1() {
+		configureParser("package other; import bar.Foo; class Other {}", 0, 1);
+	}
+
+	/**
 	 * Check that declaring the Foo class in the other package (so not bar), does
 	 * not count as a declaration
 	 */

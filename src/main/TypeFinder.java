@@ -17,7 +17,7 @@ import test.TestSuite;
  * a fully qualified name of a Java type. Counts the number of declarations of a
  * Java type and references of each occurrence of that type within that
  * directory.
- * 
+ *
  * @author Sze Lok Irene Chan
  * @author Evan Quan
  * @since 13 March 2018
@@ -28,19 +28,14 @@ public class TypeFinder {
 	// Special salt gauge version (for Irene)
 	// Disable commandline, and prints all types and counts
 	// TODO: Remove this later
-	public static final boolean IDEBUG = true;
-
-	private static void debug(String msg) {
-		if (IDEBUG) {
-			System.out.println("DEBUG >> " + msg);
-		}
-	}
+	public static final boolean IDEBUG = false;
 
 	/* GLOBAL VARIABLES */
 	/**
 	 * Command line argument index for the directory path of interest
 	 */
 	public static final int DIRECTORY_PATH = 0;
+
 	/**
 	 * Command line argument index for Java type of interest
 	 */
@@ -66,7 +61,6 @@ public class TypeFinder {
 	 * Prompts the user on how to use the program properly.
 	 */
 	public static final String USAGE_MESSAGE = "Usage: java TypeFinder <directory> <Java type>";
-
 	/**
 	 * TODO This is currently unused.
 	 */
@@ -79,15 +73,49 @@ public class TypeFinder {
 	public static final String INVALID_ARGUMENT_ERROR_MESSAGE = "Error: Invalid number of arguments.\n" + USAGE_MESSAGE;
 
 	private static String directory;
+
 	private static String java_type;
 	private static int decl_count = 0;
 	private static int ref_count = 0;
-
 	private static List<String> java_files_as_string = new ArrayList<String>(); // initialize it
+
+	private static void debug(String msg) {
+		if (IDEBUG) {
+			System.out.println("DEBUG >> " + msg);
+		}
+	}
+
+	/**
+	 *
+	 * @return ASTParser configured to parse CompilationUnits for JLS8
+	 */
+	private static ASTParser getConfiguredASTParser() {
+		ASTParser parser = ASTParser.newParser(AST.JLS8);
+		parser.setKind(ASTParser.K_COMPILATION_UNIT);
+		parser.setResolveBindings(true);
+		parser.setBindingsRecovery(true);
+		// TODO: Find out if this makes a difference
+		// String[] srcPath = {"/home/slchan/eclipse-workspace/SENG300G1/src/"};
+		// String[] classPath = {"/home/slchan/eclipse-workspace/SENG300G1/bin/"};
+		// parser.setEnvironment(classPath, srcPath, null, true);
+
+		// Given source is char[], these are required to resolve binding
+		parser.setEnvironment(null, null, null, true);
+		parser.setUnitName("SENG300GrpIt1");
+
+		// ensures nodes are being parsed properly
+		Map<String, String> options = JavaCore.getOptions();
+		options.put(JavaCore.COMPILER_COMPLIANCE, JavaCore.VERSION_1_8);
+		options.put(JavaCore.COMPILER_CODEGEN_TARGET_PLATFORM, JavaCore.VERSION_1_8);
+		options.put(JavaCore.COMPILER_SOURCE, JavaCore.VERSION_1_8);
+		parser.setCompilerOptions(options);
+
+		return parser;
+	}
 
 	/**
 	 * Retrieves Java source from directory to initialize TypeFinder
-	 * 
+	 *
 	 * @param args
 	 *            command line arguments
 	 * @return true if java source successfully retrieved, else false
@@ -126,7 +154,7 @@ public class TypeFinder {
 
 	/**
 	 * Initiates the program
-	 * 
+	 *
 	 * @param args
 	 *            command line arguments args[0] path of directory of interest
 	 *            args[1] fully qualified name of Java type to search for
@@ -180,33 +208,5 @@ public class TypeFinder {
 			System.out.println(
 					java_type + ". Declarations found: " + decl_count + "; references found: " + ref_count + ".");
 		}
-	}
-
-	/**
-	 * 
-	 * @return ASTParser configured to parse CompilationUnits for JLS8
-	 */
-	private static ASTParser getConfiguredASTParser() {
-		ASTParser parser = ASTParser.newParser(AST.JLS8);
-		parser.setKind(ASTParser.K_COMPILATION_UNIT);
-		parser.setResolveBindings(true);
-		parser.setBindingsRecovery(true);
-		// TODO: Find out if this makes a difference
-		// String[] srcPath = {"/home/slchan/eclipse-workspace/SENG300G1/src/"};
-		// String[] classPath = {"/home/slchan/eclipse-workspace/SENG300G1/bin/"};
-		// parser.setEnvironment(classPath, srcPath, null, true);
-
-		// Given source is char[], these are required to resolve binding
-		parser.setEnvironment(null, null, null, true);
-		parser.setUnitName("SENG300GrpIt1");
-
-		// ensures nodes are being parsed properly
-		Map<String, String> options = JavaCore.getOptions();
-		options.put(JavaCore.COMPILER_COMPLIANCE, JavaCore.VERSION_1_8);
-		options.put(JavaCore.COMPILER_CODEGEN_TARGET_PLATFORM, JavaCore.VERSION_1_8);
-		options.put(JavaCore.COMPILER_SOURCE, JavaCore.VERSION_1_8);
-		parser.setCompilerOptions(options);
-
-		return parser;
 	}
 }

@@ -97,7 +97,7 @@ public class TypeVisitor extends ASTVisitor {
 	/**
 	 * Debug methods TODO: Remove these before submission
 	 */
-	private boolean DEBUG = true;
+	private boolean DEBUG = false;
 
 	/*
 	 * ============================== HELPER FUNCTIONS
@@ -255,12 +255,10 @@ public class TypeVisitor extends ASTVisitor {
 			 */
 			ITypeBinding typeBind = node.getType().resolveBinding();
 			String type = typeBind.getQualifiedName();
-
 			IPackageBinding packBind = typeBind.getPackage();
 			String packName = packBind.getName();
-			// TODO does this work?
-			// Evan Quan
-			// Irene> Fixed
+
+			// Add package name if does not contain package name and not in default package
 			if (!type.contains(".") && packName != "") {
 				debug("NO PACKAGE", type);
 				type = packName + "." + type;
@@ -528,7 +526,6 @@ public class TypeVisitor extends ASTVisitor {
 			}
 		} else {
 			// These are constructors, their type = declaring class
-
 			ITypeBinding typeBind = node.resolveBinding().getDeclaringClass();
 			String type = typeBind.getQualifiedName();
 
@@ -536,7 +533,6 @@ public class TypeVisitor extends ASTVisitor {
 			addTypeToList(type);
 			incRefCount(type);
 		}
-
 		return true;
 	}
 
@@ -621,7 +617,7 @@ public class TypeVisitor extends ASTVisitor {
 			// inc count for all the arguments
 			for (ITypeBinding paramBind : node.getType().resolveBinding().getTypeArguments()) {
 				String paramType = paramBind.getQualifiedName();
-				debug("param", paramType);
+				debug("generic param", paramType);
 				addTypeToList(paramType);
 				incRefCount(paramType);
 			}
