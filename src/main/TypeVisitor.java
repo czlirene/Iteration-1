@@ -328,19 +328,48 @@ public class TypeVisitor extends ASTVisitor {
 				addTypeToList(paramType);
 				incRefCount(paramType);
 			}
+
+			// get initializers if they exists
+			List<VariableDeclarationFragment> fragments = node.fragments();
+			for (VariableDeclarationFragment fragment : fragments) {
+				if (fragment.getInitializer() instanceof TypeLiteral) {
+					String initType = ((TypeLiteral)fragment.getInitializer()).getType().resolveBinding().getQualifiedName();
+					debug("FD_Initializer", initType);
+					addTypeToList(initType);
+					incRefCount(initType);
+				}
+			}
+
 		} else {
-			ITypeBinding typeBind = node.getType().resolveBinding();
-			String type = typeBind.getQualifiedName();
+			boolean isArrayType = node.getType().isArrayType();
+			if (isArrayType){
+				ITypeBinding arrTypeBind = node.getType().resolveBinding().getElementType();
+				String type = arrTypeBind.getQualifiedName();
+				addTypeToList(type);
+				incRefCount(type);
 
-			addTypeToList(type);
+				for (Object fragment : node.fragments()) {
+					if (fragment instanceof VariableDeclarationFragment) {
+						// debug only: get the name of the variable
+						String name = ((VariableDeclarationFragment) fragment).getName().toString();
+						debug(name, type);
+					}
+				}
 
-			// iterate through all the fragments, and increment the type counter
-			for (Object fragment : node.fragments()) {
-				if (fragment instanceof VariableDeclarationFragment) {
-					// debug only: get the name of the variable
-					String name = ((VariableDeclarationFragment) fragment).getName().toString();
-					debug(name, type);
-					incRefCount(type);
+			} else {
+				ITypeBinding typeBind = node.getType().resolveBinding();
+				String type = typeBind.getQualifiedName();
+
+				addTypeToList(type);
+
+				// iterate through all the fragments, and increment the type counter
+				for (Object fragment : node.fragments()) {
+					if (fragment instanceof VariableDeclarationFragment) {
+						// debug only: get the name of the variable
+						String name = ((VariableDeclarationFragment) fragment).getName().toString();
+						debug(name, type);
+						incRefCount(type);
+					}
 				}
 			}
 		}
