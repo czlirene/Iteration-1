@@ -34,7 +34,7 @@ public class TypeVisitorFooTest {
 	 */
 	private static void configureParser(String source, int expectedDeclarationCount, int expectedReferenceCount) {
 		ASTParser parser = ASTParser.newParser(AST.JLS8);
-		parser.setSource(source.toCharnew Array());
+		parser.setSource(source.toCharArray());
 		parser.setKind(ASTParser.K_COMPILATION_UNIT);
 		parser.setResolveBindings(true);
 		parser.setBindingsRecovery(true);
