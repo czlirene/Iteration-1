@@ -17,9 +17,11 @@ public class Test2 {
 //	public static String bye = "bye";
 	public static void main() {
 //		int j;
-		for (Integer k = 1; i < (j = 3); i++) {
+		String[] bitch ;
+		String hoes;
+//		for (Integer k = 1; i < (j = 3); i++) {
 //			String x = "s";
-		}
+//		}
 //		for (Foo foo;;) {}
 		
 //		String k = Foo.shit();

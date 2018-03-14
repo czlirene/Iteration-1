@@ -175,7 +175,7 @@ public class TypeVisitor extends ASTVisitor {
 	 */
 	@Override
 	public boolean visit(ArrayCreation node){
-		ITypeBinding typeBind = node.getType().resolveBinding();
+		ITypeBinding typeBind = node.getType().getElementType().resolveBinding();
 		String type = typeBind.getQualifiedName();
 
 		debug("ArrayCreation", type);
@@ -326,7 +326,7 @@ public class TypeVisitor extends ASTVisitor {
 		for(VariableDeclarationExpression varExpr : varExprs){
 			String type = varExpr.getType().resolveBinding().getQualifiedName();
 			addTypeToList(type);
-			
+
 			for (Object fragment : varExpr.fragments()) {
 				if (fragment instanceof VariableDeclarationFragment) {
 					// debug only: get the name of the variable
@@ -599,10 +599,16 @@ public class TypeVisitor extends ASTVisitor {
 				if (fragment instanceof VariableDeclarationFragment) {
 					// debug only: get the name of the variable
 					String name = ((VariableDeclarationFragment) fragment).getName().toString();
-					ITypeBinding typeBind = ((VariableDeclarationFragment) fragment).resolveBinding().getType();
 
-					boolean isDeclaration = ((VariableDeclarationFragment) fragment).getName().isDeclaration();
+					ITypeBinding arrTypeBind = ((VariableDeclarationFragment) fragment).resolveBinding().getType().getElementType();
+					ITypeBinding typeBind = ((VariableDeclarationFragment) fragment).resolveBinding().getType();
 					String type = typeBind.getQualifiedName();
+
+					if (arrTypeBind != null){
+						type = arrTypeBind.getQualifiedName();
+						debug(name + "is ArrayType", type);
+					}
+					// boolean isDeclaration = ((VariableDeclarationFragment) fragment).getName().isDeclaration();
 
 					addTypeToList(type);
 					debug(name, type);
