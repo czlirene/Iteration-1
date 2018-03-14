@@ -63,6 +63,14 @@ BigIncrementer
 
 Diagrams
 --------
+UML diagram
+
+Sequence Diagrams
+- main(TypeFinder)
+- initASTParser(TypeFinder)
+- getAllJavaFiles(JavaFileReader)
+
+
 State
 - Our classes (main package)
 - ASTParser, ASTNode, ASTParser
