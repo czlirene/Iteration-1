@@ -23,7 +23,8 @@ import org.junit.runners.Suite;
  */
 public class TestSuite {
 	/**
-	 * Base directory is the root of the entire project (default package directory)
+	 * Base directory is the root of the entire eclipse project (which is the PARENT
+	 * of the src folder)
 	 */
 	public static final String BASEDIR = new File("").getAbsolutePath().concat("/");
 	public static final String SOURCE_DIR = BASEDIR.concat("src/");

@@ -6,6 +6,8 @@ import java.math.BigInteger;
  * Increments decimals numbers from a starting value by 1. Tracks numbers up to
  * 2^31-1 digits in length. Practically bypasses any number limits.
  *
+ * CURRENT UNUSED. But may be used for future iterations.
+ * 
  * @author Evan Quan
  * @since March 11, 2018
  *

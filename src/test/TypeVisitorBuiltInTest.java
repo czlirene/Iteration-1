@@ -128,15 +128,6 @@ public class TypeVisitorBuiltInTest {
 	}
 
 	/**
-	 * Check that a reference to String as a generic parameter of Foo defaults to
-	 * java.lang.String
-	 */
-	@Test
-	public void testJavaLangStringParameterizedAndDeclaredFoo_Dec_0_Ref_2() {
-		configureParser("class Other { Foo<String> foo = new Foo<String>();}", "java.lang.String", 0, 2);
-	}
-
-	/**
 	 * Check that a reference to String as a generic parameter of java.util.HashMap
 	 * defaults to java.lang.String
 	 */

@@ -38,9 +38,10 @@ import org.eclipse.jdt.core.dom.VariableDeclarationStatement;
  * the java types present.
  *
  * @author Sze Lok Irene Chan
- * @version 3.9 Fix up Javadocs
+ * @author Evan Quan
+ * @version 1.0.0
  *
- * @since 13 March 2018
+ * @since 14 March 2018
  */
 public class TypeVisitor extends ASTVisitor {
 
@@ -305,7 +306,8 @@ public class TypeVisitor extends ASTVisitor {
 			List<VariableDeclarationFragment> fragments = node.fragments();
 			for (VariableDeclarationFragment fragment : fragments) {
 				if (fragment.getInitializer() instanceof TypeLiteral) {
-					String initType = ((TypeLiteral) fragment.getInitializer()).getType().resolveBinding().getQualifiedName();
+					String initType = ((TypeLiteral) fragment.getInitializer()).getType().resolveBinding()
+							.getQualifiedName();
 					addTypeToList(initType);
 					incRefCount(initType);
 				}
@@ -467,18 +469,19 @@ public class TypeVisitor extends ASTVisitor {
 	}
 
 	/**
-	 * Visits normal annotation AST node type.
-	 *  @ TypeName ( [ MemberValuePair { , MemberValuePair } ] )
-	 * 
-	 * Determine the typename of the normal annotation, add it to the types,
-	 * and increment the type's counter in refCounter.
-	 * 
-	 * This also goes into the MemberValuePair, and for all TypeLiterals,
-	 * the type is recorded, and its reference counter incremented
-	 * 
+	 * Visits normal annotation AST node type. @ TypeName ( [ MemberValuePair { ,
+	 * MemberValuePair } ] )
+	 *
+	 * Determine the typename of the normal annotation, add it to the types, and
+	 * increment the type's counter in refCounter.
+	 *
+	 * This also goes into the MemberValuePair, and for all TypeLiterals, the type
+	 * is recorded, and its reference counter incremented
+	 *
 	 * CounterType: Reference
-	 * 
-	 * @param node NormalAnnotation
+	 *
+	 * @param node
+	 *            NormalAnnotation
 	 * @return boolean true to visit its children nodes
 	 */
 	@Override
@@ -558,7 +561,7 @@ public class TypeVisitor extends ASTVisitor {
 	 * CounterType: DECLARATION
 	 *
 	 * @param node
-	 *            : TypeDeclaration 
+	 *            : TypeDeclaration
 	 * @return boolean : True to visit the children of this node
 	 */
 	@Override
@@ -614,7 +617,8 @@ public class TypeVisitor extends ASTVisitor {
 			// iterate through all the fragments, and increment the type counter
 			for (Object fragment : node.fragments()) {
 				if (fragment instanceof VariableDeclarationFragment) {
-					ITypeBinding arrTypeBind = ((VariableDeclarationFragment) fragment).resolveBinding().getType().getElementType();
+					ITypeBinding arrTypeBind = ((VariableDeclarationFragment) fragment).resolveBinding().getType()
+							.getElementType();
 					ITypeBinding typeBind = ((VariableDeclarationFragment) fragment).resolveBinding().getType();
 					String type = typeBind.getQualifiedName();
 

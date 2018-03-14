@@ -17,13 +17,12 @@ import main.TypeVisitor;
  * reference counts for Foo
  *
  * @author Evan Quan
- * @since 13 March 2018
+ * @since 14 March 2018
  *
  */
 public class TypeVisitorFooTest {
 
 	private static final String type = "Foo";
-	private static final String ls = TestSuite.lineSeparator;
 
 	/**
 	 * Configures ASTParser and visitor for source file
@@ -87,39 +86,11 @@ public class TypeVisitorFooTest {
 
 	/**
 	 * Check that declaring an variable of another class that references Foo as a
-	 * generic parameter and instantiates it counts as 2 references
-	 */
-	@Test
-	public void test1ParamterizedTypeAndInstantiated_Dec_0_Ref_2() {
-		configureParser("public class Other{ Bar<Foo> bar = new Bar<Foo>();}", 0, 2);
-	}
-
-	/**
-	 * Check that declaring an variable of another class that references Foo as a
 	 * generic parameter twice counts as 2 references
 	 */
 	@Test
 	public void test2ParameterizedTypes_Dec_0_Ref_2() {
 		configureParser("public class Other{ Bar<Foo, Foo> bar;}", 0, 2);
-	}
-
-	/**
-	 * Check that declaring an variable of another class that references Foo as a
-	 * generic parameter twice and instantiates it counts as 4 references
-	 */
-	@Test
-	public void test2ParameterizedTypesAndInstantiated_Dec_0_Ref_4() {
-		configureParser("public class Other{ Bar<Foo, Foo> bar = new Bar<Foo, Foo>();}", 0, 4);
-	}
-
-	/**
-	 * Check that declaring an variable of another class that references Foo as a
-	 * generic parameter twice and instantiates it counts as 4 references, with
-	 * another third generic parameter of another class
-	 */
-	@Test
-	public void test3ParameterizedTypesAndInstantiatedMixed_dec_0_Ref_4() {
-		configureParser("public class Other{ Bar<Foo, String, Foo> bar = new Bar<Foo, String, Foo>();}", 0, 4);
 	}
 
 	/**
@@ -140,11 +111,17 @@ public class TypeVisitorFooTest {
 		configureParser("@interface Foo {}", 1, 0);
 	}
 
+	/**
+	 * Check that instantiating an array of Foo counts a 1 reference
+	 */
 	@Test
 	public void testArrayDeclarableVariableAndAllocate_Dec_0_Ref_1() {
 		configureParser("public class Other {Bar[] bar = new Foo[1];}", 0, 1);
 	}
 
+	/**
+	 * Check that declaring and instantiating an array of Foo counts as 2 references
+	 */
 	@Test
 	public void testArrayDeclarableVariableAndAllocate_Dec_0_Ref_2() {
 		configureParser("public class Other {Foo[] foo = new Foo[1];}", 0, 2);
@@ -282,14 +259,6 @@ public class TypeVisitorFooTest {
 	}
 
 	/**
-	 * Check if an @link annotation in Javadoc counts as a reference
-	 */
-	@Test
-	public void testLinkAnnotation_Dec_0_Ref_1() {
-		configureParser("/**" + ls + " * {@link Foo}" + ls + " */" + ls + "public class Other{}", 0, 1);
-	}
-
-	/**
 	 * Check if an annotation reference is counted as a reference
 	 */
 	@Test
@@ -334,57 +303,12 @@ public class TypeVisitorFooTest {
 	}
 
 	/**
-	 * Check that calling a static field which returns and stores a value counts as
-	 * a reference
-	 */
-	@Test
-	public void testReturnStaticField_Dec_0_Ref_1() {
-		configureParser("public class Other { Bar bar = Foo.staticField;}", 0, 1);
-	}
-
-	/**
-	 * Check that calling a static method which returns and stores a value counts as
-	 * a reference
-	 */
-	@Test
-	public void testReturnStaticMethod_Dec_0_Ref_1() {
-		configureParser("public class Other { Bar bar = Foo.staticMethod();}", 0, 1);
-	}
-
-	/**
-	 * Check that retrieving and setting a static field counts as a reference
-	 */
-	@Test
-	public void testSetStaticField_Dec_0_Ref_1() {
-		configureParser("public class Other {Foo.staticField = 3;}", 0, 1);
-	}
-
-	/**
-	 * Check that calling a void static method with a parameter counts as a
-	 * reference
-	 */
-	@Test
-	public void testSetStaticMethod_Dec_0_Ref_1() {
-		configureParser("public class Other {Foo.staticMethod(3);}", 0, 1);
-	}
-
-	/**
 	 * Check if a a variable declaration and setting as another variable's value is
 	 * counted as a reference
 	 */
 	@Test
 	public void testSetVariable_Dec_0_Ref_1() {
 		configureParser("public class Other { Foo foo = anotherFoo;}", 0, 1);
-	}
-
-	/**
-	 * ' Check if a variable declaration within a switch statement counts as a
-	 * reference
-	 */
-	@Test
-	public void testSwitchStatementVariableDeclaration_Dec_0_Ref_1() {
-		configureParser("public calss Other{ public void method() { int x = 1; switch(x){" + "case 1:" + "Foo foo;"
-				+ "break;" + "case 2:" + "break;" + "default:" + "} }}", 0, 1);
 	}
 
 }
