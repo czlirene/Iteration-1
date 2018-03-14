@@ -242,4 +242,22 @@ public class TypeVisitorBuiltInTest {
 		configureParser("public class Other { public void method() { for (String s;;){}}}", "java.lang.String", 0, 1);
 	}
 
+	/**
+	 * Check that creating a variable of an array of String counts as a reference
+	 */
+	@Test
+	public void testArrayDeclareVariable_Dec_0_Ref_1() {
+		configureParser("public class Other {String[] str;}", "java.lang.String", 0, 1);
+	}
+
+	@Test
+	public void testArrayDeclarableVariableAndAllocate_Dec_0_Ref_2() {
+		configureParser("public class Other {String[] str = new String[1];}", "java.lang.String", 0, 2);
+	}
+
+	@Test
+	public void testArrayDeclarableVariableAndAllocate_Dec_0_Ref_1() {
+		configureParser("public class Other {Bar[] bar = new String[1];}", "java.lang.String", 0, 1);
+	}
+
 }
