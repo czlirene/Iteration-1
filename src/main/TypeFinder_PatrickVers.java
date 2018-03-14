@@ -25,7 +25,7 @@ import test.TestSuite;
  * @since 13 March 2018
  *
  */
-public class TypeFinder {
+public class TypeFinder_PatrickVers {
 
 	/* GLOBAL VARIABLES */
 	/**

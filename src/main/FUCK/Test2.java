@@ -23,10 +23,17 @@ public class Test2 {
 //		String y = Foo.hey;
 //		String z = bye;
 //	}
-//	
-	public static List<String> merde() {
-		return null;
+	
+	// Constructor inside othe constructor
+
+	public class Other{ 
+		Other2 other = new Bar<String, Integer>();
+		Test2 another = new Shit();
 	}
+//	
+//	public static List<String> merde() {
+//		return null;
+//	}
 
 
 //	public static int a, b, c;
