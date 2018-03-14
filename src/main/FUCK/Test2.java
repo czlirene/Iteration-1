@@ -6,17 +6,19 @@ import org.junit.Test;
 public class Test2 {
 //	@interface Foo {}
 //	public class Foo{}
-	
-//	public class Bar<K,V,T>{}
-//	@Test(expected = NullPointerException.class)
 //	public Test2(){}
+public class Other{
+	String x;
+	Class<Foo> foo = Foo.class;
+			List<Foo> t = x;
+			}
 //	@Foo
 //	public Foo other() {
 //		return new Foo();
 //	}
 //	public static String bye = "bye";
-	@Test(expected = NullPointerException.class)
-	public void x() {
+//	@Test(expected = NullPointerException.class)
+//	public void x() {
 //		int j;
 //		String[] bitch ;
 //		String hoes;
@@ -31,7 +33,7 @@ public class Test2 {
 //		x = Foo.hey;
 //		String y = Foo.hey;
 //		String z = bye;
-	}
+//	}
 	
 	// Constructor inside othe constructor
 //	
