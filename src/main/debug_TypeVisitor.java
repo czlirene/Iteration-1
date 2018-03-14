@@ -93,6 +93,11 @@ public class TypeVisitor extends ASTVisitor {
 		}
 	}
 
+	/**
+	 * Debug methods TODO: Remove these before submission
+	 */
+	private boolean DEBUG = false;
+
 	/*
 	 * ============================== HELPER FUNCTIONS
 	 * ==============================
@@ -107,6 +112,18 @@ public class TypeVisitor extends ASTVisitor {
 		types = new ArrayList<String>();
 		decCounter = new HashMap<String, Integer>();
 		refCounter = new HashMap<String, Integer>();
+	}
+
+	private void debug(String msg) {
+		if (DEBUG) {
+			System.out.println("DEBUG >> " + msg);
+		}
+	}
+
+	private void debug(String var, String type) {
+		if (DEBUG) {
+			System.out.println("DEBUG >> " + var + " : " + type);
+		}
 	}
 
 	/**
@@ -160,6 +177,8 @@ public class TypeVisitor extends ASTVisitor {
 		ITypeBinding typeBind = node.resolveBinding();
 		String type = typeBind.getQualifiedName();
 
+		debug("ATD", type);
+
 		addTypeToList(type);
 		incDecCount(type);
 
@@ -187,6 +206,7 @@ public class TypeVisitor extends ASTVisitor {
 		ITypeBinding typeBind = node.getType().getElementType().resolveBinding();
 		String type = typeBind.getQualifiedName();
 
+		debug("ArrayCreation", type);
 		addTypeToList(type);
 		incRefCount(type);
 
@@ -217,10 +237,12 @@ public class TypeVisitor extends ASTVisitor {
 
 			addTypeToList(type);
 			incRefCount(type);
+			debug("P_ClassInstanceCreation", type);
 
 			// inc count for all the arguments
 			for (ITypeBinding paramBind : node.getType().resolveBinding().getTypeArguments()) {
 				String paramType = paramBind.getQualifiedName();
+				debug("param", paramType);
 				addTypeToList(paramType);
 				incRefCount(paramType);
 			}
@@ -237,9 +259,12 @@ public class TypeVisitor extends ASTVisitor {
 
 			// Add package name if does not contain package name and not in default package
 			if (!type.contains(".") && packName.length() > 0) {
+				debug("NO PACKAGE", type);
 				type = packName + "." + type;
+				debug("AFTER", type);
 			}
 
+			debug("ClassInstanceCreation", type);
 			addTypeToList(type);
 			incRefCount(type);
 		}
@@ -262,6 +287,8 @@ public class TypeVisitor extends ASTVisitor {
 	public boolean visit(EnumDeclaration node) {
 		ITypeBinding typeBind = node.resolveBinding();
 		String type = typeBind.getQualifiedName();
+
+		debug("Enum", type);
 
 		addTypeToList(type);
 		incDecCount(type);
@@ -293,10 +320,18 @@ public class TypeVisitor extends ASTVisitor {
 
 			addTypeToList(type);
 			incRefCount(type);
+			for (Object fragment : node.fragments()) {
+				if (fragment instanceof VariableDeclarationFragment) {
+					// debug only: get the name of the variable
+					String name = ((VariableDeclarationFragment) fragment).getName().toString();
+					debug(name, type);
+				}
+			}
 
 			// inc count for all the arguments
 			for (ITypeBinding paramBind : node.getType().resolveBinding().getTypeArguments()) {
 				String paramType = paramBind.getQualifiedName();
+				debug("param", paramType);
 				addTypeToList(paramType);
 				incRefCount(paramType);
 			}
@@ -305,7 +340,9 @@ public class TypeVisitor extends ASTVisitor {
 			List<VariableDeclarationFragment> fragments = node.fragments();
 			for (VariableDeclarationFragment fragment : fragments) {
 				if (fragment.getInitializer() instanceof TypeLiteral) {
-					String initType = ((TypeLiteral) fragment.getInitializer()).getType().resolveBinding().getQualifiedName();
+					String initType = ((TypeLiteral) fragment.getInitializer()).getType().resolveBinding()
+							.getQualifiedName();
+					debug("FD_Initializer", initType);
 					addTypeToList(initType);
 					incRefCount(initType);
 				}
@@ -318,6 +355,15 @@ public class TypeVisitor extends ASTVisitor {
 				String type = arrTypeBind.getQualifiedName();
 				addTypeToList(type);
 				incRefCount(type);
+
+				for (Object fragment : node.fragments()) {
+					if (fragment instanceof VariableDeclarationFragment) {
+						// debug only: get the name of the variable
+						String name = ((VariableDeclarationFragment) fragment).getName().toString();
+						debug(name, type);
+					}
+				}
+
 			} else {
 				ITypeBinding typeBind = node.getType().resolveBinding();
 				String type = typeBind.getQualifiedName();
@@ -327,7 +373,11 @@ public class TypeVisitor extends ASTVisitor {
 				// iterate through all the fragments, and increment the type counter
 				for (Object fragment : node.fragments()) {
 					if (fragment instanceof VariableDeclarationFragment) {
+						// debug only: get the name of the variable
+						String name = ((VariableDeclarationFragment) fragment).getName().toString();
+						debug(name, type);
 						incRefCount(type);
+
 					}
 				}
 			}
@@ -360,12 +410,18 @@ public class TypeVisitor extends ASTVisitor {
 
 			for (Object fragment : varExpr.fragments()) {
 				if (fragment instanceof VariableDeclarationFragment) {
+					// debug only: get the name of the variable
+					String name = ((VariableDeclarationFragment) fragment).getName().toString();
+					debug(name, type);
 					incRefCount(type);
 				}
 			}
 		}
 
 		return true;
+		// expression
+
+		// updater
 	}
 
 	/**
@@ -375,12 +431,18 @@ public class TypeVisitor extends ASTVisitor {
 	public boolean visit(ImportDeclaration node) {
 		if (node.getName().resolveTypeBinding() != null) {
 			String type = node.getName().resolveTypeBinding().getQualifiedName();
+			debug("Import", type);
 			addTypeToList(type);
 			incRefCount(type);
 		}
 
 		return true;
 	}
+
+	// TODO: get after @link Class.
+	// public boolean visit(Javadoc node){
+
+	// }
 
 	/**
 	 * Visits a Marker annotation node type. Marker annotation "@<typeName>" is
@@ -404,6 +466,8 @@ public class TypeVisitor extends ASTVisitor {
 		IAnnotationBinding annBind = node.resolveAnnotationBinding();
 		ITypeBinding typeBind = annBind.getAnnotationType();
 		String type = typeBind.getQualifiedName();
+
+		debug("MarkerAnnotation", type);
 
 		addTypeToList(type);
 		incRefCount(type);
@@ -439,8 +503,10 @@ public class TypeVisitor extends ASTVisitor {
 				addTypeToList(type);
 				incRefCount(type);
 
+				debug(node.getName().toString(), type);
 				for (ITypeBinding paramBind : node.getReturnType2().resolveBinding().getTypeArguments()) {
 					String paramType = paramBind.getQualifiedName();
+					debug("param", paramType);
 					addTypeToList(paramType);
 					incRefCount(paramType);
 				}
@@ -451,6 +517,9 @@ public class TypeVisitor extends ASTVisitor {
 
 				// ignore all void methods
 				if (!type.equals("void")) {
+					// debug only: print the method name, and its type
+					debug(node.getName().toString(), type);
+
 					addTypeToList(type);
 					incRefCount(type);
 				}
@@ -460,6 +529,7 @@ public class TypeVisitor extends ASTVisitor {
 			ITypeBinding typeBind = node.resolveBinding().getDeclaringClass();
 			String type = typeBind.getQualifiedName();
 
+			debug("Constructor", type);
 			addTypeToList(type);
 			incRefCount(type);
 		}
@@ -467,25 +537,15 @@ public class TypeVisitor extends ASTVisitor {
 	}
 
 	/**
-	 * Visits normal annotation AST node type.
-	 *  @ TypeName ( [ MemberValuePair { , MemberValuePair } ] )
-	 * 
-	 * Determine the typename of the normal annotation, add it to the types,
-	 * and increment the type's counter in refCounter.
-	 * 
-	 * This also goes into the MemberValuePair, and for all TypeLiterals,
-	 * the type is recorded, and its reference counter incremented
-	 * 
-	 * CounterType: Reference
-	 * 
-	 * @param node NormalAnnotation
-	 * @return boolean true to visit its children nodes
+	 * @interface() TODO: get into value pair and find any
 	 */
 	@Override
 	public boolean visit(NormalAnnotation node) {
 		IAnnotationBinding annBind = node.resolveAnnotationBinding();
 		ITypeBinding typeBind = annBind.getAnnotationType();
 		String type = typeBind.getQualifiedName();
+
+		debug("NormalAnn", type);
 
 		addTypeToList(type);
 		incRefCount(type);
@@ -495,13 +555,36 @@ public class TypeVisitor extends ASTVisitor {
 		for (MemberValuePair valuePair : valuePairs) {
 			if (valuePair.getValue() instanceof TypeLiteral) {
 				String valType = ((TypeLiteral) valuePair.getValue()).getType().resolveBinding().getQualifiedName();
+				debug("ValuePair", valType);
 				addTypeToList(valType);
 				incRefCount(valType);
 			}
+			// String valType =
+			// valuePair.getValue().resolveTypeBinding().getTypeDeclaration().getQualifiedName();
+			// debug("ValuePair", valType);
+			// addTypeToList(valType);
+			// incRefCount(valType);
 		}
 
 		return true;
 	}
+
+	/**
+	 * TODO:
+	 */
+	// public boolean visit(MethodInvocation node){
+
+	// }
+
+	/**
+	 * TODO javadoc
+	 */
+	// @Override
+	// public boolean visit(PackageDeclaration node) {
+	// currentPackageName = node.getName().getFullyQualifiedName();
+	// debug("PackageDeclaration", currentPackageName);
+	// return true;
+	// }
 
 	/**
 	 * Visits a single variable declaration node type. These are used only in formal
@@ -529,9 +612,12 @@ public class TypeVisitor extends ASTVisitor {
 			addTypeToList(type);
 			incRefCount(type);
 
+			debug(node.getName().toString(), type);
+
 			// inc count for all the arguments
 			for (ITypeBinding paramBind : node.getType().resolveBinding().getTypeArguments()) {
 				String paramType = paramBind.getQualifiedName();
+				debug("generic param", paramType);
 				addTypeToList(paramType);
 				incRefCount(paramType);
 			}
@@ -540,6 +626,9 @@ public class TypeVisitor extends ASTVisitor {
 			IVariableBinding varBind = node.resolveBinding();
 			ITypeBinding typeBind = varBind.getType();
 			String type = typeBind.getQualifiedName();
+
+			// debug only: print variable name, and its type
+			debug(node.getName().toString(), type);
 
 			addTypeToList(type);
 			incRefCount(type);
@@ -558,13 +647,15 @@ public class TypeVisitor extends ASTVisitor {
 	 * CounterType: DECLARATION
 	 *
 	 * @param node
-	 *            : TypeDeclaration 
+	 *            : TypeDeclaration TODO: Get parameters arguments on all generics
 	 * @return boolean : True to visit the children of this node
 	 */
 	@Override
 	public boolean visit(TypeDeclaration node) {
 		ITypeBinding typeBind = node.resolveBinding();
 		String type = typeBind.getQualifiedName();
+
+		debug(node.getName().toString(), type);
 
 		addTypeToList(type);
 		incDecCount(type);
@@ -603,9 +694,18 @@ public class TypeVisitor extends ASTVisitor {
 			addTypeToList(type);
 			incRefCount(type);
 
+			for (Object fragment : node.fragments()) {
+				if (fragment instanceof VariableDeclarationFragment) {
+					// debug only: get the name of the variable
+					String name = ((VariableDeclarationFragment) fragment).getName().toString();
+					debug(name, type);
+				}
+			}
+
 			// inc count for all the arguments
 			for (ITypeBinding paramBind : node.getType().resolveBinding().getTypeArguments()) {
 				String paramType = paramBind.getQualifiedName();
+				debug("param", paramType);
 				addTypeToList(paramType);
 				incRefCount(paramType);
 			}
@@ -614,15 +714,23 @@ public class TypeVisitor extends ASTVisitor {
 			// iterate through all the fragments, and increment the type counter
 			for (Object fragment : node.fragments()) {
 				if (fragment instanceof VariableDeclarationFragment) {
-					ITypeBinding arrTypeBind = ((VariableDeclarationFragment) fragment).resolveBinding().getType().getElementType();
+					// debug only: get the name of the variable
+					String name = ((VariableDeclarationFragment) fragment).getName().toString();
+
+					ITypeBinding arrTypeBind = ((VariableDeclarationFragment) fragment).resolveBinding().getType()
+							.getElementType();
 					ITypeBinding typeBind = ((VariableDeclarationFragment) fragment).resolveBinding().getType();
 					String type = typeBind.getQualifiedName();
 
 					if (arrTypeBind != null) {
 						type = arrTypeBind.getQualifiedName();
+						debug(name + " is ArrayType", type);
 					}
+					// boolean isDeclaration = ((VariableDeclarationFragment)
+					// fragment).getName().isDeclaration();
 
 					addTypeToList(type);
+					debug(name, type);
 					incRefCount(type);
 				}
 			}
