@@ -116,6 +116,6 @@ The inner workings of the getConfiguredASTParser () method is non-essential to t
 
 \subsection{State diagram}
 
-The state diagrams show the transition of states while visiting the nodes, within the AST, the
+The state diagrams show the transition of states while visiting the nodes. While visiting a node you can update the type list, once the list is either updated or not updated then then the count is incremented if the type is found.  Continuing this cycle of visiting and checking nodes until there are no more nodes to analyze,   the visiting state is left  return to the loop at main in TypeFinder. Again, many details were abstracted away to reduce clutter and confusion. the main purpose was to aid in the understanding of functionality and execution of analysis tool.
 
 \end{document}
