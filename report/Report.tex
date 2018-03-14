@@ -96,6 +96,11 @@
 
 \section{Explanation}
 
+UML 
+The UML diagram was kept as simple as possible and only represent main components of the software. All the methods in the Type Finder Class were included since they drive the software during execution. The JavaFileReader class is reads the all files in the directory and allows for parsing via AST. We Did not include all the methods for the TypeVisitor. The abstracted details were only supporting features that did not aid in the understanding of the functionality. As for visit(node : ) : boolean, the formating was done this way due to the multiple overriden methods with different parameter types, such as SingleVariableDecleration, TypeDecleration...etc. 
+like the rest only the key components of  the ASTParser, AST, ASTVistor, ASTNode were maintained in the uml Diagram. Everything that did not aid or was none essential in understanding the relationships between the TypeFinder and the AST parser was left out. 
+
+Sequence Diagram
 The inner workings of the getConfiguredASTParser() method is non-essential to the client's understanding of the software. Thus the details were abstracted away and not expanded on. Another aspect of the code that was abstracted away was most of the methods in JavaFileReader. We modeled a very broad overview, this informs anyone viewing the model (provided some basic knowledge of java) of what is happening. Had we made our diagram anymore specific in this area, it would draw attention away from the more important functionality of the software, and would only overwhelm the viewer.
 
 \end{document}
