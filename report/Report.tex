@@ -46,7 +46,7 @@
     \line(1,0){400}\\
     \Large March 14, 2018\\
     \vfill
-    \large{Evan Quan 10154242, Irene Chan , Patrick Gharib 10137116}\\
+    \large{Evan Quan 10154242, Irene Chan 10103807, Patrick Gharib 10137116}\\
   \end{center}
 \end{titlepage}
 
@@ -61,7 +61,7 @@
 \section{Structural Diagram}
 \begin{figure}[H]
   \includegraphics[width=0.95\textwidth]{SengUml.pdf}
-  \caption{} % TODO caption
+  \caption{The relationship between our main package and relevant classes provided by org.eclipse.jdt.core.dom} % TODO caption
   \label{fig:structural}
 \end{figure}
 
@@ -69,19 +69,19 @@
 \section{Sequence Diagrams}
 \begin{figure}[H]
   \includegraphics[width=0.95\textwidth]{mainTypeFinder.pdf}
-  \caption{} % TODO caption
+  \caption{Sequence of TypeFinder program intialization and completion} % TODO caption
   \label{fig:sequence1}
 \end{figure}
 
 \begin{figure}
   \includegraphics[width=1.0\textwidth]{initFrinder.pdf}
-  \caption{} % TODO caption
+  \caption{Initializing TypeFinder involving checking for valid user input. If valid, it acqures the Java file contents and setting up the information necessary for parsing. If invalid, prompt the user with an error message.} % TODO caption
   \label{fig:sequence2}
 \end{figure}
 
 \begin{figure}
   \includegraphics[width=1.0\textwidth]{getAllJavaFilesToString.pdf}
-  \caption{} % TODO caption
+  \caption{JavaFileReader retrieves the contents of all Java files in a directory, one file at a time.} % TODO caption
   \label{fig:sequence2}
 \end{figure}
 
@@ -90,17 +90,19 @@
 \section{State Diagram}
 \begin{figure}[H]
   \includegraphics[width=1.0\textwidth]{State_diagram.pdf}
-  \caption{} % TODO caption
+  \caption{The state of the program in finding declaration and reference counts.} % TODO caption
   \label{fig:state}
 \end{figure}
 
+\newpage
+\onehalfspacing
 \section{Explanation}
 
-UML 
-The UML diagram was kept as simple as possible and only represent main components of the software. All the methods in the Type Finder Class were included since they drive the software during execution. The JavaFileReader class is reads the all files in the directory and allows for parsing via AST. We Did not include all the methods for the TypeVisitor. The abstracted details were only supporting features that did not aid in the understanding of the functionality. As for visit(node : ) : boolean, the formating was done this way due to the multiple overriden methods with different parameter types, such as SingleVariableDecleration, TypeDecleration...etc. 
-like the rest only the key components of  the ASTParser, AST, ASTVistor, ASTNode were maintained in the uml Diagram. Everything that did not aid or was none essential in understanding the relationships between the TypeFinder and the AST parser was left out. 
+\subsection{Struture}
+The UML diagram was kept as simple as possible and only represent main components of the software. All the methods in the Type Finder Class were included since they drive the software during execution. The JavaFileReader class is reads the all files in the directory and allows for parsing via AST. We Did not include all the methods for the TypeVisitor. The abstracted details were only supporting features that did not aid in the understanding of the functionality. As for visit(node : ) : boolean, the formating was done this way due to the multiple overriden methods with different parameter types, such as SingleVariableDecleration, TypeDecleration...etc.
+like the rest only the key components of  the ASTParser, AST, ASTVistor, ASTNode were maintained in the uml Diagram. Everything that did not aid or was none essential in understanding the relationships between the TypeFinder and the AST parser was left out.
 
-Sequence Diagram
+\subsection{Sequence}
 The inner workings of the getConfiguredASTParser() method is non-essential to the client's understanding of the software. Thus the details were abstracted away and not expanded on. Another aspect of the code that was abstracted away was most of the methods in JavaFileReader. We modeled a very broad overview, this informs anyone viewing the model (provided some basic knowledge of java) of what is happening. Had we made our diagram anymore specific in this area, it would draw attention away from the more important functionality of the software, and would only overwhelm the viewer.
 
 \end{document}
