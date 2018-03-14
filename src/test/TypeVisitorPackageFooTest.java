@@ -15,7 +15,7 @@ import main.TypeVisitor;
 /**
  * JUnit 4 Tests for {@link TypeVisitor} class. Checks type declaration and
  * reference counts for bar.Foo
- * 
+ *
  * @author Evan Quan
  * @since 12 March 2018
  *
@@ -29,7 +29,7 @@ public class TypeVisitorPackageFooTest {
 
 	/**
 	 * Configures ASTParser and visitor for source file
-	 * 
+	 *
 	 * @param source
 	 * @param expectedDeclarationCount
 	 * @param expectedReferenceCount
@@ -79,6 +79,53 @@ public class TypeVisitorPackageFooTest {
 	}
 
 	/**
+	 * Check that declaring the Foo class in the bar package (correct package)
+	 * counts as a declaration
+	 */
+	@Test
+	public void testBarPackageDeclaration_Dec_1_Ref_0() {
+		configureParser("package bar; class Foo {}", 1, 0);
+	}
+
+	/**
+	 * Check that calling the Foo constructor in the bar package does count as a
+	 * reference
+	 */
+	@Test
+	public void testBarPackageFooConstructor_Dec_0_Ref_1() {
+		configureParser("package bar; class Other { Bar bar = new Foo();}", 0, 1);
+	}
+
+	/**
+	 * Check that calling the Foo constructor in a return statement in the bar
+	 * package does count as a reference
+	 */
+	@Test
+	public void testBarPackageFooConstructorReturnType_Dec_0_Ref_1() {
+		configureParser("package bar; class Other { public Bar method() {return new Foo();}", 0, 1);
+	}
+
+	/**
+	 * Check that calling the Foo constructor separately from the returned instance
+	 * in the bar package does count as a reference
+	 */
+	@Test
+	public void testBarPackageFooReturnType_Dec_0_Ref_1() {
+		System.out.println("START");
+		configureParser("package bar; class Other { public Bar method() { Bar foo = new Foo(); return foo;}", 0, 1);
+		System.out.println("END");
+	}
+
+	/**
+	 * Check that declaring an instance of Foo in the bar package does count as a
+	 * reference
+	 */
+	@Test
+	public void testBarPackageReference_Dec_0_Ref_1() {
+		configureParser("package bar; class Other { Foo f; }", 0, 1);
+	}
+
+	/**
 	 * Check that declaring the Foo class in the default package (so not bar), does
 	 * not count as a declaration
 	 */
@@ -112,51 +159,6 @@ public class TypeVisitorPackageFooTest {
 	@Test
 	public void testOtherPackageReference_Dec_0_Ref_0() {
 		configureParser("package other; class Other { Foo f; }", 0, 0);
-	}
-
-	/**
-	 * Check that declaring the Foo class in the bar package (correct package)
-	 * counts as a declaration
-	 */
-	@Test
-	public void testBarPackageDeclaration_Dec_1_Ref_0() {
-		configureParser("package bar; class Foo {}", 1, 0);
-	}
-
-	/**
-	 * Check that declaring an instance of Foo in the bar package does count as a
-	 * reference
-	 */
-	@Test
-	public void testBarPackageReference_Dec_0_Ref_1() {
-		configureParser("package bar; class Other { Foo f; }", 0, 1);
-	}
-
-	/**
-	 * Check that calling the Foo constructor in the bar package does count as a
-	 * reference
-	 */
-	@Test
-	public void testBarPackageFooConstructor_Dec_0_Ref_1() {
-		configureParser("package bar; class Other { Bar bar = new Foo();}", 0, 1);
-	}
-
-	/**
-	 * Check that calling the Foo constructor in a return statement in the bar
-	 * package does count as a reference
-	 */
-	@Test
-	public void testBarPackageFooConstructorReturnType_Dec_0_Ref_1() {
-		configureParser("package bar; class Other { public Bar method() {return new Foo();}", 0, 1);
-	}
-
-	/**
-	 * Check that calling the Foo constructor separately from the returned instance
-	 * in the bar package does count as a reference
-	 */
-	@Test
-	public void testBarPackageFooReturnType_Dec_0_Ref_1() {
-		configureParser("package bar; class Other { public Bar method() { Bar foo = new Foo(); return foo;}", 0, 1);
 	}
 
 }

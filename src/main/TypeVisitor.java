@@ -257,6 +257,14 @@ public class TypeVisitor extends ASTVisitor {
 			ITypeBinding typeBind = node.getType().resolveBinding();
 			String type = typeBind.getQualifiedName();
 
+			// TODO does this work?
+			// Evan Quan
+			if (!type.contains(".") && currentPackageName.length() > 0) {
+				debug("NO PACKAGE", type);
+				type = currentPackageName + "." + type;
+				debug("AFTER", type);
+			}
+
 			debug("ClassInstanceCreation", type);
 			addTypeToList(type);
 			incRefCount(type);
@@ -333,7 +341,8 @@ public class TypeVisitor extends ASTVisitor {
 			List<VariableDeclarationFragment> fragments = node.fragments();
 			for (VariableDeclarationFragment fragment : fragments) {
 				if (fragment.getInitializer() instanceof TypeLiteral) {
-					String initType = ((TypeLiteral)fragment.getInitializer()).getType().resolveBinding().getQualifiedName();
+					String initType = ((TypeLiteral) fragment.getInitializer()).getType().resolveBinding()
+							.getQualifiedName();
 					debug("FD_Initializer", initType);
 					addTypeToList(initType);
 					incRefCount(initType);
@@ -342,7 +351,7 @@ public class TypeVisitor extends ASTVisitor {
 
 		} else {
 			boolean isArrayType = node.getType().isArrayType();
-			if (isArrayType){
+			if (isArrayType) {
 				ITypeBinding arrTypeBind = node.getType().resolveBinding().getElementType();
 				String type = arrTypeBind.getQualifiedName();
 				addTypeToList(type);
@@ -505,11 +514,6 @@ public class TypeVisitor extends ASTVisitor {
 
 			ITypeBinding typeBind = node.resolveBinding().getDeclaringClass();
 			String type = typeBind.getQualifiedName();
-
-			// TODO does this work?
-			if (!type.contains(".")) {
-				type = currentPackageName + type;
-			}
 
 			debug("Constructor", type);
 			addTypeToList(type);
