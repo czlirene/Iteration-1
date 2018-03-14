@@ -30,7 +30,7 @@ public class TestSuite {
 	public static final String TEST_DIR = SOURCE_DIR.concat("test/");
 	public static final String BIN_DIR = BASEDIR.concat("bin/");
 	/**
-	 * test.testPackage package directory is contained in test package directory
+	 * All test directories are contained with test directory TEST_DIR
 	 */
 	public static final String JAVA_FILE_READER_TEST_DIR = TEST_DIR.concat("javaFileReaderTestPackage/");
 	public static final String TYPE_FINDER_TEST_DIR = TEST_DIR.concat("typeFinderTestPackage/");

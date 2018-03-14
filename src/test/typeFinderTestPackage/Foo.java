@@ -2,8 +2,12 @@ package test.typeFinderTestPackage;
 
 public class Foo {
 
-	private static Foo foo;
+	// private Foo foo;
 
-	public Foo() {
-	}
+	// public Foo() {
+	// }
+
+	// public Foo getFoo() {
+	// return new Foo();
+	// }
 }

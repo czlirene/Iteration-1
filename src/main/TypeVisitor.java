@@ -18,6 +18,7 @@ import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.NormalAnnotation;
 import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
+import org.eclipse.jdt.core.dom.TypeLiteral;
 import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
 import org.eclipse.jdt.core.dom.VariableDeclarationStatement;
 
@@ -30,8 +31,8 @@ import org.eclipse.jdt.core.dom.VariableDeclarationStatement;
  * the java types present.
  *
  * @author Sze Lok Irene Chan
- * @version 2.9
- * 			+ AnnotationTypeDeclaration, NormalAnnotation should work normally.
+ * @version 2.9 + AnnotationTypeDeclaration, NormalAnnotation should work
+ *          normally.
  * 
  * 
  * @since 13 March 2018
@@ -41,7 +42,7 @@ public class TypeVisitor extends ASTVisitor {
 	/**
 	 * Debug methods TODO: Remove these before submission
 	 */
-	private boolean DEBUG = true;
+	private boolean DEBUG = false;
 
 	private void debug(String msg) {
 		if (DEBUG) {
@@ -72,7 +73,8 @@ public class TypeVisitor extends ASTVisitor {
 	}
 
 	/*
-	 * ============================== HELPER FUNCTIONS ==============================
+	 * ============================== HELPER FUNCTIONS
+	 * ==============================
 	 */
 
 	/**
@@ -80,7 +82,8 @@ public class TypeVisitor extends ASTVisitor {
 	 * type to list create entry <type, 0> in decCounter create entry <type, 0> in
 	 * refCounter] [true -> do nothing]
 	 *
-	 * @param type: String, java type
+	 * @param type:
+	 *            String, java type
 	 */
 	private static void addTypeToList(String type) {
 		if (!types.contains(type)) {
@@ -142,14 +145,15 @@ public class TypeVisitor extends ASTVisitor {
 	}
 
 	/*
-	 * ============================== ASTVisitor FUNCTIONS ==============================
+	 * ============================== ASTVisitor FUNCTIONS
+	 * ==============================
 	 */
 
 	/**
 	 * TODO: Javadoc for this method
 	 */
 	@Override
-	public boolean visit(AnnotationTypeDeclaration node){
+	public boolean visit(AnnotationTypeDeclaration node) {
 		ITypeBinding typeBind = node.resolveBinding();
 		String type = typeBind.getQualifiedName();
 
@@ -168,10 +172,12 @@ public class TypeVisitor extends ASTVisitor {
 	 *
 	 * CounterType: REFERENCE
 	 * 
-	 * LIMITATION: Given public class Other { Fuck x = new Bar<Foo, String, Foo>(); }
-	 * if Bar is not declared before, then the parameter arguments Foo, String, Foo will not be recognized 
+	 * LIMITATION: Given public class Other { Fuck x = new Bar<Foo, String, Foo>();
+	 * } if Bar is not declared before, then the parameter arguments Foo, String,
+	 * Foo will not be recognized
 	 *
-	 * @param node : ClassInstanceCreation
+	 * @param node
+	 *            : ClassInstanceCreation
 	 * @return boolean : True to visit the children of this node
 	 */
 	@Override
@@ -185,6 +191,7 @@ public class TypeVisitor extends ASTVisitor {
 			incRefCount(type);
 			debug("ClassInstanceCreation", type);
 
+			debug("fuck ", node.getType().resolveBinding().toString());
 			// inc count for all the arguments
 			for (ITypeBinding paramBind : node.getType().resolveBinding().getTypeArguments()) {
 				String paramType = paramBind.getQualifiedName();
@@ -295,7 +302,7 @@ public class TypeVisitor extends ASTVisitor {
 		return true;
 	}
 
-	// TODO: get after @link Class. 
+	// TODO: get after @link Class.
 	// public boolean visit(Javadoc node){
 
 	// }
@@ -312,7 +319,7 @@ public class TypeVisitor extends ASTVisitor {
 	 * @param node MarkerAnnotation
 	 * @return boolean : True to visit the children of this node
 	 *
-	 * TODO: Cannot recognize full qualified names for IMPORTS. Works for
+	 *         TODO: Cannot recognize full qualified names for IMPORTS. Works for
 	 *         java.lang.* e.g. @Test from org.junit.Test appears as
 	 *         <currentPackage>.Test
 	 */
@@ -342,7 +349,8 @@ public class TypeVisitor extends ASTVisitor {
 	 * TODO: Get return type parameters -- should be done, please double check
 	 * TODO: CONSTRUCTORS ARE INC REFERENCES
 	 *
-	 * @param node : MethodDeclaration
+	 * @param node
+	 *            : MethodDeclaration
 	 * @return boolean : True to visit the children of this node
 	 */
 	@Override
@@ -351,15 +359,15 @@ public class TypeVisitor extends ASTVisitor {
 
 		if (!isConstructor) {
 			boolean isParameterized = node.getReturnType2().isParameterizedType();
-			if (isParameterized){
+			if (isParameterized) {
 				ITypeBinding typeBind = node.getReturnType2().resolveBinding().getTypeDeclaration();
-				String type = typeBind.getQualifiedName(); 
+				String type = typeBind.getQualifiedName();
 
 				addTypeToList(type);
 				incRefCount(type);
 
 				debug(node.getName().toString(), type);
-				for (ITypeBinding paramBind : node.getReturnType2().resolveBinding().getTypeArguments()){
+				for (ITypeBinding paramBind : node.getReturnType2().resolveBinding().getTypeArguments()) {
 					String paramType = paramBind.getQualifiedName();
 					debug("param", paramType);
 					addTypeToList(paramType);
@@ -400,11 +408,10 @@ public class TypeVisitor extends ASTVisitor {
 	// }
 
 	/**
-	 * @interface()
-	 * TODO: get into value pair and find any 
+	 * @interface() TODO: get into value pair and find any
 	 */
 	@Override
-	public boolean visit(NormalAnnotation node){
+	public boolean visit(NormalAnnotation node) {
 		IAnnotationBinding annBind = node.resolveAnnotationBinding();
 		ITypeBinding typeBind = annBind.getAnnotationType();
 		String type = typeBind.getQualifiedName();
@@ -478,8 +485,7 @@ public class TypeVisitor extends ASTVisitor {
 	 * CounterType: DECLARATION
 	 *
 	 * @param node
-	 *            : TypeDeclaration
-	 * TODO: Get parameters arguments on all generics
+	 *            : TypeDeclaration TODO: Get parameters arguments on all generics
 	 * @return boolean : True to visit the children of this node
 	 */
 	@Override

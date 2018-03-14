@@ -207,6 +207,22 @@ public class TypeVisitorBuiltInTest {
 	}
 
 	/**
+	 * TODO
+	 */
+	@Test
+	public void testClassClass_Dec_0_Ref_1() {
+		configureParser("class Other { Class<String> str", "java.lang.String", 0, 1);
+	}
+
+	/**
+	 * TODO return here
+	 */
+	@Test
+	public void testReturnStaticField_Dec_0_Ref_1() {
+		configureParser("class Other { int length = String[].length;}", "java.lang.String", 0, 1);
+	}
+
+	/**
 	 * Check that a reference to String as a generic parameter of Foo defaults to
 	 * java.lang.String
 	 */
@@ -223,6 +239,11 @@ public class TypeVisitorBuiltInTest {
 	public void testJavaLangStringParameterizedAndDeclaredList_Dec_0_Ref_2() {
 		configureParser("import java.util.List; class Other { List<String> list = new List<String>();}",
 				"java.lang.String", 0, 2);
+	}
+
+	@Test
+	public void testForLoopInitialization_Dec_0_Ref_1() {
+		configureParser("public class Other { public void method() { for (String s;;){}}}", "java.lang.String", 0, 1);
 	}
 
 }

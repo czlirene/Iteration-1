@@ -28,7 +28,7 @@ public class TypeFinder {
 	// Special salt gauge version (for Irene)
 	// Disable commandline, and prints all types and counts
 	// TODO: Remove this later
-	public static final boolean IDEBUG = true;
+	public static final boolean IDEBUG = false;
 
 	private static void debug(String msg) {
 		if (IDEBUG) {
@@ -135,7 +135,7 @@ public class TypeFinder {
 	public static void main(String[] args) {
 		/* Initialization process */
 		boolean initSuccessful = initFinder(args);
-		
+
 		if (!initSuccessful) {
 			return;
 		}
