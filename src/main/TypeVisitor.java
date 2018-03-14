@@ -42,7 +42,7 @@ public class TypeVisitor extends ASTVisitor {
 	/**
 	 * Debug methods TODO: Remove these before submission
 	 */
-	private boolean DEBUG = false;
+	private boolean DEBUG = true;
 
 	private void debug(String msg) {
 		if (DEBUG) {
@@ -189,9 +189,8 @@ public class TypeVisitor extends ASTVisitor {
 
 			addTypeToList(type);
 			incRefCount(type);
-			debug("ClassInstanceCreation", type);
+			debug("P_ClassInstanceCreation", type);
 
-			debug("fuck ", node.getType().resolveBinding().toString());
 			// inc count for all the arguments
 			for (ITypeBinding paramBind : node.getType().resolveBinding().getTypeArguments()) {
 				String paramType = paramBind.getQualifiedName();
@@ -200,21 +199,16 @@ public class TypeVisitor extends ASTVisitor {
 				incRefCount(paramType);
 			}
 		} else {
-			// ITypeBinding typeBind = node.getType().resolveBinding().getDeclaredMethods()[0].getDeclaringClass();
-			// // IMethodBinding[] methBinds = node.getType().resolveBinding().getDeclaredMethods();
-			// IMethodBinding methBinds = node.resolveConstructorBinding();
-			// // ITypeBinding typeBind = methBinds[methBinds.length-1].getDeclaringClass();
-			// ITypeBinding typeBind = methBinds.getDeclaringClass();
-			// String type = typeBind.getQualifiedName();
-			// String type = typeBind.getPackage().getName();
-			int x = node.getType().resolveBinding().getDeclaredMethods().length;
-			
-			debug("SHIT DOESN'T WORK RN, YELL AT ME TO GET THIS FIXED" + x);
-			/* Debug ONLY: Get the parent variable name if it exists */
-			// debug("PClassInstanceCreation", type);
+			/**
+			 * Limitation: Unless the type in new <Type>(); is a nested class or a java.lang.whatever shit,
+			 * it will not be able to compute the full qualified name (main.FUCK.foo)
+			 */
+			ITypeBinding typeBind = node.getType().resolveBinding();
+			String type = typeBind.getQualifiedName();
 
-			// addTypeToList(type);
-			// incRefCount(type);
+			debug("ClassInstanceCreation", type);
+			addTypeToList(type);
+			incRefCount(type);
 		}
 
 		return true;
@@ -347,7 +341,6 @@ public class TypeVisitor extends ASTVisitor {
 	 * CounterType: REFERENCE
 	 *
 	 * TODO: Get return type parameters -- should be done, please double check
-	 * TODO: CONSTRUCTORS ARE INC REFERENCES
 	 *
 	 * @param node
 	 *            : MethodDeclaration

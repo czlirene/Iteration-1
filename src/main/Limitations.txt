@@ -1,0 +1,11 @@
+Limitations:
+1. Calling static methods and static fields from another class of the same package will not increment the reference counter for the 
+    declaring class. 
+    Due to the fact that these are parsed as VariableDeclarationFragments nodes, and their type informations are stored under 
+    Initializer as a QualifiedName. As local static fields and methods are parsed in the same manner, both localStaticField and 
+    Foo.staticField will increment their own declaring class's counters. (Not what we want)
+
+String i = localStaticField
+string j = localStaticMethod()
+String x = Foo.staticField
+String y = Foo.staticMethod()
