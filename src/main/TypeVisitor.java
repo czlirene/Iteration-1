@@ -6,6 +6,7 @@ import java.util.Map;
 
 import org.eclipse.jdt.core.dom.ASTVisitor;
 import org.eclipse.jdt.core.dom.AnnotationTypeDeclaration;
+import org.eclipse.jdt.core.dom.ArrayCreation;
 import org.eclipse.jdt.core.dom.ClassInstanceCreation;
 import org.eclipse.jdt.core.dom.EnumDeclaration;
 import org.eclipse.jdt.core.dom.FieldDeclaration;
@@ -160,6 +161,21 @@ public class TypeVisitor extends ASTVisitor {
 
 		addTypeToList(type);
 		incDecCount(type);
+
+		return true;
+	}
+
+	/**
+	 * TODO: Javadoc for this method
+	 */
+	@Override
+	public boolean visit(ArrayCreation node){
+		ITypeBinding typeBind = node.getType().resolveBinding();
+		String type = typeBind.getQualifiedName();
+
+		debug("ArrayCreation", type);
+		addTypeToList(type);
+		incRefCount(type);
 
 		return true;
 	}
