@@ -3,17 +3,15 @@ import java.util.*;
 import java.nio.file.NotDirectoryException;
 import org.junit.Test;
 
-public class Test2<V extends Integer> {
+public class Test2 {
 	
-	private class Foo<V>{
-		
-	}
-	private class Bar {}
-//	@Test(expected=NullPointerException.class)
-	public Foo<V> testHashMap_Dec_0_Ref_1() {
-//		Who<String, Age> amI = new Fuck<This, Shit>();
-		return new Foo<V>();
-	}
+//	public class Bar<K,V,T>{}
+//	@Test(expected = NullPointerException.class)
+	public Test2(){}
+	
+//	public class Other {
+//		Fuck x = new Bar<Foo, String, Foo>();
+//	}
 
 
 //	public static int a, b, c;

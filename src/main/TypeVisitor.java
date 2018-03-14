@@ -167,9 +167,11 @@ public class TypeVisitor extends ASTVisitor {
 	 * type's counter value in refCounter.
 	 *
 	 * CounterType: REFERENCE
+	 * 
+	 * LIMITATION: Given public class Other { Fuck x = new Bar<Foo, String, Foo>(); }
+	 * if Bar is not declared before, then the parameter arguments Foo, String, Foo will not be recognized 
 	 *
-	 * @param node
-	 *            : ClassInstanceCreation
+	 * @param node : ClassInstanceCreation
 	 * @return boolean : True to visit the children of this node
 	 */
 	@Override
@@ -183,6 +185,7 @@ public class TypeVisitor extends ASTVisitor {
 			incRefCount(type);
 			debug("ClassInstanceCreation", type);
 
+				debug("fuck ", node.getType().resolveBinding().toString());
 			// inc count for all the arguments
 			for (ITypeBinding paramBind : node.getType().resolveBinding().getTypeArguments()) {
 				String paramType = paramBind.getQualifiedName();
@@ -195,7 +198,7 @@ public class TypeVisitor extends ASTVisitor {
 			String type = typeBind.getQualifiedName();
 
 			/* Debug ONLY: Get the parent variable name if it exists */
-			debug("ClassInstanceCreation", type);
+			debug("PClassInstanceCreation", type);
 
 			addTypeToList(type);
 			incRefCount(type);
@@ -286,6 +289,11 @@ public class TypeVisitor extends ASTVisitor {
 		return true;
 	}
 
+	// TODO: get after @link Class. 
+	// public boolean visit(Javadoc node){
+
+	// }
+
 	/**
 	 * Visits a Marker annotation node type. Marker annotation "@<typeName>" is
 	 * equivalent to normal annotation "@<typeName>()"
@@ -302,7 +310,6 @@ public class TypeVisitor extends ASTVisitor {
 	 *         TODO: Cannot recognize full qualified names for IMPORTS. Works for
 	 *         java.lang.* e.g. @Test from org.junit.Test appears as
 	 *         <currentPackage>.Test
-	 * @throw THIS MAY THROW NullPointerException
 	 */
 	@Override
 	public boolean visit(MarkerAnnotation node) {
@@ -327,7 +334,12 @@ public class TypeVisitor extends ASTVisitor {
 	 *
 	 * CounterType: REFERENCE
 	 *
+<<<<<<< HEAD
 	 * TODO: Get return type parameters TODO: check if constructors are references
+=======
+	 * TODO: Get return type parameters
+	 * TODO: CONSTRUCTORS ARE INC REFERENCES
+>>>>>>> 729f802c35286e06fff7ed0ce618f693ece25220
 	 *
 	 * @param node
 	 *            : MethodDeclaration
@@ -373,7 +385,8 @@ public class TypeVisitor extends ASTVisitor {
 	}
 
 	/**
-	 * TODO: NormalAnnotation node type.
+	 * @interface()
+	 * TODO: get into value pair and find any 
 	 */
 	@Override
 	public boolean visit(NormalAnnotation node) {
@@ -464,6 +477,10 @@ public class TypeVisitor extends ASTVisitor {
 		incDecCount(type);
 
 		return true;
+	}
+
+	public boolean visit(TypeLiteral node){
+
 	}
 
 	/**
