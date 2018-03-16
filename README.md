@@ -1,11 +1,24 @@
 SENG300 Group Iteration 1
 -------------------------
 
+<<<<<<< HEAD
 master
 master
 master
 master
 master
+=======
+new branch change
+safdasdfsadf
+as
+dfa
+sdf
+sadf
+s
+d
+:w
+
+>>>>>>> newbranch
 
 Team Members
 ----
