@@ -1,12 +1,6 @@
 SENG300 Group Iteration 1
 -------------------------
 
-master
-master
-master
-master
-master
-
 Team Members
 ----
 Evan Quan
