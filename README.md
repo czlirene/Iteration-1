@@ -33,7 +33,7 @@ Tasks
 	- Invalid input creates proper error messages
 - Directory
 	- Contains no Java files
-	- Contains 1 Java file 
+	- Contains 1 Java file
 	- Contains multiple Java files (DONE)
 	- Contains non-Java files (DONE)
 	- Contains non-readable files. ie. do not have read permission
@@ -76,7 +76,7 @@ State
 - ASTParser, ASTNode, ASTParser
 
 Sequence
-- 
+-
 
 
 Resources
