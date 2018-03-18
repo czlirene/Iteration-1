@@ -58,17 +58,20 @@ public class TypeVisitorPackageFooTest {
 		final CompilationUnit cu = (CompilationUnit) parser.createAST(null);
 
 		TypeVisitor visitor = new TypeVisitor();
+		visitor.setType(type);
 		cu.accept(visitor);
 
 		int decl_count = 0;
 		int ref_count = 0;
 		try {
-			decl_count = visitor.getDecCount().get(type);
+			// decl_count = visitor.getDecCount().get(type);
+			decl_count = visitor.getDeclarationCounter();
 		} catch (Exception e) {
 
 		}
 		try {
-			ref_count = visitor.getRefCount().get(type);
+			// ref_count = visitor.getRefCount().get(type);
+			ref_count = visitor.getReferenceCounter();
 		} catch (Exception e) {
 
 		}

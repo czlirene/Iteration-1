@@ -10,8 +10,10 @@ import org.junit.runners.Suite;
 /**
  * All Test suites go here.
  */
-@Suite.SuiteClasses({ BigIncrementerVaryingStartsTest.class, BigIncrementerDefaultTest.class, JavaFileReaderTest.class,
-		TypeFinderTest.class, TypeVisitorFooTest.class, TypeVisitorPackageFooTest.class, TypeVisitorBuiltInTest.class,
+// @Suite.SuiteClasses({ BigIncrementerVaryingStartsTest.class, BigIncrementerDefaultTest.class, JavaFileReaderTest.class,
+// 		TypeFinderTest.class, TypeVisitorFooTest.class, TypeVisitorPackageFooTest.class, TypeVisitorBuiltInTest.class,
+// 		PassTest.class })
+@Suite.SuiteClasses({ TypeVisitorFooTest.class, TypeVisitorPackageFooTest.class, TypeVisitorBuiltInTest.class,
 		PassTest.class })
 
 /**
